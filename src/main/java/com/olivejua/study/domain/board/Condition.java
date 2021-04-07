@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static lombok.AccessLevel.*;
 
@@ -15,7 +17,8 @@ import static lombok.AccessLevel.*;
 @Getter
 public class Condition {
 
-    private String languages;
+    @OneToMany(mappedBy = "post")
+    private List<Language> languages;
     private String place;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -23,7 +26,7 @@ public class Condition {
     private String explanation;
 
     @Builder
-    public Condition(String languages, String place, LocalDateTime startDate,
+    public Condition(List<Language> languages, String place, LocalDateTime startDate,
                      LocalDateTime endDate, int capacity, String explanation) {
         this.languages = languages;
         this.place = place;

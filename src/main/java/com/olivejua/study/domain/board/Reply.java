@@ -1,52 +1,48 @@
 package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.User;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static javax.persistence.FetchType.*;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Comment {
+public class Reply {
 
     @Id @GeneratedValue
-    @Column(name = "COMMENT_ID")
+    @Column(name = "REPLY_ID")
     private Long id;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "POST_ID")
-    private Board board;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "USER_ID")
     private User writer;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "REPLY_ID")
+    private Comment comment;
+
     @Column(name = "CONTENT")
     private String content;
 
-    @OneToMany(mappedBy = "comment")
-    private List<Reply> replies = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "POST_ID")
+    private Board board;
 
-    @Builder
-    public Comment(Long id, Board board, User writer, String content, List<Reply> replies) {
+    public Reply(Long id, User writer, Comment comment, String content, Board board) {
         this.id = id;
-        this.board = board;
         this.writer = writer;
+        this.comment = comment;
         this.content = content;
-        this.replies = replies;
+        this.board = board;
     }
 
     /**
-     * 댓글 수정하기
+     * 대댓글 수정하기
      */
     public void edit(String content) {
         this.content = content;

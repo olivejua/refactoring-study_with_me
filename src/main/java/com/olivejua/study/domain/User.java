@@ -38,18 +38,16 @@ public class User {
     }
 
     /**
+     * 회원가입
+     */
+    public void join() {
+        this.role = Role.USER;
+    }
+
+    /**
      * 프로필 변경
      */
     public void changeProfile(String name) {
         this.name = name;
-    }
-
-    /**
-     * 회원가입
-     */
-    public User join(Role role) {
-        this.role = role;
-
-        return this;
     }
 }

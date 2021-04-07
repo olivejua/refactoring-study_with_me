@@ -14,7 +14,7 @@ import static javax.persistence.FetchType.*;
 public abstract class Board {
 
     @Id @GeneratedValue
-    @Column(name = "POST_NO")
+    @Column(name = "POST_ID")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -35,9 +35,9 @@ public abstract class Board {
     }
 
     /**
-     * 글 수정
+     * 글 제목 수정
      */
-    public void update(String title) {
+    protected void editTitle(String title) {
         this.title = title;
     }
 }
