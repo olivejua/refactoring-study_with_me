@@ -28,6 +28,14 @@ public abstract class Board {
     private int viewCount;
 
     /**
+     * 새 게시글 작성
+     */
+    public void createPost(User user, String title) {
+        this.user = user;
+        this.title = title;
+    }
+
+    /**
      * 조회수 늘리기
      */
     public void addViewCount() {

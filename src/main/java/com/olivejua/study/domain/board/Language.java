@@ -24,8 +24,8 @@ public class Language {
     @Column(name = "LANGUAGE")
     private String language;
 
-    public Language(StudyRecruitment post, String language) {
-        this.post = post;
+    // post 없이 Languages만 조회할 일 없음
+    public Language(String language) {
         this.language = language;
     }
 
@@ -33,24 +33,13 @@ public class Language {
     public boolean equals(Object obj) {
         if (obj instanceof Language) {
             Language lan = (Language) obj;
-            return (this.language.equals(lan.getLanguage())
-                    && this.post.getId().equals(lan.getPost().getId()));
+            return language.equals(lan.language);
         } else {
             return false;
         }
     }
 
-    @Override
     public int hashCode() {
         return Objects.hash(getId(), getPost(), getLanguage());
-    }
-
-    @Override
-    public String toString() {
-        return "Language{" +
-                "id=" + id +
-                ", postId=" + post.getId() +
-                ", language='" + language + '\'' +
-                '}';
     }
 }
