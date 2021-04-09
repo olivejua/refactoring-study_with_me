@@ -37,12 +37,10 @@ public class Comment {
     private List<Reply> replies = new ArrayList<>();
 
     @Builder
-    public Comment(Long id, Board board, User writer, String content, List<Reply> replies) {
-        this.id = id;
+    public Comment(Board board, User writer, String content) {
         this.board = board;
         this.writer = writer;
         this.content = content;
-        this.replies = replies;
     }
 
     /**

@@ -23,7 +23,7 @@ public class Reply {
     private User writer;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "REPLY_ID")
+    @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
 
     @Column(name = "CONTENT")
