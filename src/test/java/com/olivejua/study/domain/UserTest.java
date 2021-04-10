@@ -2,27 +2,36 @@ package com.olivejua.study.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DataJpaTest
 class UserTest {
+
+    @Autowired
+    TestEntityManager em;
 
     @Test
     @DisplayName("사용자 생성")
-    void createUser() {
+    void createWriter() {
         User user = User.builder()
-                .id(1L)
                 .name("김슬기")
                 .email("tmfrl4710@gmail.com")
                 .role(Role.GUEST)
                 .socialCode("google")
                 .build();
 
-        assertEquals(1L, user.getId());
-        assertEquals("김슬기", user.getName());
-        assertEquals("tmfrl4710@gmail.com", user.getEmail());
-        assertEquals(Role.GUEST, user.getRole());
-        assertEquals("google", user.getSocialCode());
+        em.persist(user);
+        User findUser = em.find(User.class, user.getId());
+
+        assertEquals(user.getId(), findUser.getId());
+        assertEquals(user.getName(), findUser.getName());
+        assertEquals(user.getEmail(), findUser.getEmail());
+        assertEquals(user.getRole(), findUser.getRole());
+        assertEquals(user.getSocialCode(), findUser.getSocialCode());
     }
 
     @Test
@@ -30,7 +39,6 @@ class UserTest {
     void join() {
         //given
         User user = User.builder()
-                .id(1L)
                 .name("김슬기")
                 .email("tmfrl4710@gmail.com")
                 .role(Role.GUEST)
@@ -48,7 +56,6 @@ class UserTest {
     @DisplayName("프로필 수정")
     void changeProfile() {
         User user = User.builder()
-                .id(1L)
                 .name("김슬기")
                 .email("tmfrl4710@gmail.com")
                 .role(Role.GUEST)

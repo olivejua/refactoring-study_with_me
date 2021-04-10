@@ -29,8 +29,7 @@ public class User {
     private String socialCode;
 
     @Builder
-    public User(Long id, String name, String email, Role role, String socialCode) {
-        this.id = id;
+    public User(String name, String email, Role role, String socialCode) {
         this.name = name;
         this.email = email;
         this.role = role;

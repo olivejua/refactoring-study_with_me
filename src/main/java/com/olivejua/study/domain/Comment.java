@@ -1,6 +1,8 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.domain;
 
+import com.olivejua.study.domain.Reply;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Board;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

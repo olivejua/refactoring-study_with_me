@@ -1,5 +1,6 @@
 package com.olivejua.study.domain.board;
 
+import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class StudyRecruitment extends Board {
     private List<Comment> comment = new ArrayList<>();
 
     @Builder
-    public StudyRecruitment(User user, String title, Condition condition) {
-        createPost(user, title);
+    public StudyRecruitment(User writer, String title, Condition condition) {
+        createPost(writer, title);
         this.condition = condition;
     }
 

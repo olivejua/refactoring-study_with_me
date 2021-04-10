@@ -19,7 +19,7 @@ public abstract class Board {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private User writer;
 
     @Column(name = "TITLE", nullable = false)
     private String title;
@@ -30,8 +30,8 @@ public abstract class Board {
     /**
      * 새 게시글 작성
      */
-    public void createPost(User user, String title) {
-        this.user = user;
+    public void createPost(User writer, String title) {
+        this.writer = writer;
         this.title = title;
     }
 
