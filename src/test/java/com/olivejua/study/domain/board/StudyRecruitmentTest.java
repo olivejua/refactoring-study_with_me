@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -29,14 +31,34 @@ class StudyRecruitmentTest {
         assertEquals(post.getTitle(), findPost.getTitle());
     }
 
-//    @Test
-//    @DisplayName("스터디 모집 - 게시글 수정")
-//    void edit() {
-//        //when
-//        User user = createUser();
-//
-//
-//    }
+    @Test
+    @DisplayName("스터디 모집 - 게시글 수정")
+    void edit() {
+        //given
+        StudyRecruitment post = createPost();
+        Condition changedCondition = Condition.builder()
+                .languages(LanguageTest.createLanguages(new String[]{"java", "spring", "jpa", "gcp", "mysql"}))
+                .place("잠실")
+                .startDate(LocalDateTime.of(2021, 5, 1, 0, 0))
+                .endDate(LocalDateTime.of(2021, 8, 31, 0, 0))
+                .capacity(5)
+                .explanation("java 프로젝트 할 사람 모집합니다.")
+                .build();
+
+        //when
+        post.edit("스터디 모집합니다-수정", changedCondition);
+
+        //then
+        StudyRecruitment findPost = em.find(StudyRecruitment.class, post.getId());
+
+        assertEquals(post.getTitle(), findPost.getTitle());
+        assertEquals(post.getCondition().getLanguages(), findPost.getCondition().getLanguages());
+        assertEquals(post.getCondition().getPlace(), findPost.getCondition().getPlace());
+        assertEquals(post.getCondition().getStartDate(), findPost.getCondition().getStartDate());
+        assertEquals(post.getCondition().getEndDate(), findPost.getCondition().getEndDate());
+        assertEquals(post.getCondition().getCapacity(), findPost.getCondition().getCapacity());
+        assertEquals(post.getCondition().getExplanation(), findPost.getCondition().getExplanation());
+    }
 
     private StudyRecruitment createPost() {
         StudyRecruitment post = StudyRecruitment.builder()
