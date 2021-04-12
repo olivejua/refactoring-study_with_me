@@ -32,6 +32,9 @@ public class Question extends Board {
         this.content = content;
     }
 
+    /**
+     * 글 수정
+     */
     public void edit(String title, String content) {
         editTitle(title);
         this.content = content;

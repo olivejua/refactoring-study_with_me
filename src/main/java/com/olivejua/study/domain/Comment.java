@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "COMMENT_ID")

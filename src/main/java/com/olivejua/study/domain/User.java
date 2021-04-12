@@ -9,7 +9,7 @@ import static lombok.AccessLevel.*;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "USER_ID")

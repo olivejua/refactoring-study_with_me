@@ -1,5 +1,6 @@
 package com.olivejua.study.domain.board;
 
+import com.olivejua.study.domain.BaseTimeEntity;
 import com.olivejua.study.domain.User;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import static javax.persistence.FetchType.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
 @Getter
-public abstract class Board {
+public abstract class Board extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "POST_ID")

@@ -12,7 +12,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Reply {
+public class Reply extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "REPLY_ID")
