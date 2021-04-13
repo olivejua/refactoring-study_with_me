@@ -21,7 +21,6 @@ public class Language {
     @JoinColumn(name = "POST_ID")
     private StudyRecruitment post;
 
-    @Column(name = "LANGUAGE")
     private String language;
 
     // post 없이 Languages만 조회할 일 없음

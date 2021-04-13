@@ -32,7 +32,6 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "USER_ID")
     private User writer;
 
-    @Column(name = "CONTENT")
     private String content;
 
     @OneToMany(mappedBy = "comment")

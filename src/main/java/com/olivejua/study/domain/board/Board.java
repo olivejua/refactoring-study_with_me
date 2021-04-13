@@ -22,10 +22,9 @@ public abstract class Board extends BaseTimeEntity {
     @JoinColumn(name = "USER_ID")
     private User writer;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "VIEW_COUNT")
     private int viewCount;
 
     /**

@@ -26,7 +26,6 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
 
-    @Column(name = "CONTENT")
     private String content;
 
     @ManyToOne(fetch = LAZY)

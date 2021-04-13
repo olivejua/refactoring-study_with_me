@@ -20,7 +20,6 @@ import static lombok.AccessLevel.PROTECTED;
 public class StudyRecruitment extends Board {
 
     @Embedded
-    @Column(name = "CONDITION")
     private Condition condition;
 
     @OneToMany(mappedBy = "board")
