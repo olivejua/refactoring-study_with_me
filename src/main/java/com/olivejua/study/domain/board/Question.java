@@ -23,7 +23,7 @@ public class Question extends Board {
 
     private String content;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "post")
     private List<Comment> comment = new ArrayList<>();
 
     @Builder

@@ -1,7 +1,5 @@
 package com.olivejua.study.domain;
 
-import com.olivejua.study.domain.Reply;
-import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +24,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")
-    private Board board;
+    private Board post;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "USER_ID")
@@ -38,8 +36,8 @@ public class Comment extends BaseTimeEntity {
     private List<Reply> replies = new ArrayList<>();
 
     @Builder
-    public Comment(Board board, User writer, String content) {
-        this.board = board;
+    public Comment(Board post, User writer, String content) {
+        this.post = post;
         this.writer = writer;
         this.content = content;
     }

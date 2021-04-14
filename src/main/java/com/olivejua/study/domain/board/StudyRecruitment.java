@@ -22,7 +22,7 @@ public class StudyRecruitment extends Board {
     @Embedded
     private Condition condition;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "post")
     private List<Comment> comment = new ArrayList<>();
 
     @Builder

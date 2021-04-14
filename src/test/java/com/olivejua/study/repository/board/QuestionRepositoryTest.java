@@ -26,7 +26,7 @@ class QuestionRepositoryTest {
         User writer = SampleUser.create();
         userRepository.save(writer);
 
-        Question post = SampleQuestion.createQuestion(writer);
+        Question post = SampleQuestion.create(writer);
         questionRepository.save(post);
 
         Question findPost = questionRepository.findAll().get(0);
