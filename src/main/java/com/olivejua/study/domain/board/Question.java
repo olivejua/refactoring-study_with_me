@@ -32,6 +32,14 @@ public class Question extends Board {
         this.content = content;
     }
 
+    public static Question post(User writer, String title, String content) {
+        Question post = new Question();
+        post.createPost(writer, title);
+        post.content = content;
+
+        return post;
+    }
+
     /**
      * 글 수정
      */
