@@ -30,16 +30,16 @@ class CommentRepositoryTest {
     @Test
     @DisplayName("comment - 저장")
     public void save() {
-        List<User> users = SampleUser.createList(2);
-        User commentWriter = users.get(0);
-        User postWriter = users.get(1);
+        List<User> users = SampleUser.createList(2); // user 2개 생성
+        User commentWriter = users.get(0); // 댓글 작성자
+        User postWriter = users.get(1); // 게시물 작성자
 
-        users.forEach(user -> userRepository.save(user));
+        users.forEach(user -> userRepository.save(user)); 
 
-        Question post = SampleQuestion.create(postWriter);
+        Question post = SampleQuestion.create(postWriter); // 게시물 작성
         questionRepository.save(post);
-
-        Comment comment = SampleComment.create(commentWriter, post);
+        
+        Comment comment = SampleComment.create(commentWriter, post); //댓글 작성
 
         //when
         commentRepository.save(comment);

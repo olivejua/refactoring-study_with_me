@@ -1,13 +1,18 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.domain;
 
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.*;
+import com.olivejua.study.sampleData.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,11 +24,16 @@ class CommentTest {
 
     //TODO create 엔티티 메서드 리팩토링 해야함. 도메인에 아예 넣는건 어떨지 생각해보자.
     @Test
-    @DisplayName("댓글[스터디 모집] 작성")
+    @DisplayName("댓글[질문 게시판] 작성")
     public void writeComment_study() throws Exception {
         //given
-        StudyRecruitment post = createPost();
-        User commentWriter = createCommentWriter();
+        List<User> users = SampleUser.createList(2);
+        users.forEach(user -> em.persist(user));
+        User postWriter = users.get(0);
+        User commentWriter = users.get(1);
+
+        Question post = SampleQuestion.create(postWriter);
+        em.persist(post);
 
         //when
         Comment comment = Comment.builder()
@@ -46,8 +56,22 @@ class CommentTest {
     @DisplayName("댓글[스터디 모집] 수정")
     void edit() {
         //given
-        StudyRecruitment post = createPost();
-        Comment comment = createComment(post);
+        List<User> users = SampleUser.createList(2);
+        users.forEach(user -> em.persist(user));
+        User postWriter = users.get(0);
+        User commentWriter = users.get(1);
+
+        List<Language> languages = SampleLanguage.createList();
+        languages.forEach(language -> em.persist(language));
+
+        StudyRecruitment post = SampleStudyRecruitment.create(postWriter, languages);
+        em.persist(post);
+
+        Comment comment = SampleComment.create(commentWriter, post);
+        em.persist(comment);
+
+        em.flush();
+        em.clear();
 
         //when
         String changedContent = "저도 참여하고 싶습니다";
@@ -55,51 +79,5 @@ class CommentTest {
 
         //then
         assertEquals(changedContent, comment.getContent());
-    }
-
-    private Comment createComment(Board post) {
-        Comment comment = Comment.builder()
-                .post(post)
-                .writer(createCommentWriter())
-                .content("참여하고 싶습니다")
-                .build();
-
-        em.persist(comment);
-        return comment;
-    }
-
-    private User createCommentWriter() {
-        User writer = User.builder()
-                .name("dreaming octopus")
-                .email("dreamingoctopus@gmail.com")
-                .role(Role.USER)
-                .socialCode("google")
-                .build();
-
-        em.persist(writer);
-        return writer;
-    }
-
-    private StudyRecruitment createPost() {
-        StudyRecruitment post = StudyRecruitment.builder()
-                .writer(createPostWriter())
-                .title("자바 프로젝트 시작합니다")
-                .condition(ConditionTest.createCondition())
-                .build();
-
-        em.persist(post);
-        return post;
-    }
-
-    private User createPostWriter() {
-        User writer = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
-
-        em.persist(writer);
-        return writer;
     }
 }
