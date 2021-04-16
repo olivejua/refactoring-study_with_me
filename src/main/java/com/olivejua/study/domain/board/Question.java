@@ -26,10 +26,13 @@ public class Question extends Board {
     @OneToMany(mappedBy = "post")
     private List<Comment> comment = new ArrayList<>();
 
-    @Builder
-    public Question(User writer, String title, String content) {
-        createPost(writer, title);
-        this.content = content;
+    public static Question createPost(User writer, String title, String content) {
+        Question newPost = new Question();
+
+        newPost.createPost(writer, title);
+        newPost.content = content;
+
+        return newPost;
     }
 
     /**
