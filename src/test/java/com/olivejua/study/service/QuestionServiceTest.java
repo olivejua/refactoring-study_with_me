@@ -3,17 +3,14 @@ package com.olivejua.study.service;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
-import com.olivejua.study.sampleData.SampleQuestion;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +21,9 @@ class QuestionServiceTest {
     QuestionService questionService;
 
     @Autowired
+    QuestionRepository questionRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     private User writer;
@@ -31,6 +31,12 @@ class QuestionServiceTest {
     @BeforeEach
     void setup() {
         writer = userRepository.save(SampleUser.create());
+    }
+
+    @AfterEach
+    void cleanup() {
+        questionRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
