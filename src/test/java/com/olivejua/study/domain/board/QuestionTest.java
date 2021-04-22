@@ -2,14 +2,11 @@ package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,14 +46,12 @@ class QuestionTest {
     }
 
     private Question createPost() {
-        Question post = Question.builder()
-                .writer(createWriter())
-                .title("jpa 관련질문입니다.")
-                .content("영속성 컨텍스트는 동일한 객체를 보장해주나요?")
-                .build();
-
-        em.persist(post);
-        return post;
+        Question newPost = Question.createPost(
+                createWriter(),
+                "jpa 관련질문입니다.",
+                "영속성 컨텍스트는 동일한 객체를 보장해주나요?");
+        em.persist(newPost);
+        return newPost;
     }
 
     private User createWriter() {
