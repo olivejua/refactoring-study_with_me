@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -21,26 +22,22 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 public class Question extends Board {
 
+    @Column(nullable = false)
     private String content;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comment = new ArrayList<>();
 
-    public static Question createPost(User writer, String title, String content) {
+    /**
+     * 글 등록
+     */
+    public static Question savePost(User writer, String title, String content) {
         Question newPost = new Question();
 
         newPost.createPost(writer, title);
         newPost.content = content;
 
         return newPost;
-    }
-
-    public static Question post(User writer, String title, String content) {
-        Question post = new Question();
-        post.createPost(writer, title);
-        post.content = content;
-
-        return post;
     }
 
     /**

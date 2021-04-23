@@ -6,6 +6,7 @@ import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
+import com.olivejua.study.web.dto.question.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
-        Question newPost = Question.createPost(
+        Question newPost = Question.savePost(
                 writer, requestDto.getTitle(), requestDto.getContent());
 
         questionRepository.save(newPost);
@@ -32,5 +33,24 @@ public class QuestionService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
 
         return new PostReadResponseDto(findPost);
+    }
+
+    public Question update(Long postId, PostUpdateRequestDto requestDto) {
+        Question post = questionRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+        System.out.println("***** update 함수에서 찾아온 post = " + post);
+
+        post.edit(requestDto.getTitle(), requestDto.getContent());
+
+        return post;
+    }
+
+    public Long delete(Long postId) {
+        Question post = questionRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+
+        questionRepository.delete(post);
+
+        return post.getId();
     }
 }
