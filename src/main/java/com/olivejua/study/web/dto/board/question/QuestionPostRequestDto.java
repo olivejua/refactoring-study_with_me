@@ -1,4 +1,4 @@
-package com.olivejua.study.web.dto.question;
+package com.olivejua.study.web.dto.board.question;
 
 import com.olivejua.study.domain.board.Question;
 import lombok.Builder;

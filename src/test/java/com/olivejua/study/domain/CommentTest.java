@@ -1,8 +1,5 @@
 package com.olivejua.study.domain;
 
-import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.Role;
-import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.*;
 import com.olivejua.study.sampleData.*;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,10 +57,7 @@ class CommentTest {
         User postWriter = users.get(0);
         User commentWriter = users.get(1);
 
-        List<Language> languages = SampleLanguage.createList();
-        languages.forEach(language -> em.persist(language));
-
-        StudyRecruitment post = SampleStudyRecruitment.create(postWriter, languages);
+        StudyRecruitment post = SampleStudyRecruitment.create(postWriter);
         em.persist(post);
 
         Comment comment = SampleComment.create(commentWriter, post);

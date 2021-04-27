@@ -1,7 +1,6 @@
 package com.olivejua.study.domain.board;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,34 +10,39 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Language {
+public class TechStack {
 
     @Id @GeneratedValue
-    @Column(name = "LANGUAGE_ID")
+    @Column(name = "TECHSTACK_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private StudyRecruitment post;
 
-    private String language;
+    private String element;
 
     // post 없이 Languages만 조회할 일 없음
-    public Language(String language) {
-        this.language = language;
+    public TechStack(StudyRecruitment post, String element) {
+        this.post = post;
+        this.element = element;
+    }
+
+    public void setPost(StudyRecruitment post) {
+        this.post = post;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Language) {
-            Language lan = (Language) obj;
-            return language.equals(lan.language);
+        if (obj instanceof TechStack) {
+            TechStack ts = (TechStack) obj;
+            return element.equals(ts.element);
         } else {
             return false;
         }
     }
 
     public int hashCode() {
-        return Objects.hash(getId(), getPost(), getLanguage());
+        return Objects.hash(getId(), getPost(), getElement());
     }
 }
