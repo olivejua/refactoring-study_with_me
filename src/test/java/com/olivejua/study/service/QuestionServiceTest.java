@@ -60,7 +60,7 @@ class QuestionServiceTest {
     @Test
     void findPostBy_x() {
         assertThrows(IllegalArgumentException.class,
-                () -> questionService.findPostBy(1L),
+                () -> questionService.read(1L),
                 "저장하지 않은 게시물을 가져오는 호출에는 예외가 발생해야한다."
         );
     }

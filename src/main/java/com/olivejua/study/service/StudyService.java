@@ -17,15 +17,35 @@ public class StudyService {
     private final TechStackService techStackService;
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
-
         StudyRecruitment newPost =
                 StudyRecruitment.savePost(writer, requestDto.getTitle(),
                         requestDto.getTechStack(), requestDto.getCondition());
 
         studyRepository.save(newPost);
-        techStackService.save(newPost);
+        techStackService.update(newPost);
 
         return newPost.getId();
+    }
+
+    public Long update(Long postId, PostSaveRequestDto requestDto) {
+        StudyRecruitment post = findPost(postId);
+
+        post.edit(requestDto.getTitle(), requestDto.getCondition(), requestDto.getTechStack());
+        techStackService.update(post);
+
+        return post.getId();
+    }
+
+    public void delete(Long postId) {
+        StudyRecruitment post = findPost(postId);
+
+        techStackService.delete(post);
+        studyRepository.delete(post);
+    }
+
+    private StudyRecruitment findPost(Long postId) throws IllegalArgumentException {
+        return studyRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
     }
 }
 
@@ -35,8 +55,12 @@ public class StudyService {
 class TechStackService {
     private final TechStackRepository techStackRepository;
 
-    public void save(StudyRecruitment post) {
-        techStackRepository.deleteByPost(post);
+    public void update(StudyRecruitment post) {
+        delete(post);
         post.getTechStack().forEach(techStackRepository::save);
+    }
+
+    public void delete(StudyRecruitment post) {
+        techStackRepository.deleteByPost(post);
     }
 }

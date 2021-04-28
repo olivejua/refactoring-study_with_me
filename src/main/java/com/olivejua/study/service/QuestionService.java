@@ -28,7 +28,7 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public PostReadResponseDto findPostBy(Long postId) {
+    public PostReadResponseDto read(Long postId) {
         Question findPost = questionQueryRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
 

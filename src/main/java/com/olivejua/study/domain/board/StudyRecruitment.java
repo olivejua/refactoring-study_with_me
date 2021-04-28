@@ -43,7 +43,7 @@ public class StudyRecruitment extends Board {
     }
 
     /**
-     * 프로그래밍 언어 변경
+     * 기술스택 변경
      */
     private void changeTechStacks(List<String> techStack) {
         this.techStack = techStack.stream()
