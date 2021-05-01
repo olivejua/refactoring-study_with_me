@@ -51,4 +51,22 @@ class StudyRecruitmentRepositoryTest {
         assertEquals(post.getWriter(), findPost.getWriter());
         assertEquals(post.getCondition(), findPost.getCondition());
     }
+
+    @Test
+    void search() {
+        // given
+        User writer = SampleUser.create();
+        userRepository.save(writer);
+
+        StudyRecruitment post = SampleStudyRecruitment.create(writer);
+
+        // when
+        studyRecruitmentRepository.save(post);
+        post.getTechStack().forEach(techStackRepository::save);
+
+        List<StudyRecruitment> search = studyRecruitmentRepository.search();
+        StudyRecruitment savedPost = search.get(0);
+
+        assertEquals(post.getId(), savedPost.getId());
+    }
 }

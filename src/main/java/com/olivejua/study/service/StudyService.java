@@ -4,6 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
+import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,13 @@ public class StudyService {
 
         techStackService.delete(post);
         studyRepository.delete(post);
+    }
+
+    @Transactional(readOnly = true)
+    public PostReadResponseDto read(Long postId) {
+        StudyRecruitment post = findPost(postId);
+
+        return new PostReadResponseDto(post);
     }
 
     private StudyRecruitment findPost(Long postId) throws IllegalArgumentException {
