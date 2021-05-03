@@ -2,17 +2,25 @@ package com.olivejua.study.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class UserTest {
 
     @Autowired
-    TestEntityManager em;
+    EntityManager em;
 
     @Test
     @DisplayName("사용자 생성")
@@ -25,6 +33,10 @@ class UserTest {
                 .build();
 
         em.persist(user);
+
+        em.flush();
+        em.clear();
+
         User findUser = em.find(User.class, user.getId());
 
         assertEquals(user.getId(), findUser.getId());

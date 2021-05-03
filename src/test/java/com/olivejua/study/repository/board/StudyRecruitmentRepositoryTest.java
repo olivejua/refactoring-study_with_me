@@ -11,13 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class StudyRecruitmentRepositoryTest {
 
     @Autowired
@@ -28,6 +31,9 @@ class StudyRecruitmentRepositoryTest {
 
     @Autowired
     TechStackRepository techStackRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("StudyRecruitment - 저장")
@@ -64,9 +70,16 @@ class StudyRecruitmentRepositoryTest {
         studyRecruitmentRepository.save(post);
         post.getTechStack().forEach(techStackRepository::save);
 
+        em.flush();
+        em.clear();
+
         List<StudyRecruitment> search = studyRecruitmentRepository.search();
         StudyRecruitment savedPost = search.get(0);
 
         assertEquals(post.getId(), savedPost.getId());
+        System.out.println("=============");
+        assertEquals(post.getTechStack().size(), savedPost.getTechStack().size());
+        assertEquals(post.getTechStack().get(0), savedPost.getTechStack().get(0));
+        System.out.println("savedPost.getTechStack().get(0).getElement() = " + savedPost.getTechStack().get(0).getElement());
     }
 }
