@@ -67,7 +67,6 @@ class UserServiceTest {
         UserSignupResponseDto responseDto = userService.join(requestDto);
 
         //then
-        System.out.println(responseDto.getId());
         assertEquals(requestDto.getName(), responseDto.getName());
         assertEquals(requestDto.getEmail(), responseDto.getEmail());
         assertEquals(Role.USER, responseDto.getRole());

@@ -1,24 +1,26 @@
 package com.olivejua.study.repository.board;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Language;
+import com.olivejua.study.domain.board.TechStack;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.UserRepository;
-import com.olivejua.study.sampleData.SampleLanguage;
 import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class StudyRecruitmentRepositoryTest {
 
     @Autowired
@@ -28,22 +30,23 @@ class StudyRecruitmentRepositoryTest {
     UserRepository userRepository;
 
     @Autowired
-    LanguageRepository languageRepository;
+    TechStackRepository techStackRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("StudyRecruitment - 저장")
-    public void save() {
+    void save() {
         // given
         User writer = SampleUser.create();
         userRepository.save(writer);
 
-        List<Language> languages = SampleLanguage.createList();
-        languages.forEach(language -> languageRepository.save(language));
-
-        StudyRecruitment post = SampleStudyRecruitment.create(writer, languages);
+        StudyRecruitment post = SampleStudyRecruitment.create(writer);
 
         // when
         studyRecruitmentRepository.save(post);
+        post.getTechStack().forEach(techStackRepository::save);
 
         //then
         StudyRecruitment findPost = studyRecruitmentRepository.findAll().get(0);
@@ -53,5 +56,30 @@ class StudyRecruitmentRepositoryTest {
         assertEquals(post.getTitle(), findPost.getTitle());
         assertEquals(post.getWriter(), findPost.getWriter());
         assertEquals(post.getCondition(), findPost.getCondition());
+    }
+
+    @Test
+    void search() {
+        // given
+        User writer = SampleUser.create();
+        userRepository.save(writer);
+
+        StudyRecruitment post = SampleStudyRecruitment.create(writer);
+
+        // when
+        studyRecruitmentRepository.save(post);
+        post.getTechStack().forEach(techStackRepository::save);
+
+        em.flush();
+        em.clear();
+
+        List<StudyRecruitment> search = studyRecruitmentRepository.search();
+        StudyRecruitment savedPost = search.get(0);
+
+        assertEquals(post.getId(), savedPost.getId());
+        System.out.println("=============");
+        assertEquals(post.getTechStack().size(), savedPost.getTechStack().size());
+        assertEquals(post.getTechStack().get(0), savedPost.getTechStack().get(0));
+        System.out.println("savedPost.getTechStack().get(0).getElement() = " + savedPost.getTechStack().get(0).getElement());
     }
 }

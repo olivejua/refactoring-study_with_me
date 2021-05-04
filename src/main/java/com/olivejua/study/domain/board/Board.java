@@ -31,8 +31,8 @@ public abstract class Board extends BaseTimeEntity {
      * 새 게시글 작성
      */
     public void createPost(User writer, String title) {
-        this.writer = writer;
         this.title = title;
+        this.writer = writer;
     }
 
     /**

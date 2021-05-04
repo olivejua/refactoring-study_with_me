@@ -6,7 +6,7 @@ import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 
 public class SampleQuestion {
     public static Question create(User writer) {
-        return Question.createPost(
+        return Question.savePost(
                 writer,
                 "질문있습니다.",
                 "보라돌이 뚜비 나나 뽀~↗"

@@ -46,7 +46,7 @@ class QuestionTest {
     }
 
     private Question createPost() {
-        Question newPost = Question.createPost(
+        Question newPost = Question.savePost(
                 createWriter(),
                 "jpa 관련질문입니다.",
                 "영속성 컨텍스트는 동일한 객체를 보장해주나요?");
