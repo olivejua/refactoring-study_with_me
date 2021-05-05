@@ -16,6 +16,24 @@ public class SampleStudyRecruitment {
         return StudyRecruitment.savePost(writer, "스터디 모집합니다.", createTechStack(), SampleCondition.create());
     }
 
+    public static StudyRecruitment create(User writer, String[] techStack) {
+        return StudyRecruitment.savePost(writer, "스터디 모집합니다.", createTechStack(techStack), SampleCondition.create());
+    }
+
+    public static StudyRecruitment create(User writer, String title, String[] techStack) {
+        return StudyRecruitment.savePost(writer, title, createTechStack(techStack), SampleCondition.create());
+    }
+
+    public static List<StudyRecruitment> createList(List<User> writer, List<String> titles, List<String[]> techStacks) {
+        List<StudyRecruitment> results = new ArrayList<>();
+
+        for(int i=0; i<writer.size(); i++) {
+            results.add(create(writer.get(i), titles.get(i), techStacks.get(i)));
+        }
+
+        return results;
+    }
+
     static class SampleCondition {
         static Condition create() {
             return Condition.builder()
@@ -36,5 +54,10 @@ public class SampleStudyRecruitment {
         techStack.add("gcp");
         techStack.add("mysql");
         return techStack;
+    }
+
+    public static List<String> createTechStack(String[] techStack) {
+        return Arrays.stream(techStack)
+                .collect(Collectors.toList());
     }
 }

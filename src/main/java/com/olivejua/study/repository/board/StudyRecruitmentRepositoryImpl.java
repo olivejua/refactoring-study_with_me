@@ -3,6 +3,7 @@ package com.olivejua.study.repository.board;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.web.dto.board.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
+import com.olivejua.study.web.dto.board.study.SearchType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,22 +23,7 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
     }
 
     @Override
-    public List<StudyRecruitment> search() {
-        return queryFactory
-                .selectFrom(studyRecruitment)
-                .join(studyRecruitment.techStack, techStack)
-                .fetch();
-    }
-
-    @Override
-    public List<PostListResponseDto> list(SearchDto searchDto) {
-//        BooleanExpression cond =
-//                switch (searchDto.getSearchType()) {
-//                    case TITLE -> titleEq(searchDto.getKeyword());
-//                    case PLACE -> placeEq(searchDto.getKeyword());
-//                    case EXPLANATION -> explanationEq(searchDto.getKeyword());
-//                };
-
+    public List<PostListResponseDto> list() {
         return queryFactory
                 .select(Projections.constructor(PostListResponseDto.class,
                         studyRecruitment.id,
@@ -46,29 +32,46 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
                         studyRecruitment.viewCount,
                         studyRecruitment.comment.size()))
                 .from(studyRecruitment)
-//                .where(cond)
+                .join(studyRecruitment.techStack, techStack)
+                .fetch();
+    }
+
+    @Override
+    public List<PostListResponseDto> search(SearchDto cond) {
+        return queryFactory
+                .select(Projections.constructor(PostListResponseDto.class,
+                        studyRecruitment.id,
+                        studyRecruitment.title,
+                        studyRecruitment.writer.name,
+                        studyRecruitment.viewCount,
+                        studyRecruitment.comment.size()))
+                .from(studyRecruitment)
+                .join(studyRecruitment.techStack, techStack)
+                .where(titleEq(cond),
+                        placeEq(cond),
+                        explanationEq(cond),
+                        techStackContains(cond))
                 .fetch();
     }
 
 
-    private BooleanExpression titleEq(String title) {
-        return title != null ? studyRecruitment.title.eq(title) : null;
+    private BooleanExpression titleEq(SearchDto searchDto) {
+        return searchDto.getSearchType() == SearchType.TITLE && searchDto.getKeyword() != null
+                ? studyRecruitment.title.eq(searchDto.getKeyword()) : null;
     }
 
-    private BooleanExpression placeEq(String place) {
-        return place != null ? studyRecruitment.condition.place.eq(place) : null;
+    private BooleanExpression placeEq(SearchDto searchDto) {
+        return searchDto.getSearchType() == SearchType.PLACE && searchDto.getKeyword() != null
+                ? studyRecruitment.condition.place.eq(searchDto.getKeyword()) : null;
     }
 
-    private BooleanExpression explanationEq(String explanation) {
-        return explanation != null ? studyRecruitment.condition.explanation.eq(explanation) : null;
+    private BooleanExpression explanationEq(SearchDto searchDto) {
+        return searchDto.getSearchType() == SearchType.EXPLANATION && searchDto.getKeyword() != null
+                ? studyRecruitment.condition.explanation.eq(searchDto.getKeyword()) : null;
     }
 
-    /**
-     * techStack을 fetch join으로 가져와야함
-     *
-     * title
-     * techStack (다른 테이블에서 찾아와야함.)
-     * place
-     * explanation
-     */
+    private BooleanExpression techStackContains(SearchDto searchDto) {
+        return searchDto.getSearchType() == SearchType.TECH_STACK && searchDto.getKeyword() != null
+                ? techStack.element.contains(searchDto.getKeyword()) : null;
+    }
 }

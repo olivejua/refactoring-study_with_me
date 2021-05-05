@@ -1,23 +1,23 @@
 package com.olivejua.study.repository.board;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.TechStack;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
@@ -59,7 +59,7 @@ class StudyRecruitmentRepositoryTest {
     }
 
     @Test
-    void search() {
+    void list() {
         // given
         User writer = SampleUser.create();
         userRepository.save(writer);
@@ -73,13 +73,45 @@ class StudyRecruitmentRepositoryTest {
         em.flush();
         em.clear();
 
-        List<StudyRecruitment> search = studyRecruitmentRepository.search();
-        StudyRecruitment savedPost = search.get(0);
+        List<PostListResponseDto> posts = studyRecruitmentRepository.list();
+        PostListResponseDto listResponseDto = posts.get(0);
 
-        assertEquals(post.getId(), savedPost.getId());
-        System.out.println("=============");
-        assertEquals(post.getTechStack().size(), savedPost.getTechStack().size());
-        assertEquals(post.getTechStack().get(0), savedPost.getTechStack().get(0));
-        System.out.println("savedPost.getTechStack().get(0).getElement() = " + savedPost.getTechStack().get(0).getElement());
+        assertEquals(post.getId(), listResponseDto.getPostId());
     }
+
+    @Test
+    void search() {
+        List<String[]> tsList = new ArrayList<>();
+        tsList.add(new String[] {"java", "spring", "aws"});
+        tsList.add(new String[] {"java", "spring", "aws", "jpa"});
+        tsList.add(new String[] {"java", "jsp", "servlet", "mybatis"});
+        tsList.add(new String[] {"python", "gcp", "react"});
+        tsList.add(new String[] {"python", "aws", "html"});
+
+        List<String> titles = new ArrayList<>();
+        titles.add("java");
+        titles.add("java");
+        titles.add("spring");
+        titles.add("python");
+        titles.add("aws");
+
+        List<User> users = SampleUser.createList(5);
+
+        List<StudyRecruitment> posts = SampleStudyRecruitment.createList(users, titles, tsList);
+        posts.forEach(post -> {
+            userRepository.save(post.getWriter());
+            studyRecruitmentRepository.save(post);
+            post.getTechStack()
+                    .forEach(ts -> techStackRepository.save(ts));
+        });
+
+        em.flush();
+        em.clear();
+
+        List<PostListResponseDto> savedPosts = studyRecruitmentRepository.search(new SearchDto("TECH_STACK", "java"));
+        for (PostListResponseDto post : savedPosts) {
+            System.out.println("post = " + post);
+        }
+    }
+
 }
