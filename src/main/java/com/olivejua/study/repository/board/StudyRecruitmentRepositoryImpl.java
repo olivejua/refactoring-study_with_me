@@ -4,9 +4,13 @@ import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.web.dto.board.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.SearchType;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -37,8 +41,8 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
     }
 
     @Override
-    public List<PostListResponseDto> search(SearchDto cond) {
-        return queryFactory
+    public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
+        QueryResults<PostListResponseDto> results = queryFactory
                 .select(Projections.constructor(PostListResponseDto.class,
                         studyRecruitment.id,
                         studyRecruitment.title,
@@ -51,7 +55,14 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
                         placeEq(cond),
                         explanationEq(cond),
                         techStackContains(cond))
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<PostListResponseDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
 

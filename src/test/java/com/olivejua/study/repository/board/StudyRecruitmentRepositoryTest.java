@@ -11,6 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -108,10 +111,17 @@ class StudyRecruitmentRepositoryTest {
         em.flush();
         em.clear();
 
-        List<PostListResponseDto> savedPosts = studyRecruitmentRepository.search(new SearchDto("TECH_STACK", "java"));
+        PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
+
+        Page<PostListResponseDto> savedPosts = studyRecruitmentRepository.search(new SearchDto("TECH_STACK", "java"), paging);
         for (PostListResponseDto post : savedPosts) {
             System.out.println("post = " + post);
         }
+
+        System.out.println("PAGE SIZE : " + savedPosts.getSize());
+        System.out.println("TOTAL PAGES : " + savedPosts.getTotalPages());
+        System.out.println("TOTAL COUNT : " + savedPosts.getTotalElements());
+        System.out.println("NEXT : " + savedPosts.getPageable());
     }
 
 }
