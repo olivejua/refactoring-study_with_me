@@ -4,11 +4,17 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
+import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -16,6 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudyService {
     private final StudyRecruitmentRepository studyRepository;
     private final TechStackService techStackService;
+
+    public Page<PostListResponseDto> list(Pageable pageable) {
+        return studyRepository.list(pageable);
+    }
+
+    public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
+        return studyRepository.search(searchDto, pageable);
+    }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
         StudyRecruitment newPost =
