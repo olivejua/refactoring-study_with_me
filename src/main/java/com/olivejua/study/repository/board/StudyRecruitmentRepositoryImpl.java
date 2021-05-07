@@ -27,9 +27,9 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
     }
 
     @Override
-    public List<PostListResponseDto> list() {
-        return queryFactory
-                .select(Projections.constructor(PostListResponseDto.class,
+    public Page<PostListResponseDto> list(Pageable pageable) {
+        QueryResults<PostListResponseDto> results = queryFactory
+                .selectDistinct(Projections.constructor(PostListResponseDto.class,
                         studyRecruitment.id,
                         studyRecruitment.title,
                         studyRecruitment.writer.name,
@@ -37,7 +37,14 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
                         studyRecruitment.comment.size()))
                 .from(studyRecruitment)
                 .join(studyRecruitment.techStack, techStack)
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<PostListResponseDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     @Override

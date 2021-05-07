@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StudyRecruitmentRepositoryCustom {
 
-    List<PostListResponseDto> list();
+    Page<PostListResponseDto> list(Pageable pageable);
 
     Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable);
 }
