@@ -8,6 +8,7 @@ import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitClass {
@@ -46,11 +48,11 @@ public class InitClass {
             tsList.add(new String[] {"python", "aws", "html"});
 
             List<String> titles = new ArrayList<>();
-            titles.add("java");
-            titles.add("java");
-            titles.add("spring");
-            titles.add("python");
-            titles.add("aws");
+            titles.add("java 모집합니다.");
+            titles.add("java 스터디 하실분");
+            titles.add("spring 프로젝트하실분");
+            titles.add("python 알고리즘 같이 하실분");
+            titles.add("aws 공부하실분 오세요");
 
             List<User> users = createUserList(5);
 
@@ -83,8 +85,10 @@ public class InitClass {
         static List<StudyRecruitment> createPosts(List<User> writer, List<String> titles, List<String[]> techStacks) {
             List<StudyRecruitment> results = new ArrayList<>();
 
-            for(int i=0; i<writer.size(); i++) {
-                results.add(create(writer.get(i), titles.get(i), techStacks.get(i)));
+            for(int i=0; i<writer.size()*20; i++) {
+                int idx = i%5;
+                System.out.println("idx = " + idx);
+                results.add(create(writer.get(idx), titles.get(idx), techStacks.get(idx)));
             }
 
             return results;

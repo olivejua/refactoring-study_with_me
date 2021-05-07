@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: test
   datasource:
     url: jdbc:h2:mem:test
     username: sa
@@ -11,6 +13,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-#        default_batch_fetch_size: 1000
+        default_batch_fetch_size: 1000
 logging.level:
   org.hibernate.SQL: debug
