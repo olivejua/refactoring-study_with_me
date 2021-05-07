@@ -10,19 +10,27 @@ import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
 import com.olivejua.study.sampleData.SampleComment;
+import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
+import com.olivejua.study.web.dto.board.study.SearchType;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,6 +157,59 @@ class StudyServiceTest {
 //        for (CommentReadResponseDto comment : responseDto.getComments()) {
 //            System.out.println("comment.getContent() = " + comment.getContent());
 //        }
+    }
+
+    @Test
+    void list() {
+        createSampleData();
+
+        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
+        Page<PostListResponseDto> list = studyService.list(paging);
+        for (PostListResponseDto responseDto : list) {
+            System.out.println("responseDto = " + responseDto);
+        }
+
+        assertEquals(20, list.getSize());
+    }
+
+    private void createSampleData() {
+        List<String[]> tsList = new ArrayList<>();
+        tsList.add(new String[] {"java", "spring", "aws"});
+        tsList.add(new String[] {"java", "spring", "aws", "jpa"});
+        tsList.add(new String[] {"java", "jsp", "servlet", "mybatis"});
+        tsList.add(new String[] {"python", "gcp", "react"});
+        tsList.add(new String[] {"python", "aws", "html"});
+
+        List<String> titles = new ArrayList<>();
+        titles.add("java 모집합니다.");
+        titles.add("java 스터디 하실분");
+        titles.add("spring 프로젝트하실분");
+        titles.add("python 알고리즘 같이 하실분");
+        titles.add("aws 공부하실분 오세요");
+
+        List<User> users = SampleUser.createList(5);
+
+        List<StudyRecruitment> posts = SampleStudyRecruitment.createList100(users, titles, tsList);
+        posts.forEach(post -> {
+            userRepository.save(post.getWriter());
+            studyRepository.save(post);
+            post.getTechStack()
+                    .forEach(techStackRepository::save);
+        });
+    }
+
+    @Test
+    void search() {
+        createSampleData();
+
+        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
+        Page<PostListResponseDto> posts =
+                studyService.search(new SearchDto(SearchType.TITLE.name(), "java 스터디 하실분"), paging);
+        for (PostListResponseDto responseDto : posts) {
+            System.out.println("responseDto = " + responseDto);
+        }
+
+        assertEquals(20, posts.getSize());
     }
 
     private Long beforeUpdating() {

@@ -34,6 +34,17 @@ public class SampleStudyRecruitment {
         return results;
     }
 
+    public static List<StudyRecruitment> createList100(List<User> writer, List<String> titles, List<String[]> techStacks) {
+        List<StudyRecruitment> results = new ArrayList<>();
+
+        for(int i=0; i<writer.size()*20; i++) {
+            int idx = i%5;
+            results.add(create(writer.get(idx), titles.get(idx), techStacks.get(idx)));
+        }
+
+        return results;
+    }
+
     static class SampleCondition {
         static Condition create() {
             return Condition.builder()
