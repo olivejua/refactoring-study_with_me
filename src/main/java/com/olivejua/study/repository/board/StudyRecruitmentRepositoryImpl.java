@@ -1,6 +1,5 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.web.dto.board.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.SearchType;

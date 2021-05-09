@@ -2,7 +2,6 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class QuestionService {
 
-    private final QuestionQueryRepository questionQueryRepository;
     private final QuestionRepository questionRepository;
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
@@ -29,7 +27,7 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public PostReadResponseDto read(Long postId) {
-        Question findPost = questionQueryRepository.findById(postId)
+        Question findPost = questionRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
 
         return new PostReadResponseDto(findPost);

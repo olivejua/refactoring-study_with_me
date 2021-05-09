@@ -2,7 +2,6 @@ package com.olivejua.study.sampleData;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Condition;
-import com.olivejua.study.domain.board.TechStack;
 import com.olivejua.study.domain.board.StudyRecruitment;
 
 import java.time.LocalDateTime;

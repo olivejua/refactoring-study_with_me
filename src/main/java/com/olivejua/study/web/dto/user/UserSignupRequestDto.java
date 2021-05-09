@@ -1,6 +1,5 @@
 package com.olivejua.study.web.dto.user;
 
-import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
 import lombok.Builder;
 import lombok.Getter;

@@ -17,7 +17,6 @@ import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.study.SearchType;
-import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -153,10 +151,7 @@ class StudyServiceTest {
         assertEquals(post.getId(), responseDto.getPostId());
         assertEquals(post.getTitle(), responseDto.getTitle());
         assertEquals(toStringArray(post.getTechStack()), responseDto.getTechStack());
-//        assertEquals(post.getComment().size(), responseDto.getComments().size());
-//        for (CommentReadResponseDto comment : responseDto.getComments()) {
-//            System.out.println("comment.getContent() = " + comment.getContent());
-//        }
+        assertEquals(post.getComment().size(), responseDto.getComments().size());
     }
 
     @Test
@@ -170,6 +165,20 @@ class StudyServiceTest {
         }
 
         assertEquals(20, list.getSize());
+    }
+
+    @Test
+    void search() {
+        createSampleData();
+
+        PageRequest paging = PageRequest.of(1, 20, Sort.Direction.ASC, "POST_ID");
+        Page<PostListResponseDto> posts =
+                studyService.search(new SearchDto(SearchType.TITLE.name(), "java 스터디 하실분"), paging);
+        for (PostListResponseDto responseDto : posts) {
+            System.out.println("responseDto = " + responseDto);
+        }
+
+        assertEquals(20, posts.getSize());
     }
 
     private void createSampleData() {
@@ -196,20 +205,6 @@ class StudyServiceTest {
             post.getTechStack()
                     .forEach(techStackRepository::save);
         });
-    }
-
-    @Test
-    void search() {
-        createSampleData();
-
-        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
-        Page<PostListResponseDto> posts =
-                studyService.search(new SearchDto(SearchType.TITLE.name(), "java 스터디 하실분"), paging);
-        for (PostListResponseDto responseDto : posts) {
-            System.out.println("responseDto = " + responseDto);
-        }
-
-        assertEquals(20, posts.getSize());
     }
 
     private Long beforeUpdating() {
