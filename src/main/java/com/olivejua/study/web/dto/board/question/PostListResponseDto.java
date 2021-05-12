@@ -8,19 +8,18 @@ import java.time.LocalDateTime;
 @Getter
 public class PostListResponseDto {
     private Long postId;
-    private String title;
     private String writerName;
+    private String title;
     private int viewCount;
     private int commentCount;
     private LocalDateTime createdDate;
 
-    public PostListResponseDto(Long postId, String title, String writerName, int viewCount
-            , int commentCount, LocalDateTime createdDate) {
-        this.postId = postId;
-        this.title = title;
-        this.writerName = writerName;
-        this.viewCount = viewCount;
-        this.commentCount = commentCount;
-        this.createdDate = createdDate;
+    public PostListResponseDto(Question entity) {
+        this.postId = entity.getId();
+        this.writerName = entity.getWriter().getName();
+        this.title = entity.getTitle();
+        this.viewCount = entity.getViewCount();
+        this.commentCount = entity.getComment().size();
+        this.createdDate = entity.getCreatedDate();
     }
 }
