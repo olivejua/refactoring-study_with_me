@@ -1,6 +1,5 @@
-package com.olivejua.study.web.dto.board;
+package com.olivejua.study.web.dto.board.search;
 
-import com.olivejua.study.web.dto.board.study.SearchType;
 import lombok.Getter;
 
 @Getter
