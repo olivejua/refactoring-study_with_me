@@ -4,7 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
-import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
