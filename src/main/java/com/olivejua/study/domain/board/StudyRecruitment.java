@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class StudyRecruitment extends Board {
 
     @OneToMany(mappedBy = "post")
-    private List<TechStack> techStack;
+    private List<TechStack> techStack = new ArrayList<>();
 
     @Embedded
     private Condition condition;
@@ -27,7 +27,9 @@ public class StudyRecruitment extends Board {
     @OneToMany(mappedBy = "post")
     private List<Comment> comment = new ArrayList<>();
 
-
+    /**
+     * 글 작성
+     */
     public static StudyRecruitment savePost(User writer, String title,
                                             List<String> languages, Condition condition) {
 

@@ -1,8 +1,8 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
-import com.olivejua.study.web.dto.board.study.SearchType;
+import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -74,17 +74,17 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
 
     private BooleanExpression titleEq(SearchDto searchDto) {
         return searchDto.getSearchType() == SearchType.TITLE && searchDto.getKeyword() != null
-                ? studyRecruitment.title.eq(searchDto.getKeyword()) : null;
+                ? studyRecruitment.title.contains(searchDto.getKeyword()) : null;
     }
 
     private BooleanExpression placeEq(SearchDto searchDto) {
         return searchDto.getSearchType() == SearchType.PLACE && searchDto.getKeyword() != null
-                ? studyRecruitment.condition.place.eq(searchDto.getKeyword()) : null;
+                ? studyRecruitment.condition.place.contains(searchDto.getKeyword()) : null;
     }
 
     private BooleanExpression explanationEq(SearchDto searchDto) {
         return searchDto.getSearchType() == SearchType.EXPLANATION && searchDto.getKeyword() != null
-                ? studyRecruitment.condition.explanation.eq(searchDto.getKeyword()) : null;
+                ? studyRecruitment.condition.explanation.contains(searchDto.getKeyword()) : null;
     }
 
     private BooleanExpression techStackContains(SearchDto searchDto) {
