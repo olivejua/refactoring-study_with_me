@@ -3,10 +3,14 @@ package com.olivejua.study.service;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionRepository;
+import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+
+    @Transactional(readOnly = true)
+    public Page<PostListResponseDto> list(Pageable pageable) {
+        return questionRepository.list(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
+        return questionRepository.search(searchDto, pageable);
+    }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
         Question newPost = Question.savePost(
@@ -33,14 +47,13 @@ public class QuestionService {
         return new PostReadResponseDto(findPost);
     }
 
-    public Question update(Long postId, PostUpdateRequestDto requestDto) {
+    public Long update(Long postId, PostUpdateRequestDto requestDto) {
         Question post = questionRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
-        System.out.println("***** update 함수에서 찾아온 post = " + post);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
 
-        return post;
+        return post.getId();
     }
 
     public Long delete(Long postId) {

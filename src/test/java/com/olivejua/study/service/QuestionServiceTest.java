@@ -6,13 +6,18 @@ import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.sampleData.SampleQuestion;
 import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,5 +98,45 @@ class QuestionServiceTest {
         boolean isPresent = questionRepository.findById(postId).isPresent();
 
         assertFalse(isPresent);
+    }
+
+    @Test
+    void list() {
+        User writer = SampleUser.create();
+        userRepository.save(writer);
+
+        for (int i=0; i<100; i++) {
+            questionRepository.save(SampleQuestion.create(writer));
+        }
+
+        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
+        Page<PostListResponseDto> list = questionService.list(paging);
+
+        assertEquals(20, list.getSize());
+    }
+
+    @Test
+    void search() {
+        User writer = SampleUser.create();
+        userRepository.save(writer);
+
+        String[] titles = new String[5];
+        for (int i=0; i< titles.length; i++) {
+            titles[i] = "제목"+(i+1);
+        }
+
+        for (int i=0; i<20; i++) {
+            questionRepository.save(Question.savePost(
+                    writer,
+                    titles[i%titles.length],
+                    "샘플 내용"
+            ));
+        }
+
+        SearchDto searchDto = new SearchDto("TITLE", "제목3");
+        PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
+        Page<PostListResponseDto> list = questionService.search(searchDto, paging);
+
+        assertEquals(4, list.getTotalElements());
     }
 }
