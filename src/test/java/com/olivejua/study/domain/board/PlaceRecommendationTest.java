@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -31,6 +35,8 @@ class PlaceRecommendationTest {
     void edit() {
         //given
         PlaceRecommendation post = createPost();
+        List<String> links = new ArrayList<>();
+        links.add("www.google.com");
 
         //when
         post.edit("강남 스터디카페 추천합니다. -수정", 
@@ -38,7 +44,7 @@ class PlaceRecommendationTest {
                 "강남역 1번출구 노란건물 1층 -수정",
                 "/abc/def/gh-수정",
                 "한번 가보시길.. -수정",
-                LinkTest.createLinks(new String[] {"www.google.com"}));
+                Arrays.asList("www.google.com"));
 
         //then
         PlaceRecommendation findPost = em.find(PlaceRecommendation.class, post.getId());
@@ -52,15 +58,15 @@ class PlaceRecommendationTest {
     }
 
     private PlaceRecommendation createPost() {
-        PlaceRecommendation post = PlaceRecommendation.builder()
-                .writer(createWriter())
-                .title("강남 스터디카페 추천합니다.")
-                .address("서울시 강남구")
-                .addressDetail("강남역 1번출구 노란건물 1층")
-                .thumbnailPath("/abc/def/gh")
-                .content("한번 가보시길.. 좋아요 눌러주세요.")
-                .links(LinkTest.createLinks(new String[] {"www.google.com", "www.naver.com"}))
-                .build();
+        List<String> links = new ArrayList<>();
+        links.add("www.google.com");
+        links.add("www.naver.com");
+
+        PlaceRecommendation post = PlaceRecommendation.savePost(
+                createWriter(), "강남 스터디카페 추천합니다.",
+                "서울시 강남구", "강남역 1번출구 노란건물 1층",
+                "/abc/def/gh", "한번 가보시길.. 좋아요 눌러주세요.",
+                links);
 
         em.persist(post);
         return post;

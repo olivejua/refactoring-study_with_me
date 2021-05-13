@@ -13,23 +13,25 @@ import java.util.Objects;
 public class Link {
 
     @Id @GeneratedValue
+    @Column(name = "LINK_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private PlaceRecommendation post;
 
-    private String link;
+    private String element;
 
-    public Link(String link) {
-        this.link = link;
+    public Link(PlaceRecommendation post, String element) {
+        this.post = post;
+        this.element = element;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Link) {
             Link temp = (Link) obj;
-            return link.equals(temp.link);
+            return element.equals(temp.element);
         } else {
             return false;
         }
@@ -37,6 +39,6 @@ public class Link {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getPost(), getLink());
+        return Objects.hash(getId(), getPost(), getElement());
     }
 }

@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -28,28 +29,43 @@ public class PlaceRecommendation extends Board {
     @OneToMany(mappedBy = "post")
     private List<Link> links = new ArrayList<>();
 
-    @Builder
-    public PlaceRecommendation(User writer, String title,
-                               String address, String addressDetail,
-                               String thumbnailPath, String content, List<Link> links) {
-        createPost(writer, title);
-        this.address = address;
-        this.addressDetail = addressDetail;
-        this.thumbnailPath = thumbnailPath;
-        this.content = content;
-        this.links = links;
+    /**
+     * 글 작성
+     */
+    public static PlaceRecommendation savePost(User writer, String title,
+                           String address, String addressDetail,
+                           String thumbnailPath, String content, List<String> links) {
+
+        PlaceRecommendation newPost = new PlaceRecommendation();
+        newPost.createPost(writer, title);
+        newPost.changeLinks(links);
+        newPost.address = address;
+        newPost.addressDetail = addressDetail;
+        newPost.thumbnailPath = thumbnailPath;
+        newPost.content = content;
+
+        return newPost;
     }
 
     /**
      * 글 수정
      */
     public void edit(String title, String address, String addressDetail,
-                     String thumbnailPath, String content, List<Link> links) {
+                     String thumbnailPath, String content, List<String> links) {
         editTitle(title);
         this.address = address;
         this.addressDetail = addressDetail;
         this.thumbnailPath = thumbnailPath;
         this.content = content;
-        this.links = links;
+        changeLinks(links);
+    }
+
+    /**
+     * 링크 목록 변경
+     */
+    private void changeLinks(List<String> links) {
+        this.links = links.stream()
+                .map(link -> new Link(this, link))
+                .collect(Collectors.toList());
     }
 }

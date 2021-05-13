@@ -25,24 +25,24 @@ public class PostReadResponseDto {
     private List<CommentReadResponseDto> comments;
 
     public PostReadResponseDto(StudyRecruitment entity) {
-        this.postId = entity.getId();
-        this.title = entity.getTitle();
+        postId = entity.getId();
+        title = entity.getTitle();
 
-        this.writer = new WriterReadDto(entity.getWriter());
+        writer = new WriterReadDto(entity.getWriter());
 
-        this.techStack = entity.getTechStack().stream()
+        techStack = entity.getTechStack().stream()
                             .map(TechStack::getElement)
                             .collect(Collectors.toList());
 
         //Condition
-        this.place = entity.getCondition().getPlace();
-        this.startDate = entity.getCondition().getStartDate();
-        this.endDate = entity.getCondition().getEndDate();
-        this.capacity = entity.getCondition().getCapacity();
-        this.explanation = entity.getCondition().getExplanation();
-        this.createdDate = entity.getCreatedDate();
+        place = entity.getCondition().getPlace();
+        startDate = entity.getCondition().getStartDate();
+        endDate = entity.getCondition().getEndDate();
+        capacity = entity.getCondition().getCapacity();
+        explanation = entity.getCondition().getExplanation();
+        createdDate = entity.getCreatedDate();
 
-        this.comments = entity.getComment().stream()
+        comments = entity.getComment().stream()
                             .map(CommentReadResponseDto::new)
                             .collect(Collectors.toList());
     }

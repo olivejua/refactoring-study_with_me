@@ -1,5 +1,9 @@
 package com.olivejua.study.domain.board;
 
+import com.olivejua.study.domain.Role;
+import com.olivejua.study.domain.User;
+import com.olivejua.study.repository.UserRepository;
+import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +20,12 @@ class LinkTest {
 
     @Autowired
     TestEntityManager em;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PlaceRecommendationRepository placeRepository;
 
     @Test
     @DisplayName("링크목록이 모두 같아야 true")
@@ -36,9 +45,17 @@ class LinkTest {
         assertThat(links1.equals(links2)).isFalse();
     }
 
-    public static List<Link> createLinks(String[] urls) {
-        return Arrays.stream(urls)
-                .map(Link::new)
-                .collect(Collectors.toList());
+    public static List<Link> createLinks(String[] links) {
+        User writer = User.builder()
+                .name("김슬기")
+                .email("tmfrl4710@gmail.com")
+                .role(Role.GUEST)
+                .socialCode("google")
+                .build();
+
+        PlaceRecommendation post = PlaceRecommendation.savePost(writer, "제목", "주소",
+                "상세주소", "/tmp", "내용", Arrays.asList(links));
+
+        return post.getLinks();
     }
 }

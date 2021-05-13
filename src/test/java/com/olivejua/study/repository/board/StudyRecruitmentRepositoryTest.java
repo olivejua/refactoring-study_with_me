@@ -5,7 +5,7 @@ import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
-import com.olivejua.study.web.dto.board.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
