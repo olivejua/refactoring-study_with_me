@@ -6,9 +6,9 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Getter
-@IdClass(LikePK.class)
+@IdClass(LikeHistoryPK.class)
 @Entity
-public class Like {
+public class LikeHistory {
 
     @Id
     @ManyToOne
@@ -22,6 +22,15 @@ public class Like {
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)", name = "IS_LIKE")
     private boolean isLike;
+
+    public static LikeHistory saveLikeHistory(PlaceRecommendation post, User user, boolean isLike) {
+        LikeHistory like = new LikeHistory();
+        like.post = post;
+        like.user = user;
+        like.isLike = isLike;
+
+        return like;
+    }
 
     public void update(boolean isLike) {
         this.isLike = isLike;
