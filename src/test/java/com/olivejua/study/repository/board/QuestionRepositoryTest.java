@@ -10,20 +10,25 @@ import com.olivejua.study.web.dto.board.search.SearchDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class QuestionRepositoryTest {
 
     @Autowired
     QuestionRepository questionRepository;
+
+    @Autowired
+    QuestionQueryRepository questionQueryRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -60,7 +65,7 @@ class QuestionRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> posts = questionRepository.list(paging);
+        Page<PostListResponseDto> posts = questionQueryRepository.list(paging);
         assertEquals(10, posts.getNumberOfElements());
     }
 
@@ -84,7 +89,7 @@ class QuestionRepositoryTest {
 
         SearchDto searchDto = new SearchDto("TITLE", "제목3");
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
-        Page<PostListResponseDto> savedPosts = questionRepository.search(searchDto, paging);
+        Page<PostListResponseDto> savedPosts = questionQueryRepository.search(searchDto, paging);
 
         assertEquals(4, savedPosts.getTotalElements());
     }

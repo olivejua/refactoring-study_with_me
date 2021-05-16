@@ -2,6 +2,7 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
@@ -20,15 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final QuestionQueryRepository questionQueryRepository;
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> list(Pageable pageable) {
-        return questionRepository.list(pageable);
+        return questionQueryRepository.list(pageable);
     }
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
-        return questionRepository.search(searchDto, pageable);
+        return questionQueryRepository.search(searchDto, pageable);
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {

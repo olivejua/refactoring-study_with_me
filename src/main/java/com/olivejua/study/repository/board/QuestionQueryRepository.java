@@ -1,6 +1,5 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.QQuestion;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
@@ -8,26 +7,22 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.olivejua.study.domain.board.QQuestion.*;
+import static com.olivejua.study.domain.board.QQuestion.question;
 
-public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
+@RequiredArgsConstructor
+@Repository
+public class QuestionQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public QuestionRepositoryImpl(EntityManager entityManager) {
-        queryFactory = new JPAQueryFactory(entityManager);
-    }
-
-
-    @Override
     public Page<PostListResponseDto> list(Pageable pageable) {
         QueryResults<PostListResponseDto> results = queryFactory
                 .selectDistinct(Projections.constructor(PostListResponseDto.class,
@@ -48,7 +43,6 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
-    @Override
     public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
         QueryResults<PostListResponseDto> results = queryFactory
                 .select(Projections.constructor(PostListResponseDto.class,
