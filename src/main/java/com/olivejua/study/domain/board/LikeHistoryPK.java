@@ -10,5 +10,5 @@ import java.io.Serializable;
 public class LikeHistoryPK implements Serializable {
 
     private Long user;
-    private Long boardPlaceRecommendation;
+    private Long post;
 }
