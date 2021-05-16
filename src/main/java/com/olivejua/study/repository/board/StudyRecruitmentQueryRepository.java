@@ -1,31 +1,29 @@
 package com.olivejua.study.repository.board;
 
 import com.olivejua.study.web.dto.board.search.SearchDto;
-import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
+import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.olivejua.study.domain.board.QStudyRecruitment.studyRecruitment;
 import static com.olivejua.study.domain.board.QTechStack.techStack;
 
-public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositoryCustom {
+@RequiredArgsConstructor
+@Repository
+public class StudyRecruitmentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public StudyRecruitmentRepositoryImpl(EntityManager entityManager) {
-        queryFactory = new JPAQueryFactory(entityManager);
-    }
-
-    @Override
     public Page<PostListResponseDto> list(Pageable pageable) {
         QueryResults<PostListResponseDto> results = queryFactory
                 .selectDistinct(Projections.constructor(PostListResponseDto.class,
@@ -46,7 +44,6 @@ public class StudyRecruitmentRepositoryImpl implements StudyRecruitmentRepositor
         return new PageImpl<>(content, pageable, total);
     }
 
-    @Override
     public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
         QueryResults<PostListResponseDto> results = queryFactory
                 .select(Projections.constructor(PostListResponseDto.class,

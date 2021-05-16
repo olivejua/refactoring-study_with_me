@@ -30,6 +30,9 @@ class StudyRecruitmentRepositoryTest {
     StudyRecruitmentRepository studyRecruitmentRepository;
 
     @Autowired
+    StudyRecruitmentQueryRepository studyQueryRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -78,7 +81,7 @@ class StudyRecruitmentRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> posts = studyRecruitmentRepository.list(paging);
+        Page<PostListResponseDto> posts = studyQueryRepository.list(paging);
 //        PostListResponseDto listResponseDto = posts.get(0);
 //
 //        assertEquals(post.getId(), listResponseDto.getPostId());
@@ -115,7 +118,7 @@ class StudyRecruitmentRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> savedPosts = studyRecruitmentRepository.search(new SearchDto("TECH_STACK", "java"), paging);
+        Page<PostListResponseDto> savedPosts = studyQueryRepository.search(new SearchDto("TECH_STACK", "java"), paging);
         for (PostListResponseDto post : savedPosts) {
             System.out.println("post = " + post);
         }

@@ -2,6 +2,7 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.StudyRecruitment;
+import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
 import com.olivejua.study.web.dto.board.search.SearchDto;
@@ -19,14 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StudyService {
     private final StudyRecruitmentRepository studyRepository;
+    private final StudyRecruitmentQueryRepository studyQueryRepository;
     private final TechStackService techStackService;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
-        return studyRepository.list(pageable);
+        return studyQueryRepository.list(pageable);
     }
 
     public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
-        return studyRepository.search(searchDto, pageable);
+        return studyQueryRepository.search(searchDto, pageable);
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
