@@ -60,13 +60,14 @@ public class StudyService {
 
     @Transactional(readOnly = true)
     public PostReadResponseDto read(Long postId) {
-        StudyRecruitment post = findPost(postId);
+        StudyRecruitment entity = studyQueryRepository.findEntity(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
 
-        return new PostReadResponseDto(post);
+        return new PostReadResponseDto(entity);
     }
 
-    private StudyRecruitment findPost(Long postId) throws IllegalArgumentException {
-        return studyQueryRepository.findEntity(postId)
+    private StudyRecruitment findPost(Long postId) {
+        return studyRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
     }
 }

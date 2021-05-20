@@ -1,11 +1,9 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.QStudyRecruitment;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
-import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -30,6 +28,17 @@ public class StudyRecruitmentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    public Optional<StudyRecruitment> findEntity(Long postId) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(studyRecruitment)
+                .innerJoin(studyRecruitment.writer, user)
+                .leftJoin(studyRecruitment.techStack, techStack)
+                .leftJoin(studyRecruitment.comment, comment)
+                .fetchJoin()
+                .where(idEq(postId))
+                .fetchOne());
+    }
+
     public Page<PostListResponseDto> list(Pageable pageable) {
         List<PostListResponseDto> content = findPosts(pageable);
 
@@ -47,17 +56,6 @@ public class StudyRecruitmentQueryRepository {
                 .where(allEq(cond));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
-
-    public Optional<StudyRecruitment> findEntity(Long postId) {
-        return Optional.ofNullable(queryFactory
-                .selectFrom(QStudyRecruitment.studyRecruitment)
-                .innerJoin(QStudyRecruitment.studyRecruitment.writer, user)
-                .leftJoin(QStudyRecruitment.studyRecruitment.techStack, techStack)
-                .leftJoin(QStudyRecruitment.studyRecruitment.comment, comment)
-                .fetchJoin()
-                .where(QStudyRecruitment.studyRecruitment.id.eq(postId))
-                .fetchOne());
     }
 
     private List<PostListResponseDto> findPosts(Pageable pageable) {
@@ -95,6 +93,10 @@ public class StudyRecruitmentQueryRepository {
                 .and(placeEq(cond))
                 .and(explanationEq(cond))
                 .and(techStackContains(cond));
+    }
+
+    private BooleanExpression idEq(Long postId) {
+        return studyRecruitment.id.eq(postId);
     }
 
     private BooleanExpression titleEq(SearchDto cond) {

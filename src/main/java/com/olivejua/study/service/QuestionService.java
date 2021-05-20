@@ -43,15 +43,14 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public PostReadResponseDto read(Long postId) {
-        Question findPost = questionRepository.findById(postId)
+        Question entity = questionQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
 
-        return new PostReadResponseDto(findPost);
+        return new PostReadResponseDto(entity);
     }
 
     public Long update(Long postId, PostUpdateRequestDto requestDto) {
-        Question post = questionRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+        Question post = findPost(postId);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
 
@@ -59,11 +58,15 @@ public class QuestionService {
     }
 
     public Long delete(Long postId) {
-        Question post = questionRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+        Question post = findPost(postId);
 
         questionRepository.delete(post);
 
         return post.getId();
+    }
+
+    private Question findPost(Long postId) {
+        return questionRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
     }
 }
