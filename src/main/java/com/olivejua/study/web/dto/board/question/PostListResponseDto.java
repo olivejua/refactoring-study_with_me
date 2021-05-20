@@ -1,6 +1,5 @@
 package com.olivejua.study.web.dto.board.question;
 
-import com.olivejua.study.domain.board.Question;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
