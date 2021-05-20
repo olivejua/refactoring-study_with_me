@@ -66,7 +66,7 @@ public class StudyService {
     }
 
     private StudyRecruitment findPost(Long postId) throws IllegalArgumentException {
-        return studyRepository.findById(postId)
+        return studyQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
     }
 }
