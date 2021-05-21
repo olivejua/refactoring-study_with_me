@@ -10,11 +10,9 @@ import java.util.List;
 public class SampleComment {
 
     public static Comment create(User writer, Board post) {
-        return Comment.builder()
-                .post(post)
-                .writer(writer)
-                .content("참여하고 싶습니다")
-                .build();
+        return Comment.createComment(
+                post, writer, "댓글 내용"
+        );
     }
 
     public static List<Comment> createList(User writer, Board post, int size) {
@@ -22,12 +20,8 @@ public class SampleComment {
 
         for(int i=1; i<=size; i++) {
             comments.add(
-                    Comment.builder()
-                            .post(post)
-                            .writer(writer)
-                            .content("참여하고 싶습니다 -" + i)
-                            .build()
-            );
+                    Comment.createComment(
+                        post, writer, "댓글 내용 - "+i));
         }
 
         return comments;

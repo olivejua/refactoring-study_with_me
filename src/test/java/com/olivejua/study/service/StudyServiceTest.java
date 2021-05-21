@@ -7,6 +7,7 @@ import com.olivejua.study.domain.board.TechStack;
 import com.olivejua.study.repository.CommentRepository;
 import com.olivejua.study.repository.ReplyRepository;
 import com.olivejua.study.repository.UserRepository;
+import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
 import com.olivejua.study.sampleData.SampleComment;
@@ -44,6 +45,9 @@ class StudyServiceTest {
 
     @Autowired
     StudyRecruitmentRepository studyRepository;
+
+    @Autowired
+    StudyRecruitmentQueryRepository studyRecruitmentQueryRepository;
 
     @Autowired
     TechStackRepository techStackRepository;
@@ -160,9 +164,6 @@ class StudyServiceTest {
 
         PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
         Page<PostListResponseDto> list = studyService.list(paging);
-        for (PostListResponseDto responseDto : list) {
-            System.out.println("responseDto = " + responseDto);
-        }
 
         assertEquals(20, list.getSize());
     }
@@ -174,9 +175,6 @@ class StudyServiceTest {
         PageRequest paging = PageRequest.of(1, 20, Sort.Direction.ASC, "POST_ID");
         Page<PostListResponseDto> posts =
                 studyService.search(new SearchDto(SearchType.TITLE.name(), "java 스터디 하실분"), paging);
-        for (PostListResponseDto responseDto : posts) {
-            System.out.println("responseDto = " + responseDto);
-        }
 
         assertEquals(20, posts.getSize());
     }

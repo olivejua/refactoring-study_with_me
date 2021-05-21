@@ -22,12 +22,17 @@ public class Condition {
 
     private String explanation;
 
-    @Builder
-    public Condition(String place, LocalDateTime startDate, LocalDateTime endDate, int capacity, String explanation) {
+    private Condition(String place, LocalDateTime startDate, LocalDateTime endDate, int capacity, String explanation) {
         this.place = place;
         this.startDate = startDate;
         this.endDate = endDate;
         this.capacity = capacity;
         this.explanation = explanation;
+    }
+
+    public static Condition createCondition(String place, LocalDateTime startDate,
+                                            LocalDateTime endDate, int capacity, String explanation) {
+        return new Condition(
+                place, startDate, endDate, capacity, explanation);
     }
 }

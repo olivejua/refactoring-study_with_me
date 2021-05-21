@@ -32,11 +32,8 @@ class CommentTest {
         em.persist(post);
 
         //when
-        Comment comment = Comment.builder()
-                .post(post)
-                .writer(commentWriter)
-                .content("참여하고 싶습니다")
-                .build();
+        Comment comment =
+                Comment.createComment(post, commentWriter, "참여하고 싶습니다");
 
         em.persist(comment);
         Comment findComment = em.find(Comment.class, comment.getId());

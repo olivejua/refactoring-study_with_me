@@ -31,12 +31,12 @@ public class PostSaveRequestDto {
     }
 
     public Condition getCondition() {
-        return Condition.builder()
-                .place(place)
-                .startDate(startDate)
-                .endDate(endDate)
-                .capacity(capacity)
-                .explanation(explanation)
-                .build();
+        return Condition.createCondition(
+                place,
+                startDate,
+                endDate,
+                capacity,
+                explanation
+        );
     }
 }

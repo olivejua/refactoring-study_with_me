@@ -55,12 +55,12 @@ class QuestionTest {
     }
 
     private User createWriter() {
-        User user = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User user = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
         em.persist(user);
         return user;

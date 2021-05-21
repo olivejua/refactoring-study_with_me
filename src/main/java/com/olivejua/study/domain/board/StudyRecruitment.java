@@ -24,30 +24,19 @@ public class StudyRecruitment extends Board {
     @Embedded
     private Condition condition;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comment = new ArrayList<>();
 
     /**
      * 글 작성
      */
     public static StudyRecruitment savePost(User writer, String title,
-                                            List<String> languages, Condition condition) {
+                                            List<String> techStacks, Condition condition) {
 
         StudyRecruitment newPost = new StudyRecruitment();
         newPost.createPost(writer, title);
-        newPost.changeTechStacks(languages);
+        newPost.changeTechStacks(techStacks);
         newPost.condition = condition;
 
         return newPost;
-    }
-
-    /**
-     * 기술스택 변경
-     */
-    private void changeTechStacks(List<String> techStack) {
-        this.techStack = techStack.stream()
-                            .map(ts -> new TechStack(this, ts))
-                            .collect(Collectors.toList());
     }
 
     /**
@@ -57,5 +46,12 @@ public class StudyRecruitment extends Board {
         editTitle(title);
         this.condition = condition;
         changeTechStacks(techStack);
+    }
+
+    /**
+     * 기술스택 변경
+     */
+    private void changeTechStacks(List<String> techStack) {
+        this.techStack = TechStack.createTechStacks(this, techStack);
     }
 }

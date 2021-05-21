@@ -25,7 +25,7 @@ public class UserService {
 
     public UserSignupResponseDto join(UserSignupRequestDto requestDto) {
         User user = requestDto.toEntity();
-        user.join();
+        user.changeRoleToUser();
 
         User savedUser = userRepository.save(user);
 

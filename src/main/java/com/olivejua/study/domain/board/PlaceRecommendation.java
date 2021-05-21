@@ -1,5 +1,6 @@
 package com.olivejua.study.domain.board;
 
+import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,9 @@ public class PlaceRecommendation extends Board {
 
     @OneToMany(mappedBy = "post")
     private List<Link> links = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<LikeHistory> likes;
 
     /**
      * 글 작성

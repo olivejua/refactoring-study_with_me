@@ -12,7 +12,8 @@ public class PostListResponseDto {
     int viewCount;
     int commentCount;
 
-    public PostListResponseDto(Long postId, String title, String writerName, int viewCount, int commentCount) {
+    public PostListResponseDto(Long postId, String title, String writerName,
+                               int viewCount, int commentCount) {
         this.postId = postId;
         this.title = title;
         this.writerName = writerName;

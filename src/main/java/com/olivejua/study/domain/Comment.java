@@ -35,11 +35,20 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "comment")
     private List<Reply> replies = new ArrayList<>();
 
-    @Builder
-    public Comment(Board post, User writer, String content) {
+    private Comment(Board post, User writer, String content) {
         this.post = post;
         this.writer = writer;
         this.content = content;
+    }
+
+    /**
+     * 댓글 달기
+     */
+    public static Comment createComment(Board post, User writer, String content) {
+        Comment comment = new Comment(post, writer, content);
+        post.getComment().add(comment);
+
+        return comment;
     }
 
     /**

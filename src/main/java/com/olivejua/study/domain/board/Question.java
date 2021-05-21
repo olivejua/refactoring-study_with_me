@@ -25,9 +25,6 @@ public class Question extends Board {
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comment = new ArrayList<>();
-
     /**
      * 글 등록
      */
