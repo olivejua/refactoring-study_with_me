@@ -46,13 +46,12 @@ public class SampleStudyRecruitment {
 
     static class SampleCondition {
         static Condition create() {
-            return Condition.builder()
-                    .place("강남")
-                    .startDate(LocalDateTime.of(2021, 4, 7, 0, 0))
-                    .endDate(LocalDateTime.of(2021, 6, 7, 0, 0))
-                    .capacity(5)
-                    .explanation("java 프로젝트 할 사람 모집")
-                    .build();
+            return Condition.createCondition(
+                    "강남",
+                    LocalDateTime.of(2021, 4, 7, 0, 0),
+                    LocalDateTime.of(2021, 6, 7, 0, 0),
+                    5,
+                    "java 프로젝트 할 사람 모집");
         }
     }
 

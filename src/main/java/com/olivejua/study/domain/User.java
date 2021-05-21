@@ -28,20 +28,24 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String socialCode;
 
-    @Builder
-    public User(String name, String email, Role role, String socialCode) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
-        this.socialCode = socialCode;
+    public static User createUser(String name, String email, Role role, String socialCode) {
+        User newUser = new User();
+
+        newUser.name = name;
+        newUser.email = email;
+        newUser.role = role;
+        newUser.socialCode = socialCode;
+
+        return newUser;
     }
 
     /**
      * 회원가입
      */
-    public void join() {
+    public void changeRoleToUser() {
         this.role = Role.USER;
     }
+
 
     /**
      * 프로필 변경

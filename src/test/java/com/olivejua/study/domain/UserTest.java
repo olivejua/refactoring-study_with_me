@@ -20,12 +20,13 @@ class UserTest {
     @Test
     @DisplayName("사용자 생성")
     void createWriter() {
-        User user = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User user =
+                User.createUser(
+                        "김슬기",
+                        "tmfrl4710@gmail.com",
+                        Role.GUEST,
+                        "google"
+                );
 
         em.persist(user);
 
@@ -45,15 +46,15 @@ class UserTest {
     @DisplayName("회원가입")
     void join() {
         //given
-        User user = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User user = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
         //when
-        user.join();
+        user.changeRoleToUser();
 
         //then
         assertEquals(Role.USER, user.getRole());
@@ -62,12 +63,12 @@ class UserTest {
     @Test
     @DisplayName("프로필 수정")
     void changeProfile() {
-        User user = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User user = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
         String changedName = "olivejua";
         user.changeProfile(changedName);

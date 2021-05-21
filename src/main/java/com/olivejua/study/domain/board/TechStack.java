@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,14 +25,16 @@ public class TechStack {
 
     private String element;
 
-    // post 없이 Languages만 조회할 일 없음
-    public TechStack(StudyRecruitment post, String element) {
+    // post 없이 TechStack만 조회할 일 없음
+    private TechStack(StudyRecruitment post, String element) {
         this.post = post;
         this.element = element;
     }
 
-    public void setPost(StudyRecruitment post) {
-        this.post = post;
+    public static List<TechStack> createTechStacks(StudyRecruitment post, List<String> elements) {
+        return elements.stream()
+                .map(e -> new TechStack(post, e))
+                .collect(Collectors.toList());
     }
 
     @Override

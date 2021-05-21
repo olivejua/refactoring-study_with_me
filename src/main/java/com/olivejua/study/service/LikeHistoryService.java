@@ -23,7 +23,7 @@ public class LikeHistoryService {
         findLikeHistory(post.getId(), user.getId())
             .ifPresentOrElse(
                     entity -> entity.update(isLike),
-                    () -> LikeHistory.saveLikeHistory(post, user, isLike));
+                    () -> LikeHistory.createLikeHistory(post, user, isLike));
     }
 
     public void delete(Long postId, Long userId) {

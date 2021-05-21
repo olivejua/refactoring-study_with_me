@@ -46,12 +46,12 @@ class LinkTest {
     }
 
     public static List<Link> createLinks(String[] links) {
-        User writer = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User writer = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
         PlaceRecommendation post = PlaceRecommendation.savePost(writer, "제목", "주소",
                 "상세주소", "/tmp", "내용", Arrays.asList(links));

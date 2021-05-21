@@ -32,20 +32,19 @@ public class TechStackTest {
     }
 
     public static List<TechStack> createTechStack(String[] words) {
-        User writer = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        User writer = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
-        Condition condition = Condition.builder()
-                .place("강남")
-                .startDate(LocalDateTime.of(2021, 4, 7, 0, 0))
-                .endDate(LocalDateTime.of(2021, 6, 7, 0, 0))
-                .capacity(5)
-                .explanation("java 프로젝트 할 사람 모집")
-                .build();
+        Condition condition = Condition.createCondition(
+                "강남",
+                LocalDateTime.of(2021, 4, 7, 0, 0),
+                LocalDateTime.of(2021, 6, 7, 0, 0),
+                5,
+                "java 프로젝트 할 사람 모집");
 
         StudyRecruitment post = StudyRecruitment.savePost(writer, "스터디 모집합니다.", Arrays.asList(words), condition);
 

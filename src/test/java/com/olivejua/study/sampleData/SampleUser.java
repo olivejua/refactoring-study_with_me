@@ -8,12 +8,12 @@ import java.util.List;
 
 public class SampleUser {
     public static User create() {
-        return User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        return User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
     }
 
     public static List<User> createList(int size) {
@@ -21,12 +21,12 @@ public class SampleUser {
 
         for(int i=1; i<=size; i++) {
             result.add(
-                    User.builder()
-                        .name("user"+i)
-                        .email("user" + i + "@gmail.com")
-                        .role(Role.GUEST)
-                        .socialCode("google")
-                        .build()
+                    User.createUser(
+                            "user"+i,
+                            "user" + i + "@gmail.com",
+                            Role.GUEST,
+                            "google"
+                    )
             );
         }
 

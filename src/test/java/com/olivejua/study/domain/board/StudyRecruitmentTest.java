@@ -26,12 +26,12 @@ class StudyRecruitmentTest {
 
     @BeforeEach
     void setup() {
-        writer = User.builder()
-                .name("김슬기")
-                .email("tmfrl4710@gmail.com")
-                .role(Role.GUEST)
-                .socialCode("google")
-                .build();
+        writer = User.createUser(
+                "김슬기",
+                "tmfrl4710@gmail.com",
+                Role.GUEST,
+                "google"
+        );
 
         em.persist(writer);
     }
@@ -59,13 +59,13 @@ class StudyRecruitmentTest {
         post.getTechStack().forEach(em::persist);
 
         //when
-        Condition changedCondition = Condition.builder()
-                .place("사당")
-                .startDate(LocalDateTime.of(2021, 4, 7, 0, 0))
-                .endDate(LocalDateTime.of(2021, 10, 7, 0, 0))
-                .capacity(10)
-                .explanation("java 프로젝트 할 사람 모집 - 수정")
-                .build();
+        Condition changedCondition = Condition.createCondition(
+                "강남",
+                LocalDateTime.of(2021, 4, 7, 0, 0),
+                LocalDateTime.of(2021, 6, 7, 0, 0),
+                5,
+                "java 프로젝트 할 사람 모집"
+        );
 
         List<String> changedTechStack = new ArrayList<>();
         changedTechStack.add("node");

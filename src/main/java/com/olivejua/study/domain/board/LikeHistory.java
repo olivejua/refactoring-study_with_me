@@ -23,7 +23,7 @@ public class LikeHistory {
     @Column(nullable = false, columnDefinition = "TINYINT(1)", name = "IS_LIKE")
     private boolean isLike;
 
-    public static LikeHistory saveLikeHistory(PlaceRecommendation post, User user, boolean isLike) {
+    public static LikeHistory createLikeHistory(PlaceRecommendation post, User user, boolean isLike) {
         LikeHistory like = new LikeHistory();
         like.post = post;
         like.user = user;

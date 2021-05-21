@@ -32,12 +32,18 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "POST_ID")
     private Board board;
 
-    public Reply(Long id, User writer, Comment comment, String content, Board board) {
-        this.id = id;
-        this.writer = writer;
+    private Reply(Comment comment, User writer, String content) {
+        this.board = comment.getPost();
         this.comment = comment;
+        this.writer = writer;
         this.content = content;
-        this.board = board;
+    }
+
+    public static Reply createReply(Comment comment, User writer, String content) {
+        Reply reply = new Reply(comment, writer, content);
+        comment.getReplies().add(reply);
+
+        return reply;
     }
 
     /**
@@ -45,5 +51,12 @@ public class Reply extends BaseTimeEntity {
      */
     public void edit(String content) {
         this.content = content;
+    }
+
+    /**
+     * 대댓글 삭제
+     */
+    public void delete() {
+        comment.getReplies().remove(this);
     }
 }

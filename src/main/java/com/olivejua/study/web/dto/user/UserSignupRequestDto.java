@@ -1,5 +1,6 @@
 package com.olivejua.study.web.dto.user;
 
+import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,8 @@ public class UserSignupRequestDto {
     }
 
     public User toEntity() {
-        return User.builder()
-                .name(name)
-                .email(email)
-                .socialCode(socialCode)
-                .build();
+        return User.createUser(
+                name, email, Role.USER, socialCode
+        );
     }
 }

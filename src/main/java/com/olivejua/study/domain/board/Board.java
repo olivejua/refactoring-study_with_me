@@ -1,10 +1,14 @@
 package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.BaseTimeEntity;
+import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import lombok.Getter;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -26,6 +30,9 @@ public abstract class Board extends BaseTimeEntity {
     private String title;
 
     private int viewCount;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comment = new ArrayList<>();
 
     /**
      * 새 게시글 작성
