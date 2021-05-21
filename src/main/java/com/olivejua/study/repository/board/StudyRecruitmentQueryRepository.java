@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,12 @@ public class StudyRecruitmentQueryRepository {
         List<PostListResponseDto> content = findPosts(pageable, cond);
         JPAQuery<StudyRecruitment> countQuery = queryFactory
                 .selectFrom(studyRecruitment)
-                .where(allEq(cond));
+                .where(
+                        titleContains(cond),
+                        placeContains(cond),
+                        explanationContains(cond),
+                        techStackContains(cond)
+                );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -69,7 +75,12 @@ public class StudyRecruitmentQueryRepository {
                 .leftJoin(studyRecruitment.techStack, techStack)
                 .leftJoin(studyRecruitment.comment, comment)
                 .fetchJoin()
-                .where(cond == null ? null : allEq(cond))
+                .where(
+                        titleContains(cond),
+                        placeContains(cond),
+                        explanationContains(cond),
+                        techStackContains(cond)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -88,34 +99,43 @@ public class StudyRecruitmentQueryRepository {
                 )).collect(Collectors.toList());
     }
 
-    private BooleanExpression allEq(SearchDto cond) {
-        return titleEq(cond)
-                .and(placeEq(cond))
-                .and(explanationEq(cond))
-                .and(techStackContains(cond));
-    }
-
     private BooleanExpression idEq(Long postId) {
         return studyRecruitment.id.eq(postId);
     }
 
-    private BooleanExpression titleEq(SearchDto cond) {
-        return cond.getSearchType() == SearchType.TITLE && cond.getKeyword() != null
-                ? studyRecruitment.title.contains(cond.getKeyword()) : null;
+    private BooleanExpression titleContains(SearchDto cond) {
+        if (cond != null
+                && cond.getSearchType() == SearchType.TITLE
+                && StringUtils.isEmpty(cond.getKeyword()))
+            return studyRecruitment.title.contains(cond.getKeyword());
+
+        return null;
     }
 
-    private BooleanExpression placeEq(SearchDto cond) {
-        return cond.getSearchType() == SearchType.PLACE && cond.getKeyword() != null
-                ? studyRecruitment.condition.place.contains(cond.getKeyword()) : null;
+    private BooleanExpression placeContains(SearchDto cond) {
+        if (cond != null
+                && cond.getSearchType() == SearchType.PLACE
+                && StringUtils.isEmpty(cond.getKeyword()))
+            return studyRecruitment.condition.place.contains(cond.getKeyword());
+
+        return null;
     }
 
-    private BooleanExpression explanationEq(SearchDto cond) {
-        return cond.getSearchType() == SearchType.EXPLANATION && cond.getKeyword() != null
-                ? studyRecruitment.condition.explanation.contains(cond.getKeyword()) : null;
+    private BooleanExpression explanationContains(SearchDto cond) {
+        if (cond != null
+                && cond.getSearchType() == SearchType.EXPLANATION
+                && StringUtils.isEmpty(cond.getKeyword()))
+            return studyRecruitment.condition.explanation.contains(cond.getKeyword());
+
+        return null;
     }
 
     private BooleanExpression techStackContains(SearchDto cond) {
-        return cond.getSearchType() == SearchType.TECH_STACK && cond.getKeyword() != null
-                ? techStack.element.contains(cond.getKeyword()) : null;
+        if (cond != null
+                && cond.getSearchType() == SearchType.TECH_STACK
+                && StringUtils.isEmpty(cond.getKeyword()))
+            return techStack.element.contains(cond.getKeyword());
+
+        return null;
     }
 }
