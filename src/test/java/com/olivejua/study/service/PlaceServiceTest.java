@@ -9,12 +9,10 @@ import com.olivejua.study.repository.ReplyRepository;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.LinkRepository;
-import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import com.olivejua.study.sampleData.SampleComment;
 import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
-import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,6 @@ import java.util.List;
 
 import static com.olivejua.study.domain.board.QLink.link;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.placeRecommendation;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -38,9 +35,6 @@ public class PlaceServiceTest {
 
     @Autowired
     PlaceRecommendationRepository placeRecommendationRepository;
-
-    @Autowired
-    PlaceRecommendationQueryRepository placeRecommendationQueryRepository;
 
     @Autowired
     LinkRepository linkRepository;
@@ -92,11 +86,6 @@ public class PlaceServiceTest {
 
         em.flush();
         em.clear();
-
-        PostReadResponseDto responseDto = placeService.read(post.getId());
-
-        assertEquals(5, responseDto.getComments().size());
-        assertEquals(5, responseDto.getLikes().size());
     }
 
     @Test

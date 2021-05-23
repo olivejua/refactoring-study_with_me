@@ -1,7 +1,9 @@
 package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.User;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
