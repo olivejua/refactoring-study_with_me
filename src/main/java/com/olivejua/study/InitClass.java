@@ -7,10 +7,6 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.Condition;
 import com.olivejua.study.domain.board.StudyRecruitment;
-import com.olivejua.study.domain.board.TechStack;
-import com.olivejua.study.repository.UserRepository;
-import com.olivejua.study.repository.board.StudyRecruitmentRepository;
-import com.olivejua.study.repository.board.TechStackRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -20,9 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Profile("local")
 @Component
@@ -41,12 +35,7 @@ public class InitClass {
     static class InitDataService {
         private final EntityManager em;
 
-        private final StudyRecruitmentRepository studyRecruitmentRepository;
-        private final UserRepository userRepository;
-        private final TechStackRepository techStackRepository;
-
         private List<User> users;
-        private List<StudyRecruitment> studyPosts;
 
         @Transactional
         public void init() {
@@ -54,7 +43,7 @@ public class InitClass {
             users = getUsers();
 
             // TODO StudyRecruitment 생성 (+ TechStack 생성, Comment 생성, Reply 생성)
-            studyPosts = getStudyPosts();
+            List<StudyRecruitment> studyPosts = getStudyPosts();
 
             // TODO PlaceRecommendation 생성 (+ Link 생성, Like 생성, Comment 생성, Reply 생성)
 
@@ -110,6 +99,37 @@ public class InitClass {
             return results;
         }
 
+        private List<Comment> createComments(Board post, int size) {
+            List<Comment> results = new ArrayList<>();
+
+            int startIdx = 50;
+
+            for (int i=startIdx; i<startIdx+size; i++) {
+                Comment comment = Comment.createComment(
+                        post, users.get(i), "Sample Comment Content-" + i);
+
+                createReplies(comment, 3);
+
+                results.add(comment);
+            }
+
+            return results;
+        }
+
+        private List<Reply> createReplies(Comment comment, int size) {
+            List<Reply> results = new ArrayList<>();
+
+            int startIdx = 100;
+
+            for (int i=startIdx; i<startIdx+size; i++) {
+                results.add(
+                        Reply.createReply(
+                                comment, users.get(i), "Sample Comment Content-" + i));
+            }
+
+            return results;
+        }
+
         class SampleStudyRecruitment {
             private List<StudyRecruitment> createStudyPosts(int size) {
                 List<StudyRecruitment> results = new ArrayList<>();
@@ -145,37 +165,6 @@ public class InitClass {
                         "sample explanation"
                 );
             }
-        }
-
-        private List<Comment> createComments(Board post, int size) {
-            List<Comment> results = new ArrayList<>();
-
-            int startIdx = 50;
-
-            for (int i=startIdx; i<startIdx+size; i++) {
-                Comment comment = Comment.createComment(
-                        post, users.get(i), "Sample Comment Content-" + i);
-
-                createReplies(comment, 3);
-
-                results.add(comment);
-            }
-
-            return results;
-        }
-
-        private List<Reply> createReplies(Comment comment, int size) {
-            List<Reply> results = new ArrayList<>();
-
-            int startIdx = 100;
-
-            for (int i=startIdx; i<startIdx+size; i++) {
-                results.add(
-                        Reply.createReply(
-                                comment, users.get(i), "Sample Comment Content-" + i));
-            }
-
-            return results;
         }
     }
 }

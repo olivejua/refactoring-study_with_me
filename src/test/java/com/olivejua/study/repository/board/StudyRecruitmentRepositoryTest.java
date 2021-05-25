@@ -6,6 +6,7 @@ import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.search.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchType;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,7 @@ class StudyRecruitmentRepositoryTest {
 
         List<User> users = SampleUser.createList(5);
 
-        List<StudyRecruitment> posts = SampleStudyRecruitment.createList(users, titles, tsList);
+        List<StudyRecruitment> posts = SampleStudyRecruitment.createList100(users, titles, tsList);
         posts.forEach(post -> {
             userRepository.save(post.getWriter());
             studyRecruitmentRepository.save(post);
@@ -118,15 +119,8 @@ class StudyRecruitmentRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> savedPosts = studyQueryRepository.search(new SearchDto("TECH_STACK", "java"), paging);
-        for (PostListResponseDto post : savedPosts) {
-            System.out.println("post = " + post);
-        }
-
-        System.out.println("PAGE SIZE : " + savedPosts.getSize());
-        System.out.println("TOTAL PAGES : " + savedPosts.getTotalPages());
-        System.out.println("TOTAL COUNT : " + savedPosts.getTotalElements());
-        System.out.println("NEXT : " + savedPosts.getPageable());
+        Page<PostListResponseDto> savedPosts =
+                studyQueryRepository.search(new SearchDto(SearchType.TECH_STACK.name(), "java"), paging);
     }
 
 }

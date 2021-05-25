@@ -96,7 +96,8 @@ public class PlaceServiceTest {
         PostReadResponseDto responseDto = placeService.read(post.getId());
 
         assertEquals(5, responseDto.getComments().size());
-        assertEquals(5, responseDto.getLikes().size());
+        assertEquals(5, responseDto.getLikeCount());
+        assertEquals(0, responseDto.getDislikeCount());
     }
 
     @Test
