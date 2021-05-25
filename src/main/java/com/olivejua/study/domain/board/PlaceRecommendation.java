@@ -37,8 +37,8 @@ public class PlaceRecommendation extends Board {
      * 글 작성
      */
     public static PlaceRecommendation savePost(User writer, String title,
-                           String address, String addressDetail,
-                           String thumbnailPath, String content, List<String> links) {
+                                               String address, String addressDetail,
+                                               String thumbnailPath, String content, List<String> links) {
 
         PlaceRecommendation newPost = new PlaceRecommendation();
         newPost.createPost(writer, title);

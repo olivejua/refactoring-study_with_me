@@ -20,10 +20,10 @@ public class LikeHistoryService {
     public void update(Long postId, User user, boolean isLike) {
         PlaceRecommendation post = findPost(postId);
 
-        findLikeHistory(post.getId(), user.getId())
-            .ifPresentOrElse(
-                    entity -> entity.update(isLike),
-                    () -> LikeHistory.createLikeHistory(post, user, isLike));
+//        findLikeHistory(post.getId(), user.getId())
+//            .ifPresentOrElse(
+//                    entity -> entity.update(isLike),
+//                    () -> LikeHistory.saveLikeHistory(post, user, isLike));
     }
 
     public void delete(Long postId, Long userId) {
