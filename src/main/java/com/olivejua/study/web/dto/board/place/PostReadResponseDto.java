@@ -1,8 +1,10 @@
 package com.olivejua.study.web.dto.board.place;
 
+import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import com.olivejua.study.web.dto.user.WriterReadDto;
 import lombok.Getter;
 
@@ -26,11 +28,13 @@ public class PostReadResponseDto {
     private int viewCount;
     private LikeStatus likeStatus;
     private LocalDateTime createDate;
+    private List<CommentReadResponseDto> comments;
 
     public PostReadResponseDto(Long postId, String title, User writer,
                                String address, String addressDetail, String thumbnailPath,
-                               String content, List<Link> links, int likeCount,
-                               int dislikeCount, int viewCount, LocalDateTime createDate) {
+                               String content, List<Link> links, Long likeCount,
+                               Long dislikeCount, int viewCount, LocalDateTime createDate,
+                               List<Comment> comments) {
         this.postId = postId;
         this.title = title;
         this.writer = new WriterReadDto(writer);
@@ -42,10 +46,13 @@ public class PostReadResponseDto {
                 .map(Link::getElement)
                 .collect(Collectors.toList());
 
-        this.likeCount = likeCount;
-        this.dislikeCount = dislikeCount;
+        this.likeCount = likeCount.intValue();
+        this.dislikeCount = dislikeCount.intValue();
         this.viewCount = viewCount;
         this.createDate = createDate;
+        this.comments = comments.stream()
+                .map(CommentReadResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     private enum LikeStatus {

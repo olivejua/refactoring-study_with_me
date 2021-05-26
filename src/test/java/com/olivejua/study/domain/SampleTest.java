@@ -38,6 +38,7 @@ public class SampleTest {
 @Entity
 class Person {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "person_id")
     private Long id;
 
     private String name;
