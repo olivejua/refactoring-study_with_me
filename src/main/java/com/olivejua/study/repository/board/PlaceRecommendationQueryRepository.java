@@ -27,43 +27,12 @@ public class PlaceRecommendationQueryRepository {
     public Optional<PlaceRecommendation> findEntity(Long postId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(placeRecommendation)
-                .innerJoin(placeRecommendation.writer, user)
+                .join(placeRecommendation.writer, user)
                 .leftJoin(placeRecommendation.links, link)
+                .leftJoin(placeRecommendation.likes, likeHistory)
                 .leftJoin(placeRecommendation.comment, comment)
                 .where(idEq(postId))
                 .fetchOne());
-    }
-
-    public PostReadResponseDto findReadDto(Long postId) {
-        return queryFactory
-                .select(Projections.constructor(
-                        PostReadResponseDto.class,
-                        placeRecommendation.id,
-                        placeRecommendation.title,
-                        placeRecommendation.writer,
-                        placeRecommendation.address,
-                        placeRecommendation.addressDetail,
-                        placeRecommendation.thumbnailPath,
-                        placeRecommendation.content,
-                        placeRecommendation.links,
-                        JPAExpressions
-                                .select(likeHistory.count())
-                                .from(likeHistory)
-                                .where(likeHistory.post.id.eq(postId), likeHistory.isLike.isTrue()),
-                        JPAExpressions
-                                .select(likeHistory.count())
-                                .from(likeHistory)
-                                .where(likeHistory.post.id.eq(postId), likeHistory.isLike.isFalse()),
-                        placeRecommendation.viewCount,
-                        placeRecommendation.createdDate,
-                        placeRecommendation.comment
-                ))
-                .from(placeRecommendation)
-                .innerJoin(placeRecommendation.writer, user)
-                .leftJoin(placeRecommendation.links, link)
-                .leftJoin(placeRecommendation.comment, comment)
-                .where(idEq(postId))
-                .fetchOne();
     }
 
     private BooleanExpression idEq(Long postId) {
