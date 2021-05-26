@@ -1,7 +1,7 @@
 package com.olivejua.study.web.dto.board.place;
 
-import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
@@ -30,27 +30,26 @@ public class PostReadResponseDto {
     private LocalDateTime createDate;
     private List<CommentReadResponseDto> comments;
 
-    public PostReadResponseDto(Long postId, String title, User writer,
-                               String address, String addressDetail, String thumbnailPath,
-                               String content, List<Link> links, Long likeCount,
-                               Long dislikeCount, int viewCount, LocalDateTime createDate,
-                               List<Comment> comments) {
-        this.postId = postId;
-        this.title = title;
-        this.writer = new WriterReadDto(writer);
-        this.address = address;
-        this.addressDetail = addressDetail;
-        this.thumbnailPath = thumbnailPath;
-        this.content = content;
-        this.links = links.stream()
+
+    public PostReadResponseDto(PlaceRecommendation entity) {
+        this.postId = entity.getId();
+        this.title = entity.getTitle();
+        this.writer = new WriterReadDto(entity.getWriter());
+        this.address = entity.getAddress();
+        this.addressDetail = entity.getAddressDetail();
+        this.thumbnailPath = entity.getThumbnailPath();
+        this.content = entity.getContent();
+        this.links = entity.getLinks().stream()
                 .map(Link::getElement)
                 .collect(Collectors.toList());
 
-        this.likeCount = likeCount.intValue();
-        this.dislikeCount = dislikeCount.intValue();
-        this.viewCount = viewCount;
-        this.createDate = createDate;
-        this.comments = comments.stream()
+        this.likeCount = (int) entity.getLikes().stream()
+                .filter(LikeHistory::isLike).count();
+        this.dislikeCount = (int) entity.getLikes().stream()
+                .filter(e -> !e.isLike()).count();
+        this.viewCount = entity.getViewCount();
+        this.createDate = entity.getCreatedDate();
+        this.comments = entity.getComment().stream()
                 .map(CommentReadResponseDto::new)
                 .collect(Collectors.toList());
     }

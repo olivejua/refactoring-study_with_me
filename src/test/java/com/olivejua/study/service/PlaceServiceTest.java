@@ -3,7 +3,6 @@ package com.olivejua.study.service;
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.repository.CommentRepository;
 import com.olivejua.study.repository.ReplyRepository;
@@ -17,7 +16,6 @@ import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.olivejua.study.domain.board.QLink.link;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.placeRecommendation;
@@ -97,13 +93,11 @@ public class PlaceServiceTest {
         em.flush();
         em.clear();
 
-        PlaceRecommendation read = placeService.read(post.getId());
+        PostReadResponseDto responseDto = placeService.read(post.getId());
 
-        List<String> links = read.getLinks().stream()
-                .map(Link::getElement)
-                .collect(Collectors.toList());
-
-        assertEquals(links, Arrays.asList("www.google.com", "www.naver.com", "www.tistory.com", "www.daum.net", "www.github.com"));
+        assertEquals(5, responseDto.getComments().size());
+        assertEquals(5, responseDto.getLikeCount());
+        assertEquals(0, responseDto.getDislikeCount());
     }
 
     @Test
@@ -132,7 +126,14 @@ public class PlaceServiceTest {
         em.flush();
         em.clear();
 
-        PostReadResponseDto readDto = placeRecommendationQueryRepository.findReadDto(post.getId());
-        assertEquals(5, readDto.getComments().size());
+//        queryFactory
+//                .selectFrom(link)
+//                .leftJoin(link.post, placeRecommendation)
+//                .fetch();
+
+        queryFactory
+                .selectFrom(placeRecommendation)
+                .rightJoin(placeRecommendation.links, link)
+                .fetch();
     }
 }

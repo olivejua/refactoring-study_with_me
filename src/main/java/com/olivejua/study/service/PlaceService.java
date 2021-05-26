@@ -54,6 +54,14 @@ public class PlaceService {
         placeRepository.delete(post);
     }
 
+    @Transactional(readOnly = true)
+    public PostReadResponseDto read(Long postId) {
+        PlaceRecommendation entity = placeQueryRepository.findEntity(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. postId=" + postId));
+
+        return new PostReadResponseDto(entity);
+    }
+
     private PlaceRecommendation findPost(Long postId) {
         return placeRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
