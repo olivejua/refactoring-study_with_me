@@ -162,7 +162,7 @@ class StudyServiceTest {
     void list() {
         createSampleData();
 
-        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
+        PageRequest paging = PageRequest.of(1, 20, Sort.Direction.ASC, "POST_ID");
         Page<PostListResponseDto> list = studyService.list(paging);
 
         assertEquals(20, list.getSize());
