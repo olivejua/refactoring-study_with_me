@@ -1,5 +1,6 @@
 package com.olivejua.study.web.dto.board.place;
 
+import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 
@@ -15,17 +16,18 @@ public class PostListResponseDto {
     private int dislikeCount;
     private int viewCount;
     private LocalDateTime createdDate;
+    private int commentCount;
+    private User writer;
 
 
-    public PostListResponseDto(PlaceRecommendation entity) {
+    public PostListResponseDto(PlaceRecommendation entity, long commentCount) {
         this.postId = entity.getId();
         this.writerName = entity.getWriter().getName();
         this.title = entity.getTitle();
         this.thumbnailPath = entity.getThumbnailPath();
-        this.likeCount = getLikeCount(entity.getLikes(), true);
-        this.dislikeCount = getLikeCount(entity.getLikes(), false);
         this.viewCount = entity.getViewCount();
         this.createdDate = entity.getCreatedDate();
+        this.commentCount = (int) commentCount;
     }
 
     public PostListResponseDto(Long postId, String writerName, String title,
