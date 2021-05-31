@@ -30,7 +30,7 @@
 
 
 # 기능
-[1. 회원가입/로그인](/docs/function/user/userPage.md)
+1. [회원가입/로그인](/docs/function/user/userPage.md)
 2. 게시판
     1. 스터디 모집
     2. 장소 추천
