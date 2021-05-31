@@ -7,6 +7,7 @@ import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,31 @@ public class PlaceRecommendationQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    public Page<PostListResponseDto> list(Pageable pageable) {
+        List<PlaceRecommendation> entities = findPosts(pageable);
+
+        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
+
+        JPAQuery<PlaceRecommendation> countQuery = queryFactory
+                .selectFrom(placeRecommendation);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
+        List<PlaceRecommendation> entities = findPosts(pageable, cond);
+        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
+
+        JPAQuery<PlaceRecommendation> countQuery = queryFactory
+                .selectFrom(placeRecommendation)
+                .where(
+                        titleContains(cond),
+                        contentContains(cond),
+                        addressContains(cond)
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
 
     public Optional<PlaceRecommendation> findEntity(Long postId) {
         return Optional.ofNullable(queryFactory
@@ -56,17 +83,6 @@ public class PlaceRecommendationQueryRepository {
                         user.id.eq(userId),
                         placeRecommendation.id.eq(postId))
                 .fetchOne());
-    }
-
-    public Page<PostListResponseDto> list(Pageable pageable) {
-        List<PlaceRecommendation> entities = findPosts(pageable);
-
-        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
-
-        JPAQuery<PlaceRecommendation> countQuery = queryFactory
-                .selectFrom(placeRecommendation);
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
     private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> commentCounts) {
@@ -107,6 +123,11 @@ public class PlaceRecommendationQueryRepository {
         return queryFactory
                 .selectFrom(placeRecommendation)
                 .join(placeRecommendation.writer, user).fetchJoin()
+                .where(
+                        titleContains(cond),
+                        contentContains(cond),
+                        addressContains(cond)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -114,5 +135,33 @@ public class PlaceRecommendationQueryRepository {
 
     private BooleanExpression idEq(Long postId) {
         return placeRecommendation.id.eq(postId);
+    }
+
+    private BooleanExpression titleContains(SearchDto cond) {
+        if(cond != null
+                && cond.getSearchType() == SearchType.TITLE
+                && !StringUtils.isEmpty(cond.getKeyword()))
+            return placeRecommendation.title.contains(cond.getKeyword());
+
+        return null;
+    }
+
+    private BooleanExpression contentContains(SearchDto cond) {
+        if(cond != null
+                && cond.getSearchType() == SearchType.CONTENT
+                && !StringUtils.isEmpty(cond.getKeyword()))
+            return placeRecommendation.content.contains(cond.getKeyword());
+
+        return null;
+    }
+
+    private BooleanExpression addressContains(SearchDto cond) {
+        if(cond != null
+                && cond.getSearchType() == SearchType.ADDRESS
+                && !StringUtils.isEmpty(cond.getKeyword()))
+            return placeRecommendation.address.contains(cond.getKeyword())
+                    .or(placeRecommendation.addressDetail.contains(cond.getKeyword()));
+
+        return null;
     }
 }

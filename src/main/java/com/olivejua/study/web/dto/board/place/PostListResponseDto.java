@@ -3,10 +3,12 @@ package com.olivejua.study.web.dto.board.place;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 public class PostListResponseDto {
     private Long postId;
     private String writerName;
@@ -17,7 +19,6 @@ public class PostListResponseDto {
     private int viewCount;
     private LocalDateTime createdDate;
     private int commentCount;
-    private User writer;
 
 
     public PostListResponseDto(PlaceRecommendation entity, long commentCount) {
@@ -28,6 +29,7 @@ public class PostListResponseDto {
         this.viewCount = entity.getViewCount();
         this.createdDate = entity.getCreatedDate();
         this.commentCount = (int) commentCount;
+        updateLikeCount(entity.getLikes());
     }
 
     public PostListResponseDto(Long postId, String writerName, String title,
@@ -43,9 +45,13 @@ public class PostListResponseDto {
         this.createdDate = createdDate;
     }
 
-    private int getLikeCount(List<LikeHistory> likes, boolean isLike) {
-        return (int) likes.stream()
-                .filter(like -> like.isLike()==isLike)
+    private void updateLikeCount(List<LikeHistory> likes) {
+        this.likeCount = (int) likes.stream()
+                .filter(like -> like.isLike())
+                .count();
+
+        this.dislikeCount = (int) likes.stream()
+                .filter(like -> !like.isLike())
                 .count();
     }
 }

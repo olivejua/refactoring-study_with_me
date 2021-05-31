@@ -1,15 +1,15 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.QComment;
-import com.olivejua.study.domain.QUser;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.*;
+import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.domain.board.QLink;
 import com.olivejua.study.domain.board.QPlaceRecommendation;
 import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -129,21 +129,104 @@ class PlaceRecommendationQueryRepositoryTest {
 
     @Test
     void testList() {
-        em.persist(Comment.createComment(post1, writer, "example content1"));
-        em.persist(Comment.createComment(post1, writer, "example content2"));
-        em.persist(Comment.createComment(post1, writer, "example content3"));
-        em.persist(Comment.createComment(post2, writer, "example content4"));
-        em.persist(Comment.createComment(post2, writer, "example content5"));
+        em.persist(Comment.createComment(post1, writer, "post1 content1"));
+        em.persist(Comment.createComment(post1, writer, "post1 content2"));
+        em.persist(Comment.createComment(post1, writer, "post1 content3"));
+        em.persist(Comment.createComment(post2, writer, "post2 content1"));
+        em.persist(Comment.createComment(post2, writer, "post2 content2"));
+
+        User likeUser1 = User.createUser("like user1", "likeUser1@gmail.com", Role.USER, "google");
+        User likeUser2 = User.createUser("like user2", "likeUser2@gmail.com", Role.USER, "google");
+        User likeUser3 = User.createUser("like user3", "likeUser3@gmail.com", Role.USER, "google");
+        User likeUser4 = User.createUser("like user4", "likeUser4@gmail.com", Role.USER, "google");
+        User likeUser5 = User.createUser("like user5", "likeUser5@gmail.com", Role.USER, "google");
+        em.persist(likeUser1);
+        em.persist(likeUser2);
+        em.persist(likeUser3);
+        em.persist(likeUser4);
+        em.persist(likeUser5);
+
+        //post1: like-2, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser1, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser2, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser3, false));
+
+        //post2: like-1, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser4, true));
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser5, false));
 
         em.flush();
         em.clear();
 
         PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
-        Page<PostListResponseDto> list = repository.list(paging);
+        Page<PostListResponseDto> results = repository.list(paging);
+        List<PostListResponseDto> list = results.getContent();
 
-        for (PostListResponseDto postListResponseDto : list) {
-            System.out.println(postListResponseDto);
-        }
+        assertEquals(2, list.size());
+
+        PostListResponseDto post1 = list.get(0);
+        assertEquals(3, post1.getCommentCount());
+        assertEquals(2, post1.getLikeCount());
+        assertEquals(1, post1.getDislikeCount());
+
+        PostListResponseDto post2 = list.get(1);
+        assertEquals(2, post2.getCommentCount());
+        assertEquals(1, post2.getLikeCount());
+        assertEquals(1, post2.getDislikeCount());
+    }
+
+    @Test
+    void testSearch() {
+        em.persist(Comment.createComment(post1, writer, "post1 content1"));
+        em.persist(Comment.createComment(post1, writer, "post1 content2"));
+        em.persist(Comment.createComment(post1, writer, "post1 content3"));
+        em.persist(Comment.createComment(post2, writer, "post2 content1"));
+        em.persist(Comment.createComment(post2, writer, "post2 content2"));
+
+        User likeUser1 = User.createUser("like user1", "likeUser1@gmail.com", Role.USER, "google");
+        User likeUser2 = User.createUser("like user2", "likeUser2@gmail.com", Role.USER, "google");
+        User likeUser3 = User.createUser("like user3", "likeUser3@gmail.com", Role.USER, "google");
+        User likeUser4 = User.createUser("like user4", "likeUser4@gmail.com", Role.USER, "google");
+        User likeUser5 = User.createUser("like user5", "likeUser5@gmail.com", Role.USER, "google");
+        em.persist(likeUser1);
+        em.persist(likeUser2);
+        em.persist(likeUser3);
+        em.persist(likeUser4);
+        em.persist(likeUser5);
+
+        //post1: like-2, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser1, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser2, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser3, false));
+
+        //post2: like-1, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser4, true));
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser5, false));
+
+        em.flush();
+        em.clear();
+
+        PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
+        SearchDto searchDto = new SearchDto(SearchType.TITLE.name(), "tle1");
+        Page<PostListResponseDto> results1 = repository.search(searchDto, paging);
+        List<PostListResponseDto> list1 = results1.getContent();
+
+        assertEquals(1, list1.size());
+        assertEquals("title1", list1.get(0).getTitle());
+
+        searchDto = new SearchDto(SearchType.ADDRESS.name(), "ress2");
+        Page<PostListResponseDto> results2 = repository.search(searchDto, paging);
+        List<PostListResponseDto> list2 = results2.getContent();
+
+        assertEquals(1, list2.size());
+        assertEquals("title2", list2.get(0).getTitle());
+
+
+        searchDto = new SearchDto(SearchType.CONTENT.name(), "content");
+        Page<PostListResponseDto> results3 = repository.search(searchDto, paging);
+        List<PostListResponseDto> list3 = results3.getContent();
+
+        assertEquals(2, list3.size());
     }
 }
 
