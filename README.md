@@ -9,6 +9,7 @@
 - JAVA 8버전
 - Spring Boot 2.4.4버전
 - JPA
+- Querydsl
 - Spring Security
 - Junit Test
 - MariaDB
@@ -28,3 +29,10 @@
 - [주소 API] postcodify
 
 
+# 기능
+[1. 회원가입/로그인](/docs/function/user/userPage.md)
+2. 게시판
+    1. 스터디 모집
+    2. 장소 추천
+    3. 질문
+3. 웹 구축
