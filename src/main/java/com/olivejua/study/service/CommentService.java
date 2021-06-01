@@ -38,7 +38,6 @@ public class CommentService {
         Comment comment = findComment(commentId);
         
         //reply 먼저 지우기
-        
         commentRepository.delete(comment);
 
         return commentId;

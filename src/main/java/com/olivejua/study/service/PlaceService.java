@@ -67,7 +67,10 @@ public class PlaceService {
 
     public void delete(Long postId) {
         PlaceRecommendation post = findPost(postId);
-
+        
+        //reply 지우기
+        //comment 지우기
+        //likeHistory 지우기
         linkService.delete(post);
         placeRepository.delete(post);
     }

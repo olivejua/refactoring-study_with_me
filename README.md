@@ -36,3 +36,9 @@
     2. 장소 추천
     3. 질문
 3. 웹 구축
+
+
+# 리팩토링
+1. [Querydsl을 활용한 select 쿼리 최적화](/docs/refactoring/aboutQuerydsl/updateQueries.md)
+2. 엔티티 연관관계 보완
+3. 1메소드당 최소 1테스트케이스 작성

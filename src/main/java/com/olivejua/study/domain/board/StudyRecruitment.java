@@ -1,14 +1,15 @@
 package com.olivejua.study.domain.board;
 
-import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -29,11 +30,11 @@ public class StudyRecruitment extends Board {
      * 글 작성
      */
     public static StudyRecruitment savePost(User writer, String title,
-                                            List<String> techStacks, Condition condition) {
+                                            List<String> techStack, Condition condition) {
 
         StudyRecruitment newPost = new StudyRecruitment();
         newPost.createPost(writer, title);
-        newPost.changeTechStacks(techStacks);
+        newPost.changeTechStacks(techStack);
         newPost.condition = condition;
 
         return newPost;
@@ -52,6 +53,6 @@ public class StudyRecruitment extends Board {
      * 기술스택 변경
      */
     private void changeTechStacks(List<String> techStack) {
-        this.techStack = TechStack.createTechStacks(this, techStack);
+        techStack.forEach(e -> new TechStack().changeTechStack(this, e));
     }
 }

@@ -25,16 +25,10 @@ public class TechStack {
 
     private String element;
 
-    // post 없이 TechStack만 조회할 일 없음
-    private TechStack(StudyRecruitment post, String element) {
+    public void changeTechStack(StudyRecruitment post, String element) {
         this.post = post;
         this.element = element;
-    }
-
-    public static List<TechStack> createTechStacks(StudyRecruitment post, List<String> elements) {
-        return elements.stream()
-                .map(e -> new TechStack(post, e))
-                .collect(Collectors.toList());
+        post.getTechStack().add(this);
     }
 
     @Override

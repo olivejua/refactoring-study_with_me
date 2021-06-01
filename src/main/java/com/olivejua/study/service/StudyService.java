@@ -54,6 +54,8 @@ public class StudyService {
     public void delete(Long postId) {
         StudyRecruitment post = findPost(postId);
 
+        //reply 지우기
+        //comment 지우기
         techStackService.delete(post);
         studyRepository.delete(post);
     }

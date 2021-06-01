@@ -10,79 +10,98 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class StudyRecruitmentTest {
 
     @Autowired
-    TestEntityManager em;
+    EntityManager em;
 
     private User writer;
+    private List<String> techStack;
+    private Condition condition;
 
     @BeforeEach
     void setup() {
-        writer = User.createUser(
-                "김슬기",
-                "tmfrl4710@gmail.com",
-                Role.GUEST,
-                "google"
-        );
-
+        writer = User.createUser("user1", "user1@gmail.com", Role.USER, "google");
         em.persist(writer);
+
+        techStack = new ArrayList<>();
+        techStack.add("tech1");
+        techStack.add("tech2");
+        techStack.add("tech3");
+        techStack.add("tech4");
+
+        condition = Condition.createCondition(
+                "sample place1",
+                LocalDateTime.of(2021, 6, 1, 0, 0),
+                LocalDateTime.of(2021, 12, 31, 0, 0),
+                10,
+                "sample explanation1");
     }
 
     @Test
     @DisplayName("스터디 모집 - 게시글 작성")
     public void write() {
         //when
-        StudyRecruitment post = SampleStudyRecruitment.create(writer);
+        StudyRecruitment post = StudyRecruitment.savePost(writer, "title1", techStack, condition);
         em.persist(post);
+        post.getTechStack().forEach(em::persist);
 
         StudyRecruitment findPost = em.find(StudyRecruitment.class, post.getId());
 
         //then
+        assertEquals(post.getId(), findPost.getId());
         assertEquals(post.getWriter().getId(), findPost.getWriter().getId());
         assertEquals(post.getTitle(), findPost.getTitle());
+        assertEquals(post.getTechStack(), findPost.getTechStack());
+        assertEquals(post.getCondition(), post.getCondition());
     }
 
     @Test
     @DisplayName("스터디 모집 - 게시글 수정")
     void edit() {
         //given
-        StudyRecruitment post = SampleStudyRecruitment.create(writer);
+        StudyRecruitment post = StudyRecruitment.savePost(writer, "title1", techStack, condition);
         em.persist(post);
         post.getTechStack().forEach(em::persist);
 
-        //when
+        post = em.find(StudyRecruitment.class, post.getId());
+
         Condition changedCondition = Condition.createCondition(
-                "강남",
-                LocalDateTime.of(2021, 4, 7, 0, 0),
-                LocalDateTime.of(2021, 6, 7, 0, 0),
-                5,
-                "java 프로젝트 할 사람 모집"
-        );
+                "sample place2",
+                LocalDateTime.of(2021, 7, 1, 0, 0),
+                LocalDateTime.of(2022, 1, 31, 0, 0),
+                11,
+                "sample explanation2");
 
         List<String> changedTechStack = new ArrayList<>();
-        changedTechStack.add("node");
-        changedTechStack.add("typescript");
-        changedTechStack.add("react");
-        changedTechStack.add("gcp");
+        changedTechStack.add("tech5");
+        changedTechStack.add("tech6");
+        changedTechStack.add("tech7");
+        changedTechStack.add("tech8");
 
-        post.edit("스터디 모집합니다-수정", changedCondition, changedTechStack);
+        //when
+        post.edit("changedTitle", changedCondition, changedTechStack);
+        post.getTechStack().forEach(em::persist);
+
+        em.flush();
+        em.clear();
 
         //then
         StudyRecruitment findPost = em.find(StudyRecruitment.class, post.getId());
 
+        assertEquals(post.getId(), findPost.getId());
+        assertEquals(post.getWriter().getId(), findPost.getWriter().getId());
         assertEquals(post.getTitle(), findPost.getTitle());
-        assertEquals(post.getCondition().getPlace(), findPost.getCondition().getPlace());
-        assertEquals(post.getCondition().getStartDate(), findPost.getCondition().getStartDate());
-        assertEquals(post.getCondition().getEndDate(), findPost.getCondition().getEndDate());
-        assertEquals(post.getCondition().getCapacity(), findPost.getCondition().getCapacity());
-        assertEquals(post.getCondition().getExplanation(), findPost.getCondition().getExplanation());
+//        assertEquals(post.getTechStack(), findPost.getTechStack());
+        assertEquals(post.getCondition(), post.getCondition());
     }
 }
