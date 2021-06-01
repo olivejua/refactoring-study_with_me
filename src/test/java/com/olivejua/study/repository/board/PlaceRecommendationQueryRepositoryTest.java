@@ -1,19 +1,20 @@
 package com.olivejua.study.repository.board;
 
 import com.olivejua.study.domain.*;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
-import com.olivejua.study.domain.board.QLink;
-import com.olivejua.study.domain.board.QPlaceRecommendation;
+import com.olivejua.study.domain.board.*;
 import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,10 @@ import java.util.List;
 
 import static com.olivejua.study.domain.QComment.*;
 import static com.olivejua.study.domain.QUser.*;
+import static com.olivejua.study.domain.board.QLikeHistory.*;
 import static com.olivejua.study.domain.board.QLink.*;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.*;
+import static com.querydsl.jpa.JPAExpressions.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -227,6 +230,74 @@ class PlaceRecommendationQueryRepositoryTest {
         List<PostListResponseDto> list3 = results3.getContent();
 
         assertEquals(2, list3.size());
+    }
+
+    @Test
+    void testMultiColumnsCountsQuery() {
+        //post1- 3 , post2- 2
+        em.persist(Comment.createComment(post1, writer, "post1 content1"));
+        em.persist(Comment.createComment(post1, writer, "post1 content2"));
+        em.persist(Comment.createComment(post1, writer, "post1 content3"));
+        em.persist(Comment.createComment(post2, writer, "post2 content1"));
+        em.persist(Comment.createComment(post2, writer, "post2 content2"));
+
+        User likeUser1 = User.createUser("like user1", "likeUser1@gmail.com", Role.USER, "google");
+        User likeUser2 = User.createUser("like user2", "likeUser2@gmail.com", Role.USER, "google");
+        User likeUser3 = User.createUser("like user3", "likeUser3@gmail.com", Role.USER, "google");
+        User likeUser4 = User.createUser("like user4", "likeUser4@gmail.com", Role.USER, "google");
+        User likeUser5 = User.createUser("like user5", "likeUser5@gmail.com", Role.USER, "google");
+        em.persist(likeUser1);
+        em.persist(likeUser2);
+        em.persist(likeUser3);
+        em.persist(likeUser4);
+        em.persist(likeUser5);
+
+        //post1: like-2, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser1, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser2, true));
+        em.persist(LikeHistory.createLikeHistory(post1, likeUser3, false));
+
+        //post2: like-1, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser4, true));
+        em.persist(LikeHistory.createLikeHistory(post2, likeUser5, false));
+
+        em.flush();
+        em.clear();
+
+        List<Long> postIds = new ArrayList<>();
+//        postIds.add(2L);
+        postIds.add(6L);
+
+        List<Tuple> result = queryFactory
+                .select(
+                        placeRecommendation.id,
+                        ExpressionUtils.as(select(comment.count())
+                            .from(comment)
+                            .where(comment.post.id.eq(placeRecommendation.id)),"commentCount"),
+                        ExpressionUtils.as(select(likeHistory.count())
+                            .from(likeHistory)
+                            .where(
+                                    likeHistory.post.id.eq(placeRecommendation.id),
+                                    likeHistory.isLike.isTrue()), "likeCount"),
+                        ExpressionUtils.as(select(likeHistory.count())
+                                .from(likeHistory)
+                                .where(
+                                        likeHistory.post.id.eq(placeRecommendation.id),
+                                        likeHistory.isLike.isFalse()), "dislikeCount")
+                ).from(placeRecommendation)
+                .where(placeRecommendation.id.in(postIds))
+                .fetch();
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+            System.out.println("postId = " + tuple.get(placeRecommendation.id));
+            NumberPath<Long> commentCount = Expressions.numberPath(Long.class, "commentCount");
+            NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
+            NumberPath<Long> dislikeCount = Expressions.numberPath(Long.class, "dislikeCount");
+            System.out.println("commentCount = " + tuple.get(commentCount));
+            System.out.println("likeCount = " + tuple.get(likeCount));
+            System.out.println("dislikeCount = " + tuple.get(dislikeCount));
+        }
     }
 }
 

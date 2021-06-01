@@ -9,7 +9,9 @@ import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import static com.olivejua.study.domain.QUser.user;
 import static com.olivejua.study.domain.board.QLikeHistory.likeHistory;
 import static com.olivejua.study.domain.board.QLink.link;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.placeRecommendation;
+import static com.querydsl.jpa.JPAExpressions.select;
 
 @RequiredArgsConstructor
 @Repository
@@ -37,10 +40,21 @@ public class PlaceRecommendationQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    private final String columnCommentCount = "commentCount";
+    private final String columnLikeCount = "likeCount";
+    private final String columnDislikeCount = "dislikeCount";
+
     public Page<PostListResponseDto> list(Pageable pageable) {
         List<PlaceRecommendation> entities = findPosts(pageable);
 
-        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
+        List<Tuple> tuples = findAllJoinCountsByPostIds(toPostIds(entities));
+
+        List<PostListResponseDto> content = toListDtos(
+                entities,
+                tupleToMap(tuples, columnLikeCount),
+                tupleToMap(tuples, columnDislikeCount),
+                tupleToMap(tuples, columnCommentCount)
+        );
 
         JPAQuery<PlaceRecommendation> countQuery = queryFactory
                 .selectFrom(placeRecommendation);
@@ -50,7 +64,14 @@ public class PlaceRecommendationQueryRepository {
 
     public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
         List<PlaceRecommendation> entities = findPosts(pageable, cond);
-        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
+
+        List<Tuple> tuples = findAllJoinCountsByPostIds(toPostIds(entities));
+        List<PostListResponseDto> content = toListDtos(
+                entities,
+                tupleToMap(tuples, columnCommentCount),
+                tupleToMap(tuples, columnLikeCount),
+                tupleToMap(tuples, columnDislikeCount)
+        );
 
         JPAQuery<PlaceRecommendation> countQuery = queryFactory
                 .selectFrom(placeRecommendation)
@@ -61,6 +82,17 @@ public class PlaceRecommendationQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private Map<Long, Long> tupleToMap(List<Tuple> tuples, String extractingColumn) {
+        Map<Long, Long> result = new HashMap<>();
+        for (Tuple tuple : tuples) {
+            result.put(
+                    tuple.get(placeRecommendation.id),
+                    tuple.get(Expressions.numberPath(
+                            Long.class, extractingColumn)));
+        }
+        return result;
     }
 
     public Optional<PlaceRecommendation> findEntity(Long postId) {
@@ -85,9 +117,15 @@ public class PlaceRecommendationQueryRepository {
                 .fetchOne());
     }
 
-    private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> commentCounts) {
+    private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> likeCount,
+                                                 Map<Long, Long> dislikeCount, Map<Long, Long> commentCount) {
         return entities.stream()
-                .map(entity -> new PostListResponseDto(entity, commentCounts.get(entity.getId())))
+                .map(entity ->
+                        new PostListResponseDto(
+                                entity,
+                                likeCount.get(entity.getId()),
+                                dislikeCount.get(entity.getId()),
+                                commentCount.get(entity.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -99,6 +137,28 @@ public class PlaceRecommendationQueryRepository {
         return entities.stream()
                 .map(Board::getId)
                 .collect(Collectors.toList());
+    }
+
+    private List<Tuple> findAllJoinCountsByPostIds(List<Long> postIds) {
+        return queryFactory
+                .select(
+                        placeRecommendation.id,
+                        ExpressionUtils.as(select(comment.count())
+                                .from(comment)
+                                .where(comment.post.id.eq(placeRecommendation.id)),columnCommentCount),
+                        ExpressionUtils.as(select(likeHistory.count())
+                                .from(likeHistory)
+                                .where(
+                                        likeHistory.post.id.eq(placeRecommendation.id),
+                                        likeHistory.isLike.isTrue()), columnLikeCount),
+                        ExpressionUtils.as(select(likeHistory.count())
+                                .from(likeHistory)
+                                .where(
+                                        likeHistory.post.id.eq(placeRecommendation.id),
+                                        likeHistory.isLike.isFalse()), columnDislikeCount)
+                ).from(placeRecommendation)
+                .where(placeRecommendation.id.in(postIds))
+                .fetch();
     }
 
     private Map<Long, Long> findCommentCountsByPostId(List<Long> postIds) {
