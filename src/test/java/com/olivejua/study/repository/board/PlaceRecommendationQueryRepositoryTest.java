@@ -1,12 +1,7 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.QComment;
-import com.olivejua.study.domain.QUser;
-import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.PlaceRecommendation;
-import com.olivejua.study.domain.board.QLink;
-import com.olivejua.study.domain.board.QPlaceRecommendation;
+import com.olivejua.study.domain.*;
+import com.olivejua.study.domain.board.*;
 import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
@@ -30,6 +25,7 @@ import java.util.List;
 
 import static com.olivejua.study.domain.QComment.*;
 import static com.olivejua.study.domain.QUser.*;
+import static com.olivejua.study.domain.board.QLikeHistory.*;
 import static com.olivejua.study.domain.board.QLink.*;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.*;
 import static org.assertj.core.api.Assertions.*;
@@ -135,6 +131,25 @@ class PlaceRecommendationQueryRepositoryTest {
         em.persist(Comment.createComment(post2, writer, "example content4"));
         em.persist(Comment.createComment(post2, writer, "example content5"));
 
+
+        User user2 = User.createUser("user2", "user2@gmail.com", Role.USER, "google");
+        User user3 = User.createUser("user3", "user3@gmail.com", Role.USER, "google");
+        User user4 = User.createUser("user4", "user4@gmail.com", Role.USER, "google");
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        // post1: like-2, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post1, user2, true));
+        em.persist(LikeHistory.createLikeHistory(post1, user3, true));
+        em.persist(LikeHistory.createLikeHistory(post1, user4, false));
+
+        // post2: like-1, dislike-2
+        em.persist(LikeHistory.createLikeHistory(post2, user2, true));
+        em.persist(LikeHistory.createLikeHistory(post2, user3, false));
+        em.persist(LikeHistory.createLikeHistory(post2, user4, false));
+
+
         em.flush();
         em.clear();
 
@@ -142,8 +157,59 @@ class PlaceRecommendationQueryRepositoryTest {
         Page<PostListResponseDto> list = repository.list(paging);
 
         for (PostListResponseDto postListResponseDto : list) {
-            System.out.println(postListResponseDto);
+            System.out.println(postListResponseDto.getPostId());
+            System.out.println(postListResponseDto.getLikeCount());
+            System.out.println(postListResponseDto.getDislikeCount());
         }
+    }
+
+    @Test
+    void testLikeCount() {
+        em.persist(Comment.createComment(post1, writer, "example content1"));
+        em.persist(Comment.createComment(post1, writer, "example content2"));
+        em.persist(Comment.createComment(post1, writer, "example content3"));
+        em.persist(Comment.createComment(post2, writer, "example content4"));
+        em.persist(Comment.createComment(post2, writer, "example content5"));
+
+
+        User user2 = User.createUser("user2", "user2@gmail.com", Role.USER, "google");
+        User user3 = User.createUser("user3", "user3@gmail.com", Role.USER, "google");
+        User user4 = User.createUser("user4", "user4@gmail.com", Role.USER, "google");
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        // post1: like-2, dislike-1
+        em.persist(LikeHistory.createLikeHistory(post1, user2, true));
+        em.persist(LikeHistory.createLikeHistory(post1, user3, true));
+        em.persist(LikeHistory.createLikeHistory(post1, user4, false));
+
+        // post2: like-1, dislike-2
+        em.persist(LikeHistory.createLikeHistory(post2, user2, true));
+        em.persist(LikeHistory.createLikeHistory(post2, user3, false));
+        em.persist(LikeHistory.createLikeHistory(post2, user4, false));
+
+        em.flush();
+        em.clear();
+
+        List<LikeHistory> histories = queryFactory
+                .selectFrom(likeHistory)
+                .where(likeHistory.post.id.in(post1.getId()))
+                .fetch();
+
+        for (LikeHistory history : histories) {
+            System.out.println("id=" + history.getPost().getId());
+            System.out.println("isLike=" + history.isLike());
+        }
+
+        long count = queryFactory
+                .selectFrom(likeHistory)
+                .where(
+                        likeHistory.post.id.in(post1.getId()),
+                        likeHistory.isLike.isTrue())
+                .fetchCount();
+
+        System.out.println("count=" + count);
     }
 }
 

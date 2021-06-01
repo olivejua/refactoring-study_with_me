@@ -61,7 +61,12 @@ public class PlaceRecommendationQueryRepository {
     public Page<PostListResponseDto> list(Pageable pageable) {
         List<PlaceRecommendation> entities = findPosts(pageable);
 
-        List<PostListResponseDto> content = toListDtos(entities, findCommentCountsByPostId(toPostIds(entities)));
+        List<Long> postIds = toPostIds(entities);
+
+        List<PostListResponseDto> content = toListDtos(entities,
+                findLikeCountByPostId(postIds),
+                findDislikeCountByPostId(postIds),
+                findCommentCountsByPostId(postIds));
 
         JPAQuery<PlaceRecommendation> countQuery = queryFactory
                 .selectFrom(placeRecommendation);
@@ -69,9 +74,13 @@ public class PlaceRecommendationQueryRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> commentCounts) {
+    private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> commentCounts, Map<Long, Long> likeCounts, Map<Long, Long> dislikeCounts) {
         return entities.stream()
-                .map(entity -> new PostListResponseDto(entity, commentCounts.get(entity.getId())))
+                .map(entity -> new PostListResponseDto(
+                        entity,
+                        likeCounts.get(entity.getId()),
+                        dislikeCounts.get(entity.getId()),
+                        commentCounts.get(entity.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -98,6 +107,46 @@ public class PlaceRecommendationQueryRepository {
         Map<Long, Long> result = new HashMap<>();
         for (Tuple tuple : tuples) {
             result.put(tuple.get(comment.post.id), tuple.get(comment.count()));
+        }
+
+        return result;
+    }
+
+    private Map<Long, Long> findLikeCountByPostId(List<Long> postIds) {
+        List<Tuple> tuples = queryFactory
+                .select(
+                        likeHistory.post.id,
+                        likeHistory.count()
+                ).from(likeHistory)
+                .where(
+                        likeHistory.post.id.in(postIds),
+                        likeHistory.isLike.isTrue())
+                .groupBy(likeHistory.post.id)
+                .fetch();
+
+        Map<Long, Long> result = new HashMap<>();
+        for (Tuple tuple : tuples) {
+            result.put(tuple.get(likeHistory.post.id), tuple.get(likeHistory.count()));
+        }
+
+        return result;
+    }
+
+    private Map<Long, Long> findDislikeCountByPostId(List<Long> postIds) {
+        List<Tuple> tuples = queryFactory
+                .select(
+                        likeHistory.post.id,
+                        likeHistory.count()
+                ).from(likeHistory)
+                .where(
+                        likeHistory.post.id.in(postIds),
+                        likeHistory.isLike.isFalse())
+                .groupBy(likeHistory.post.id)
+                .fetch();
+
+        Map<Long, Long> result = new HashMap<>();
+        for (Tuple tuple : tuples) {
+            result.put(tuple.get(likeHistory.post.id), tuple.get(likeHistory.count()));
         }
 
         return result;
