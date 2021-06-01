@@ -10,5 +10,8 @@ public enum SearchType {
 
     //    question
     CONTENT,
-    WRITER
+    WRITER,
+
+    //    place
+    ADDRESS
 }

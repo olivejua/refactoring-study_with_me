@@ -105,7 +105,7 @@ public class StudyRecruitmentQueryRepository {
     private BooleanExpression titleContains(SearchDto cond) {
         if (cond != null
                 && cond.getSearchType() == SearchType.TITLE
-                && StringUtils.isEmpty(cond.getKeyword()))
+                && !StringUtils.isEmpty(cond.getKeyword()))
             return studyRecruitment.title.contains(cond.getKeyword());
 
         return null;

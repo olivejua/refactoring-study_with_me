@@ -8,6 +8,7 @@ import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,13 @@ public class PlaceService {
     private final PlaceRecommendationQueryRepository placeQueryRepository;
     private final LinkService linkService;
 
-//    public Page<PostListResponseDto> list(Pageable pageable) {
-//
-//    }
+    public Page<PostListResponseDto> list(Pageable pageable) {
+        return placeQueryRepository.list(pageable);
+    }
+
+    public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
+        return placeQueryRepository.search(cond, pageable);
+    }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
         PlaceRecommendation newPost =
