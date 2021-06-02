@@ -1,7 +1,9 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.Comment;
+import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Condition;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.domain.board.TechStack;
 import com.olivejua.study.repository.CommentRepository;
@@ -28,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +64,9 @@ class StudyServiceTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EntityManager em;
+
     private User writer;
 
     @BeforeEach
@@ -78,6 +84,7 @@ class StudyServiceTest {
 
     @Test
     void post() {
+
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
                 .title("스터디원 구합니다.")
                 .place("강남 어딘가...")
@@ -105,24 +112,68 @@ class StudyServiceTest {
 
     @Test
     void update() {
-        Long postId = beforeUpdating();
+        //given
+        User writer = User.createUser(
+                "user1",
+                "user1@gmail.com",
+                Role.USER,
+                "google");
+        em.persist(writer);
+
+        List<String> techStack = new ArrayList<>();
+        techStack.add("sample tech1");
+        techStack.add("sample tech2");
+        techStack.add("sample tech3");
+        techStack.add("sample tech4");
+
+        Condition condition = Condition.createCondition(
+                "sample place1",
+                LocalDateTime.of(2021, 06, 01, 00, 00),
+                LocalDateTime.of(2021, 12, 31, 00, 00),
+                10,
+                "sample explanation blah blah");
+
+        StudyRecruitment post = StudyRecruitment.savePost(
+                writer,
+                "sample title1",
+                techStack,
+                condition);
+
+        em.persist(post);
+        post.getTechStack().forEach(em::persist);
+
+        //when
+        Condition updatedCondition = Condition.createCondition(
+                "sample place2",
+                LocalDateTime.of(2021, 07, 01, 00, 00),
+                LocalDateTime.of(2022, 01, 31, 00, 00),
+                20,
+                "sample explanation blah blah updated");
+        String updatedTitle = "sample title2";
+
+        List<String> updatedTechStack = new ArrayList<>();
+        techStack.add("sample tech5");
+        techStack.add("sample tech6");
+        techStack.add("sample tech7");
+        techStack.add("sample tech8");
+
 
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title("스터디원 구합니다. -수정")
-                .place("강남 어딘가... -수정")
-                .techStack(Arrays.asList("node.js", "typescript", "react"))
-                .startDate(LocalDateTime.of(2021, 1, 1, 15, 0))
-                .endDate(LocalDateTime.of(2021, 6, 30, 23, 59))
-                .capacity(10)
-                .explanation("소통 잘 되시는 분 구해여 -수정")
+                .title(updatedTitle)
+                .place(updatedCondition.getPlace())
+                .techStack(updatedTechStack)
+                .startDate(updatedCondition.getStartDate())
+                .endDate(updatedCondition.getEndDate())
+                .capacity(updatedCondition.getCapacity())
+                .explanation(updatedCondition.getExplanation())
                 .build();
 
-        studyService.update(postId, requestDto);
+        studyService.update(post.getId(), requestDto);
 
-        StudyRecruitment updatedPost = studyRepository.findById(postId).orElse(null);
+        //then
+        StudyRecruitment updatedPost = studyRepository.findById(post.getId()).orElse(null);
 
         assertNotNull(updatedPost);
-        assertEquals(requestDto.getTechStack(), toStringArray(updatedPost.getTechStack()));
         assertEquals(requestDto.getCondition().getPlace(), updatedPost.getCondition().getPlace());
         assertEquals(requestDto.getCondition().getStartDate(), updatedPost.getCondition().getStartDate());
         assertEquals(requestDto.getCondition().getEndDate(), updatedPost.getCondition().getEndDate());
