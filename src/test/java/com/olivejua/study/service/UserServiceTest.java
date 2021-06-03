@@ -70,7 +70,7 @@ class UserServiceTest {
                 .build();
 
         //when
-        UserSignupResponseDto responseDto = userService.join(requestDto);
+        UserSignupResponseDto responseDto = userService.signUp(requestDto);
 
         //then
         assertEquals(requestDto.getName(), responseDto.getName());

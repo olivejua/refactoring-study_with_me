@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +24,7 @@ public class UserService {
         return userRepository.findAllNames();
     }
 
-    public UserSignupResponseDto join(UserSignupRequestDto requestDto) {
+    public UserSignupResponseDto signUp(UserSignupRequestDto requestDto) {
         User user = requestDto.toEntity();
         user.changeRoleToUser();
 
