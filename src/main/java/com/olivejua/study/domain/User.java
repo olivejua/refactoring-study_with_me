@@ -53,4 +53,12 @@ public class User extends BaseTimeEntity {
     public void changeProfile(String name) {
         this.name = name;
     }
+
+    /**
+     * 소셜정보와 맞춰서 이름 업데이트
+     */
+    public User updateName(String name) {
+        this.name = name;
+        return this;
+    }
 }
