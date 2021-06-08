@@ -14,7 +14,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 public class Reply extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REPLY_ID")
     private Long id;
 

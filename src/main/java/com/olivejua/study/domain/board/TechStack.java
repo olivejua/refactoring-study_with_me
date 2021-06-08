@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 public class TechStack {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TECHSTACK_ID")
     private Long id;
 

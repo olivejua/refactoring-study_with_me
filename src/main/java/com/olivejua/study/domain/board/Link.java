@@ -12,7 +12,7 @@ import java.util.Objects;
 @Getter
 public class Link {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LINK_ID")
     private Long id;
 

@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 public abstract class Board extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_ID")
     private Long id;
 

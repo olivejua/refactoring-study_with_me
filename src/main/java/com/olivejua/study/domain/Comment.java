@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 public class Comment extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_ID")
     private Long id;
 
