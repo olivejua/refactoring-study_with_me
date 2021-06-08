@@ -28,15 +28,10 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @Test
-//    @WithMockUser(roles = "GUEST")
+    @WithMockUser(roles = "USER")
     public void requestHelloPage() throws Exception {
         mvc.perform(get("/user/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello"));
-    }
-
-    @Test
-    public void signInTest() {
-
     }
 }
