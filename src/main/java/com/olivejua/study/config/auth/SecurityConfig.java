@@ -28,12 +28,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/", "/user/signIn", "/user/signUp", "/user/hello"
                             , "/board/study/list/**", "/board/place/list/**", "/board/question/list/**").permitAll()
-                    .antMatchers("/board/study/posts/**", "/board/place/posts/**", "/board/question/posts/**").hasRole(Role.USER.name())
+                    .antMatchers("/board/study/posts/**", "/board/place/posts/**", "/board/question/posts/**", "/user/auth").hasRole(Role.USER.name())
                     .anyRequest().authenticated()
                 .and()
+                    .exceptionHandling()
+                        .accessDeniedPage("/user/accessDenied")
+                .and()
                     .oauth2Login()
-//                        .defaultSuccessUrl("/user/processLogin")
-//                        .loginProcessingUrl()
                         .userInfoEndpoint()
                             .userService(customOAuth2UserService);
     }

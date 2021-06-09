@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Profile("local")
+//@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitClass {

@@ -3,6 +3,7 @@ package com.olivejua.study.config.auth;
 import com.olivejua.study.config.auth.dto.OAuthAttributes;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.exception.NotExistingUserException;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.service.UserService;
 import com.olivejua.study.web.dto.user.UserSignInResponseDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -49,11 +51,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         );
     }
 
-    //TODO DB에 등록된 회원인지 아닌지 가려내고, 회원이 아닐 경우 로그인페이지 / 회원일 경우 홈으로 이동
-    //TODO 이 로직은 컨트롤러 또는 서비스로 이동해야함.
     private User verifyUser(OAuthAttributes attributes) {
-        return userRepository.findByEmailAndSocialCode(attributes.getEmail(), attributes.getSocialCode())
-                .map(entity -> entity.updateName(attributes.getName()))
-                .orElse(attributes.toEntity());
+        Optional<User> userOptional = userRepository.findByEmailAndSocialCode(attributes.getEmail(), attributes.getSocialCode());
+        if (userOptional.isEmpty()) {
+            throw new NotExistingUserException();
+        }
+
+        User user = userOptional.get();
+        if (!user.getName().equals(attributes.getName())) {
+            user.updateName(user.getName());
+        }
+
+        return user;
     }
 }
