@@ -5,15 +5,18 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.board.place.like.LikeStatus;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import com.olivejua.study.web.dto.user.WriterReadDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 @Getter
 public class PostReadResponseDto {
 
@@ -31,7 +34,7 @@ public class PostReadResponseDto {
     private LikeStatus likeStatus;
     private LocalDateTime createDate;
     private List<CommentReadResponseDto> comments;
-
+    private PageDto pageInfo;
 
     public PostReadResponseDto(PlaceRecommendation entity, LikeHistory userLikeStatus) {
         this.postId = entity.getId();
@@ -78,5 +81,9 @@ public class PostReadResponseDto {
         }
 
         return like.isLike() ? LikeStatus.LIKE : LikeStatus.DISLIKE;
+    }
+
+    public void savePageInfo(PageDto pageInfo) {
+        this.pageInfo = pageInfo;
     }
 }
