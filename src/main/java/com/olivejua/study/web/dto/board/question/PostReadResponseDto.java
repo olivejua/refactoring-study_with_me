@@ -1,6 +1,7 @@
 package com.olivejua.study.web.dto.board.question;
 
 import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import com.olivejua.study.web.dto.user.WriterReadDto;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PostReadResponseDto {
     private int viewCount;
     private List<CommentReadResponseDto> comments;
     private LocalDateTime createdDate;
+    private PageDto pageInfo;
 
     public PostReadResponseDto(Question entity) {
         this.title = entity.getTitle();
@@ -27,5 +29,9 @@ public class PostReadResponseDto {
                 .map(CommentReadResponseDto::new)
                 .collect(Collectors.toList());
         this.createdDate = entity.getCreatedDate();
+    }
+
+    public void savePageInfo(PageDto pageInfo) {
+        this.pageInfo = pageInfo;
     }
 }
