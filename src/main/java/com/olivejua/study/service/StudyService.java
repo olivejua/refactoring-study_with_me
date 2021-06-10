@@ -51,13 +51,15 @@ public class StudyService {
         return post.getId();
     }
 
-    public void delete(Long postId) {
+    public Long delete(Long postId) {
         StudyRecruitment post = findPost(postId);
 
         //reply 지우기
         //comment 지우기
         techStackService.delete(post);
         studyRepository.delete(post);
+
+        return post.getId();
     }
 
     @Transactional(readOnly = true)
