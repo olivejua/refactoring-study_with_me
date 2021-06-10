@@ -129,10 +129,7 @@ public class PlaceServiceTest {
                 readResponseDto.getAddressDetail(),
                 readResponseDto.getLinks(),
                 readResponseDto.getThumbnailPath(),
-                readResponseDto.getContent(),
-                readResponseDto.getLikeCount(),
-                readResponseDto.getDislikeCount(),
-                readResponseDto.getViewCount());
+                readResponseDto.getContent());
 
         placeService.update(post.getId(), requestDto);
 
