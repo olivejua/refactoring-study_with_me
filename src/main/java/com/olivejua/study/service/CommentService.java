@@ -27,20 +27,16 @@ public class CommentService {
         return comment.getId();
     }
 
-    public Long update(Long commentId, String updatedContent) {
+    public void update(Long commentId, String updatedContent) {
         Comment comment = findComment(commentId);
         comment.edit(updatedContent);
-
-        return commentId;
     }
 
-    public Long delete(Long commentId) {
+    public void delete(Long commentId) {
         Comment comment = findComment(commentId);
         
         //reply 먼저 지우기
         commentRepository.delete(comment);
-
-        return commentId;
     }
 
     private Comment findComment(Long commentId) {

@@ -93,8 +93,8 @@ class CommentServiceTest {
         em.clear();
 
         String updatedContent = "update comment1 content1";
-        Long commentId = commentService.update(comment1.getId(), updatedContent);
-        Comment comment = commentRepository.findById(commentId).orElse(null);
+        commentService.update(comment1.getId(), updatedContent);
+        Comment comment = commentRepository.findById(comment1.getId()).orElse(null);
 
         assertNotNull(comment);
         assertEquals(comment1.getId(), comment.getId());
@@ -106,8 +106,8 @@ class CommentServiceTest {
         em.flush();
         em.clear();
 
-        Long commentId = commentService.delete(comment2.getId());
-        Comment comment = commentRepository.findById(commentId).orElse(null);
+        commentService.delete(comment2.getId());
+        Comment comment = commentRepository.findById(comment2.getId()).orElse(null);
 
         assertNull(comment);
     }

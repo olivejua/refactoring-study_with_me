@@ -26,19 +26,14 @@ public class ReplyService {
         return reply.getId();
     }
 
-    public Long update(Long replyId, String updatedContent) {
+    public void update(Long replyId, String updatedContent) {
         Reply reply = findReply(replyId);
         reply.edit(updatedContent);
-
-        return replyId;
     }
 
-    public Long delete(Long replyId) {
+    public void delete(Long replyId) {
         Reply reply = findReply(replyId);
-
         replyRepository.delete(reply);
-
-        return replyId;
     }
 
     private Comment findComment(Long commentId) {

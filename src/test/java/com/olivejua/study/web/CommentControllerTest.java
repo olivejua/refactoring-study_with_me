@@ -48,7 +48,7 @@ public class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
-    private Question post;
+    private Question dummyPost;
 
     @BeforeEach
     void setup(WebApplicationContext webApplicationContext) {
@@ -66,14 +66,14 @@ public class CommentControllerTest {
                 "google");
         em.persist(postWriter);
 
-        post = Question.savePost(postWriter, "sample title", "sample content");
-        em.persist(post);
+        dummyPost = Question.savePost(postWriter, "sample title", "sample content");
+        em.persist(dummyPost);
     }
 
     @Test
     @DisplayName("댓글을 작성한다")
     public void saveTest() throws Exception {
-        CommentSaveRequestDto requestDto = new CommentSaveRequestDto(post.getId(), "sample content1");
+        CommentSaveRequestDto requestDto = new CommentSaveRequestDto(dummyPost.getId(), "sample content1");
 
         User commentWriter = User.createUser("user2", "user2@example.com", Role.USER, "google");
         em.persist(commentWriter);
@@ -90,9 +90,9 @@ public class CommentControllerTest {
     @Test
     @DisplayName("댓글을 수정한다")
     public void updateTest() throws Exception {
-        when(commentService.update(anyLong(), anyString())).thenReturn(1L);
+        doNothing().when(commentService).update(anyLong(), anyString());
 
-        CommentSaveRequestDto requestDto = new CommentSaveRequestDto(post.getId(), "updated sample content2");
+        CommentSaveRequestDto requestDto = new CommentSaveRequestDto(dummyPost.getId(), "updated sample content2");
 
         mvc.perform(put("/comment/{commentId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -104,7 +104,7 @@ public class CommentControllerTest {
     @Test
     @DisplayName("댓글을 삭제한다")
     public void deleteTest() throws Exception {
-        when(commentService.delete(anyLong())).thenReturn(1L);
+        doNothing().when(commentService).delete(anyLong());
 
         mvc.perform(delete("/comment/{commentId}", 1L))
                 .andExpect(status().isNoContent())

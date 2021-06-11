@@ -1,8 +1,10 @@
 package com.olivejua.study.web.dto.reply;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ReplySaveRequestDto {
 
     private Long commentId;
