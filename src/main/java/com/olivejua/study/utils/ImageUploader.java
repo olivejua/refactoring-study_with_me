@@ -1,7 +1,6 @@
 package com.olivejua.study.utils;
 
 import com.olivejua.study.config.ImageConfig;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
