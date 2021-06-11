@@ -101,7 +101,7 @@ public class QuestionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto))
                 .session(httpSession))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 
@@ -125,7 +125,7 @@ public class QuestionControllerTest {
         mvc.perform(put("/question/"+post.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
@@ -143,7 +143,7 @@ public class QuestionControllerTest {
 
         //then
         mvc.perform(delete("/question/"+1L))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
 
         verify(questionService, atLeastOnce()).delete(anyLong());

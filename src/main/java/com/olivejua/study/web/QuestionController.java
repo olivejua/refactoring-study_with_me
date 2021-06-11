@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RequestMapping("/question")
@@ -23,25 +24,28 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/{postId}")
-    public PostReadResponseDto read(@PathVariable Long postId, PageDto pageInfo) {
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo) {
         PostReadResponseDto responseDto = questionService.read(postId);
         responseDto.savePageInfo(pageInfo);
 
-        return responseDto;
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
-    public Long post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
-        return questionService.post(requestDto, user.toEntity());
+    public ResponseEntity<Void> post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
+        Long savedPostId = questionService.post(requestDto, user.toEntity());
+        return ResponseEntity.created(URI.create("/question/"+savedPostId)).build();
     }
 
     @PutMapping("/{postId}")
-    public Long update(@PathVariable Long postId, @RequestBody PostUpdateRequestDto requestDto) {
-        return questionService.update(postId, requestDto);
+    public ResponseEntity<Void> update(@PathVariable Long postId, @RequestBody PostUpdateRequestDto requestDto) {
+        questionService.update(postId, requestDto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{postId}")
-    public Long delete(@PathVariable Long postId) {
-        return questionService.delete(postId);
+    public ResponseEntity<Void> delete(@PathVariable Long postId) {
+        questionService.delete(postId);
+        return ResponseEntity.noContent().build();
     }
 }

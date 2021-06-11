@@ -28,7 +28,8 @@ public class QuestionQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     public Optional<Question> findEntity(Long postId) {
-        return Optional.ofNullable(queryFactory
+        return Optional.ofNullable(
+                queryFactory
                 .selectFrom(question)
                 .innerJoin(question.writer, user)
                 .leftJoin(question.comment, comment)
