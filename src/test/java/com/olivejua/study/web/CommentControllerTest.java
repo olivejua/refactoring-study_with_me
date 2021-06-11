@@ -83,7 +83,7 @@ public class CommentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto))
                 .session(httpSession))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 
@@ -97,7 +97,7 @@ public class CommentControllerTest {
         mvc.perform(put("/comment/{commentId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
@@ -107,7 +107,7 @@ public class CommentControllerTest {
         when(commentService.delete(anyLong())).thenReturn(1L);
 
         mvc.perform(delete("/comment/{commentId}", 1L))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }

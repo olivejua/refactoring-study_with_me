@@ -5,7 +5,10 @@ import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.CommentService;
 import com.olivejua.study.web.dto.comment.CommentSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RequestMapping("/comment")
@@ -15,17 +18,20 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public Long save(@RequestBody CommentSaveRequestDto requestDto, @LoginUser SessionUser user) {
-        return commentService.save(requestDto, user.toEntity());
+    public ResponseEntity<Void> save(@RequestBody CommentSaveRequestDto requestDto, @LoginUser SessionUser user) {
+        Long savedCommentId = commentService.save(requestDto, user.toEntity());
+        return ResponseEntity.created(URI.create("/comment/"+savedCommentId)).build();
     }
 
     @PutMapping("/{commentId}")
-    public Long update(@PathVariable Long commentId, @RequestBody CommentSaveRequestDto requestDto) {
-        return commentService.update(commentId, requestDto.getContent());
+    public ResponseEntity<Void> update(@PathVariable Long commentId, @RequestBody CommentSaveRequestDto requestDto) {
+        commentService.update(commentId, requestDto.getContent());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{commentId}")
-    public Long delete(@PathVariable Long commentId) {
-        return commentService.delete(commentId);
+    public ResponseEntity<Void> delete(@PathVariable Long commentId) {
+        commentService.delete(commentId);
+        return ResponseEntity.noContent().build();
     }
 }
