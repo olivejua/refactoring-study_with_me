@@ -1,5 +1,7 @@
 package com.olivejua.study.utils;
 
+import com.olivejua.study.config.ImageConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -23,7 +25,11 @@ import static java.io.File.separator;
 @Component
 public class ImageUploader {
     public static String tempPath = "";
-    public static final String DEFAULT_PATH = "C:\\Users\\tmfrl\\Desktop\\project-study-image";
+    private final String defaultPath;
+
+    public ImageUploader(ImageConfig imageConfig) {
+        this.defaultPath = imageConfig.getDefaultPath();
+    }
 
     public void uploadImagesIn(String htmlCode, String board, Long postId) {
         List<String> images = getImagesIn(htmlCode);
@@ -31,7 +37,7 @@ public class ImageUploader {
         if (images.isEmpty()) {
             return;
         }
-        String savedPath = getDirectory(DEFAULT_PATH, board, postId.toString());
+        String savedPath = getDirectory(defaultPath, board, postId.toString());
         makeDirectory(savedPath);
 
         convertImages(images, tempPath, savedPath);
@@ -44,21 +50,21 @@ public class ImageUploader {
             return;
         }
 
-        String sourcePath = getDirectory(DEFAULT_PATH, board, postId.toString());
+        String sourcePath = getDirectory(defaultPath, board, postId.toString());
         String targetPath = servletPath + getDirectory("resource", "photo_upload");
 
         convertAllInDir(sourcePath, targetPath);
     }
 
     public void updateImagesIn(String htmlCode, String board, Long postId) {
-        String path = getDirectory(DEFAULT_PATH, board, postId.toString());
+        String path = getDirectory(defaultPath, board, postId.toString());
         deleteDirectory(path);
 
         uploadImagesIn(htmlCode, board, postId);
     }
 
     public void deleteImagesOf(String board, Long postId) {
-        deleteDirectory(getDirectory(DEFAULT_PATH, board, postId.toString()));
+        deleteDirectory(getDirectory(defaultPath, board, postId.toString()));
     }
 
     private boolean deleteDirectory(String path) {
