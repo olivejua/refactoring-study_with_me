@@ -132,7 +132,7 @@ public class StudyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto))
                 .session(httpSession))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 
@@ -158,7 +158,7 @@ public class StudyControllerTest {
         mvc.perform(put("/study/{postId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
@@ -168,7 +168,7 @@ public class StudyControllerTest {
         when(studyService.delete(anyLong())).thenReturn(anyLong());
 
         mvc.perform(delete("/study/{postId}", 1L))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }
