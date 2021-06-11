@@ -7,7 +7,10 @@ import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RequestMapping("/place")
@@ -17,26 +20,28 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping("/{postId}")
-    public PostReadResponseDto read(@PathVariable Long postId, PageDto pageInfo, @LoginUser SessionUser user) {
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, @LoginUser SessionUser user) {
         PostReadResponseDto responseDto = placeService.read(postId, user.toEntity());
         responseDto.savePageInfo(pageInfo);
 
-        return responseDto;
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
-    public Long post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
-        return placeService.post(requestDto, user.toEntity());
+    public ResponseEntity<Void> post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
+        Long savedPostId = placeService.post(requestDto, user.toEntity());
+        return ResponseEntity.created(URI.create("/place/"+savedPostId)).build();
     }
 
     @PutMapping("/{postId}")
-    public Long update(@PathVariable Long postId, @RequestBody PostSaveRequestDto requestDto) {
-        return placeService.update(postId, requestDto);
+    public ResponseEntity<Void> update(@PathVariable Long postId, @RequestBody PostSaveRequestDto requestDto) {
+        placeService.update(postId, requestDto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{postId}")
-    public Long delete(@PathVariable Long postId) {
+    public ResponseEntity<Void> delete(@PathVariable Long postId) {
         placeService.delete(postId);
-        return postId;
+        return ResponseEntity.noContent().build();
     }
 }

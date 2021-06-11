@@ -131,7 +131,7 @@ public class PlaceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto))
                 .session(httpSession))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 
@@ -155,7 +155,7 @@ public class PlaceControllerTest {
         mvc.perform(put("/place/{postId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
@@ -165,7 +165,7 @@ public class PlaceControllerTest {
         doNothing().when(placeService).delete(anyLong());
 
         mvc.perform(delete("/place/{postId}", 1L))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }
