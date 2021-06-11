@@ -8,8 +8,6 @@ import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +22,9 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo) {
-        PostReadResponseDto responseDto = questionService.read(postId);
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, HttpServletRequest request) {
+        PostReadResponseDto responseDto =
+                questionService.read(postId, request.getSession().getServletContext().getRealPath("/"));
         responseDto.savePageInfo(pageInfo);
 
         return ResponseEntity.ok(responseDto);
