@@ -2,13 +2,11 @@ package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -51,7 +49,7 @@ class StudyRecruitmentTest {
     @DisplayName("스터디 모집 - 게시글 작성")
     public void write() {
         //when
-        StudyRecruitment post = StudyRecruitment.savePost(writer, "title1", techStack, condition);
+        StudyRecruitment post = StudyRecruitment.createPost(writer, "title1", techStack, condition);
         em.persist(post);
         post.getTechStack().forEach(em::persist);
 
@@ -69,7 +67,7 @@ class StudyRecruitmentTest {
     @DisplayName("스터디 모집 - 게시글 수정")
     void edit() {
         //given
-        StudyRecruitment post = StudyRecruitment.savePost(writer, "title1", techStack, condition);
+        StudyRecruitment post = StudyRecruitment.createPost(writer, "title1", techStack, condition);
         em.persist(post);
         post.getTechStack().forEach(em::persist);
 
@@ -89,7 +87,7 @@ class StudyRecruitmentTest {
         changedTechStack.add("tech8");
 
         //when
-        post.edit("changedTitle", changedCondition, changedTechStack);
+        post.update("changedTitle", changedCondition, changedTechStack);
         post.getTechStack().forEach(em::persist);
 
         em.flush();

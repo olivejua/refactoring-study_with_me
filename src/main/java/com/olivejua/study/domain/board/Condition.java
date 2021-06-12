@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,5 +35,18 @@ public class Condition {
                                             LocalDateTime endDate, int capacity, String explanation) {
         return new Condition(
                 place, startDate, endDate, capacity, explanation);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Condition condition = (Condition) o;
+        return capacity == condition.capacity && Objects.equals(place, condition.place) && Objects.equals(startDate, condition.startDate) && Objects.equals(endDate, condition.endDate) && Objects.equals(explanation, condition.explanation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(place, startDate, endDate, capacity, explanation);
     }
 }

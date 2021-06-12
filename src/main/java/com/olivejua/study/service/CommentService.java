@@ -17,6 +17,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final ReplyService replyService;
 
     public Long save(CommentSaveRequestDto requestDto, User writer) {
         Board post = findPost(requestDto.getPostId());
@@ -37,6 +38,11 @@ public class CommentService {
         
         //reply 먼저 지우기
         commentRepository.delete(comment);
+    }
+
+    public void deleteByPost(Board post) {
+        replyService.deleteByPost(post);
+        commentRepository.deleteCommentsByPost(post);
     }
 
     private Comment findComment(Long commentId) {

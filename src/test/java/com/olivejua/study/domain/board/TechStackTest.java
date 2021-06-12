@@ -46,7 +46,7 @@ public class TechStackTest {
                 5,
                 "java 프로젝트 할 사람 모집");
 
-        StudyRecruitment post = StudyRecruitment.savePost(writer, "스터디 모집합니다.", Arrays.asList(words), condition);
+        StudyRecruitment post = StudyRecruitment.createPost(writer, "스터디 모집합니다.", Arrays.asList(words), condition);
 
         return post.getTechStack();
     }

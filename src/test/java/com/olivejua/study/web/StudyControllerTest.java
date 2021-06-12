@@ -12,7 +12,6 @@ import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -89,7 +87,7 @@ public class StudyControllerTest {
         );
 
         StudyRecruitment post =
-                StudyRecruitment.savePost(writer, "sample title1", techStack, condition);
+                StudyRecruitment.createPost(writer, "sample title1", techStack, condition);
 
         em.persist(post);
         post.getTechStack().forEach(em::persist);

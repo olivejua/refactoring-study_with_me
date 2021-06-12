@@ -29,12 +29,12 @@ public class StudyRecruitment extends Board {
     /**
      * 글 작성
      */
-    public static StudyRecruitment savePost(User writer, String title,
-                                            List<String> techStack, Condition condition) {
+    public static StudyRecruitment createPost(User writer, String title,
+                                              List<String> techStack, Condition condition) {
 
         StudyRecruitment newPost = new StudyRecruitment();
         newPost.createPost(writer, title);
-        newPost.changeTechStacks(techStack);
+        newPost.replaceTechStack(techStack);
         newPost.condition = condition;
 
         return newPost;
@@ -43,16 +43,20 @@ public class StudyRecruitment extends Board {
     /**
      * 글 수정
      */
-    public void edit(String title, Condition condition, List<String> techStack) {
+    public void update(String title, Condition condition, List<String> techStack) {
         editTitle(title);
         this.condition = condition;
-        changeTechStacks(techStack);
+        replaceTechStack(techStack);
     }
 
     /**
      * 기술스택 변경
      */
-    private void changeTechStacks(List<String> techStack) {
-        techStack.forEach(e -> new TechStack().changeTechStack(this, e));
+    private void replaceTechStack(List<String> techStack) {
+        this.techStack.clear();
+        techStack.forEach(e -> {
+            TechStack newTech = TechStack.createTechStack(this, e);
+            this.techStack.add(newTech);
+        });
     }
 }
