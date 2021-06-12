@@ -1,5 +1,6 @@
 package com.olivejua.study;
 
+import com.olivejua.study.domain.Role;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -21,5 +22,11 @@ public class ArrayTest {
 
         assertThat(list1.equals(list2)).isTrue();
         assertThat(list1.equals(list3)).isFalse();
+    }
+
+    @Test
+    public void test() {
+        Role role = Role.GUEST;
+        System.out.println(role.name());
     }
 }

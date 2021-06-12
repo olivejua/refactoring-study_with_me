@@ -1,7 +1,17 @@
 spring:
   profiles:
-    active: local
-    include: real
+    include: real, oauth
 
-logging.level:
-  org.hibernate.SQL: debug
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/study
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+#spring:
+#  profiles:
+#    active: local
+#    include: real
+#
+#logging.level:
+#  org.hibernate.SQL: debug
