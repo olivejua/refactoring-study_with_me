@@ -25,10 +25,12 @@ public class TechStack {
 
     private String element;
 
-    public void changeTechStack(StudyRecruitment post, String element) {
-        this.post = post;
-        this.element = element;
-        post.getTechStack().add(this);
+    public static TechStack createTechStack(StudyRecruitment post, String element) {
+        TechStack ts = new TechStack();
+        ts.post = post;
+        ts.element = element;
+
+        return ts;
     }
 
     @Override

@@ -30,10 +30,10 @@ public class Reply extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")
-    private Board board;
+    private Board post;
 
     private Reply(Comment comment, User writer, String content) {
-        this.board = comment.getPost();
+        this.post = comment.getPost();
         this.comment = comment;
         this.writer = writer;
         this.content = content;

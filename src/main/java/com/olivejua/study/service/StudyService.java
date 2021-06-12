@@ -22,6 +22,7 @@ public class StudyService {
     private final StudyRecruitmentRepository studyRepository;
     private final StudyRecruitmentQueryRepository studyQueryRepository;
     private final TechStackService techStackService;
+    private final CommentService commentService;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
         return studyQueryRepository.list(pageable);
@@ -33,7 +34,7 @@ public class StudyService {
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
         StudyRecruitment newPost =
-                StudyRecruitment.savePost(writer, requestDto.getTitle(),
+                StudyRecruitment.createPost(writer, requestDto.getTitle(),
                         requestDto.getTechStack(), requestDto.getCondition());
 
         studyRepository.save(newPost);
@@ -44,8 +45,8 @@ public class StudyService {
 
     public Long update(Long postId, PostSaveRequestDto requestDto) {
         StudyRecruitment post = findPost(postId);
-
-        post.edit(requestDto.getTitle(), requestDto.getCondition(), requestDto.getTechStack());
+        
+        post.update(requestDto.getTitle(), requestDto.getCondition(), requestDto.getTechStack());
         techStackService.update(post);
 
         return post.getId();
@@ -54,9 +55,8 @@ public class StudyService {
     public Long delete(Long postId) {
         StudyRecruitment post = findPost(postId);
 
-        //reply 지우기
-        //comment 지우기
-        techStackService.delete(post);
+        commentService.deleteByPost(post);
+        techStackService.deleteByPost(post);
         studyRepository.delete(post);
 
         return post.getId();
@@ -83,11 +83,11 @@ class TechStackService {
     private final TechStackRepository techStackRepository;
 
     public void update(StudyRecruitment post) {
-        delete(post);
+        deleteByPost(post);
         post.getTechStack().forEach(techStackRepository::save);
     }
 
-    public void delete(StudyRecruitment post) {
+    public void deleteByPost(StudyRecruitment post) {
         techStackRepository.deleteByPost(post);
     }
 }

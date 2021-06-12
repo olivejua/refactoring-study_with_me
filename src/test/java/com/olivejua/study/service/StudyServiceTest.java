@@ -1,47 +1,36 @@
 package com.olivejua.study.service;
 
-import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.Condition;
 import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.domain.board.TechStack;
-import com.olivejua.study.repository.CommentRepository;
-import com.olivejua.study.repository.ReplyRepository;
-import com.olivejua.study.repository.UserRepository;
-import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
-import com.olivejua.study.sampleData.SampleComment;
 import com.olivejua.study.sampleData.SampleStudyRecruitment;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.search.SearchDto;
+import com.olivejua.study.web.dto.board.search.SearchType;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.study.PostSaveRequestDto;
-import com.olivejua.study.web.dto.board.search.SearchType;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
-class StudyServiceTest {
+class StudyServiceTest extends CommonBoardServiceTest {
 
     @Autowired
     StudyService studyService;
@@ -50,32 +39,11 @@ class StudyServiceTest {
     StudyRecruitmentRepository studyRepository;
 
     @Autowired
-    StudyRecruitmentQueryRepository studyRecruitmentQueryRepository;
-
-    @Autowired
     TechStackRepository techStackRepository;
-
-    @Autowired
-    CommentRepository commentRepository;
-
-    @Autowired
-    ReplyRepository replyRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    EntityManager em;
-
-    private User writer;
-
-    @BeforeEach
-    void setup() {
-        writer = userRepository.save(SampleUser.create());
-    }
 
     @AfterEach
     void cleanup() {
+        replyRepository.deleteAll();
         commentRepository.deleteAll();
         techStackRepository.deleteAll();
         studyRepository.deleteAll();
@@ -84,7 +52,6 @@ class StudyServiceTest {
 
     @Test
     void post() {
-
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
                 .title("스터디원 구합니다.")
                 .place("강남 어딘가...")
@@ -95,53 +62,18 @@ class StudyServiceTest {
                 .explanation("소통 잘 되시는 분 구해여")
                 .build();
 
-        Long postId = studyService.post(requestDto, writer);
+        Long postId = studyService.post(requestDto, dummyPostWriter);
 
         StudyRecruitment savedPost = studyRepository.findById(postId).orElse(null);
 
         assertNotNull(savedPost);
         assertEquals(requestDto.getTitle(), savedPost.getTitle());
-
         assertEquals(requestDto.getTechStack(), toStringArray(savedPost.getTechStack()));
-        assertEquals(requestDto.getCondition().getPlace(), savedPost.getCondition().getPlace());
-        assertEquals(requestDto.getCondition().getStartDate(), savedPost.getCondition().getStartDate());
-        assertEquals(requestDto.getCondition().getEndDate(), savedPost.getCondition().getEndDate());
-        assertEquals(requestDto.getCondition().getCapacity(), savedPost.getCondition().getCapacity());
-        assertEquals(requestDto.getCondition().getExplanation(), savedPost.getCondition().getExplanation());
+        assertEquals(requestDto.getCapacity(), savedPost.getCondition());
     }
 
     @Test
     void update() {
-        //given
-        User writer = User.createUser(
-                "user1",
-                "user1@gmail.com",
-                Role.USER,
-                "google");
-        em.persist(writer);
-
-        List<String> techStack = new ArrayList<>();
-        techStack.add("sample tech1");
-        techStack.add("sample tech2");
-        techStack.add("sample tech3");
-        techStack.add("sample tech4");
-
-        Condition condition = Condition.createCondition(
-                "sample place1",
-                LocalDateTime.of(2021, 06, 01, 00, 00),
-                LocalDateTime.of(2021, 12, 31, 00, 00),
-                10,
-                "sample explanation blah blah");
-
-        StudyRecruitment post = StudyRecruitment.savePost(
-                writer,
-                "sample title1",
-                techStack,
-                condition);
-
-        em.persist(post);
-        post.getTechStack().forEach(em::persist);
-
         //when
         Condition updatedCondition = Condition.createCondition(
                 "sample place2",
@@ -152,11 +84,10 @@ class StudyServiceTest {
         String updatedTitle = "sample title2";
 
         List<String> updatedTechStack = new ArrayList<>();
-        techStack.add("sample tech5");
-        techStack.add("sample tech6");
-        techStack.add("sample tech7");
-        techStack.add("sample tech8");
-
+        updatedTechStack.add("sample tech5");
+        updatedTechStack.add("sample tech6");
+        updatedTechStack.add("sample tech7");
+        updatedTechStack.add("sample tech8");
 
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
                 .title(updatedTitle)
@@ -168,45 +99,36 @@ class StudyServiceTest {
                 .explanation(updatedCondition.getExplanation())
                 .build();
 
-        studyService.update(post.getId(), requestDto);
+        studyService.update(dummyPost.getId(), requestDto);
 
         //then
-        StudyRecruitment updatedPost = studyRepository.findById(post.getId()).orElse(null);
+        StudyRecruitment updatedPost = studyRepository.findById(dummyPost.getId()).orElse(null);
 
         assertNotNull(updatedPost);
-        assertEquals(requestDto.getCondition().getPlace(), updatedPost.getCondition().getPlace());
-        assertEquals(requestDto.getCondition().getStartDate(), updatedPost.getCondition().getStartDate());
-        assertEquals(requestDto.getCondition().getEndDate(), updatedPost.getCondition().getEndDate());
-        assertEquals(requestDto.getCondition().getCapacity(), updatedPost.getCondition().getCapacity());
-        assertEquals(requestDto.getCondition().getExplanation(), updatedPost.getCondition().getExplanation());
+        assertEquals(requestDto.getCondition(), updatedPost.getCondition());
+        assertEquals(updatedTechStack, toStringArray(updatedPost.getTechStack()));
     }
 
     @Test
     void delete() {
-        Long postId = beforeUpdating();
+        studyService.delete(dummyPost.getId());
 
-        studyService.delete(postId);
-
-        StudyRecruitment deletedPost = studyRepository.findById(postId).orElse(null);
+        StudyRecruitment deletedPost = studyRepository.findById(dummyPost.getId()).orElse(null);
         assertNull(deletedPost);
     }
 
     @Test
     void read() {
-        //given
-        Long postId = beforeUpdating();
-        StudyRecruitment post = studyRepository.findById(postId).orElse(null);
-
-        List<Comment> comments = SampleComment.createList(writer, post, 5);
-        comments.forEach(commentRepository::save);
-
         //when
-        PostReadResponseDto responseDto = studyService.read(postId);
+        PostReadResponseDto responseDto = studyService.read(dummyPost.getId());
 
-        assertEquals(post.getId(), responseDto.getPostId());
-        assertEquals(post.getTitle(), responseDto.getTitle());
-        assertEquals(toStringArray(post.getTechStack()), responseDto.getTechStack());
-        assertEquals(post.getComment().size(), responseDto.getComments().size());
+        assertThat(dummyPost).isExactlyInstanceOf(StudyRecruitment.class);
+        StudyRecruitment dummyPostInStudy = (StudyRecruitment) dummyPost;
+
+        assertEquals(dummyPostInStudy.getId(), responseDto.getPostId());
+        assertEquals(dummyPostInStudy.getTitle(), responseDto.getTitle());
+        assertEquals(toStringArray(dummyPostInStudy.getTechStack()), responseDto.getTechStack());
+        assertEquals(dummyPostInStudy.getComment().size(), responseDto.getComments().size());
     }
 
     @Test
@@ -267,12 +189,46 @@ class StudyServiceTest {
                 .explanation("소통 잘 되시는 분 구해여")
                 .build();
 
-        return studyService.post(requestDto, writer);
+        return studyService.post(requestDto, dummyPostWriter);
     }
 
     private List<String> toStringArray(List<TechStack> techStack) {
         return techStack.stream()
                 .map(TechStack::getElement)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    void saveDummyPost(Board post) {
+        if (post instanceof StudyRecruitment) {
+            StudyRecruitment postInStudy = (StudyRecruitment) post;
+            studyRepository.save(postInStudy);
+            postInStudy.getTechStack().forEach(techStackRepository::save);
+
+            dummyPost = postInStudy;
+        }
+    }
+
+    @Override
+    Board createDummyPost() {
+        List<String> techStack = new ArrayList<>();
+        techStack.add("sample tech1");
+        techStack.add("sample tech2");
+        techStack.add("sample tech3");
+
+        Condition condition = Condition.createCondition(
+                "sample place",
+                LocalDateTime.of(2020, 06, 12, 00, 00),
+                LocalDateTime.of(2020, 12, 12, 00, 00),
+                10,
+                "sample explanation"
+        );
+
+        return StudyRecruitment.createPost(
+                dummyPostWriter,
+                "sample title",
+                techStack,
+                condition
+        );
     }
 }

@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 
 public class SampleStudyRecruitment {
     public static StudyRecruitment create(User writer) {
-        return StudyRecruitment.savePost(writer, "스터디 모집합니다.", createTechStack(), SampleCondition.create());
+        return StudyRecruitment.createPost(writer, "스터디 모집합니다.", createTechStack(), SampleCondition.create());
     }
 
     public static StudyRecruitment create(User writer, String[] techStack) {
-        return StudyRecruitment.savePost(writer, "스터디 모집합니다.", createTechStack(techStack), SampleCondition.create());
+        return StudyRecruitment.createPost(writer, "스터디 모집합니다.", createTechStack(techStack), SampleCondition.create());
     }
 
     public static StudyRecruitment create(User writer, String title, String[] techStack) {
-        return StudyRecruitment.savePost(writer, title, createTechStack(techStack), SampleCondition.create());
+        return StudyRecruitment.createPost(writer, title, createTechStack(techStack), SampleCondition.create());
     }
 
     public static List<StudyRecruitment> createList(List<User> writer, List<String> titles, List<String[]> techStacks) {
