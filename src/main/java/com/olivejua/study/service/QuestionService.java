@@ -4,6 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
+import com.olivejua.study.utils.ImageUploader;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
@@ -22,6 +23,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final ImageUploader imageUploader;
+    private static final String BOARD_NAME = "question";
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> list(Pageable pageable) {
@@ -38,13 +41,18 @@ public class QuestionService {
                 writer, requestDto.getTitle(), requestDto.getContent());
 
         questionRepository.save(newPost);
+        imageUploader.uploadImagesIn(
+                newPost.getContent(), BOARD_NAME, newPost.getId());
+
         return newPost.getId();
     }
 
     @Transactional(readOnly = true)
-    public PostReadResponseDto read(Long postId) {
+    public PostReadResponseDto read(Long postId, String servletPath) {
         Question entity = questionQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+
+        imageUploader.readImagesIn(entity.getContent(), servletPath,  BOARD_NAME, postId);
 
         return new PostReadResponseDto(entity);
     }
@@ -53,6 +61,7 @@ public class QuestionService {
         Question post = findPost(postId);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
+        imageUploader.uploadImagesIn(post.getContent(), BOARD_NAME, postId);
 
         return post.getId();
     }
@@ -61,6 +70,7 @@ public class QuestionService {
         Question post = findPost(postId);
 
         questionRepository.delete(post);
+        imageUploader.deleteImagesOf(BOARD_NAME, postId);
 
         return post.getId();
     }

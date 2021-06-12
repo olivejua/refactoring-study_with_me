@@ -74,7 +74,7 @@ public class QuestionControllerTest {
                 writer, "sample title1", "sample content1");
         em.persist(post);
 
-        when(questionService.read(anyLong())).thenReturn(new PostReadResponseDto(post));
+        when(questionService.read(anyLong(), anyString())).thenReturn(new PostReadResponseDto(post));
 
         mvc.perform(get("/question/"+post.getId())
                 .param("page", String.valueOf(0)))

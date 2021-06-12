@@ -1,17 +1,15 @@
 spring:
   profiles:
-    include: real, oauth
+    include: oauth, real-db
 
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/study
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+        default_batch_fetch_size: 1000
 
-#spring:
-#  profiles:
-#    active: local
-#    include: real
-#
-#logging.level:
-#  org.hibernate.SQL: debug
+  session:
+    store-type: jdbc
