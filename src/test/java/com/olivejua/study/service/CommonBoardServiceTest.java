@@ -26,7 +26,7 @@ public abstract class CommonBoardServiceTest extends CommonServiceTest {
 
     protected Board dummyPost;
 
-    protected final String dummyServletPath = "/home/images/";
+    protected String dummyServletPath = "/home/test/images";
 
     @BeforeEach
     void setup() {

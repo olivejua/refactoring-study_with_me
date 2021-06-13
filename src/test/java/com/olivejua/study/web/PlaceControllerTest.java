@@ -90,7 +90,7 @@ public class PlaceControllerTest {
         em.persist(post);
         post.getLinks().forEach(em::persist);
 
-        when(placeService.read(anyLong(), any())).thenReturn(new PostReadResponseDto(post, null));
+        when(placeService.read(anyLong(), any(), anyString())).thenReturn(new PostReadResponseDto(post, null));
 
         mvc.perform(get("/place/{postId}", 1L)
                 .param("page", String.valueOf(0))

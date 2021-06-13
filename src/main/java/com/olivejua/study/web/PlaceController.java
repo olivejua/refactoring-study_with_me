@@ -9,7 +9,9 @@ import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RequiredArgsConstructor
@@ -20,8 +22,11 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, @LoginUser SessionUser user) {
-        PostReadResponseDto responseDto = placeService.read(postId, user.toEntity());
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo
+            , @LoginUser SessionUser user, HttpServletRequest httpServletRequest) {
+        PostReadResponseDto responseDto = placeService.read(
+                postId, user.toEntity(),
+                httpServletRequest.getSession().getServletContext().getRealPath("/"));
         responseDto.savePageInfo(pageInfo);
 
         return ResponseEntity.ok(responseDto);

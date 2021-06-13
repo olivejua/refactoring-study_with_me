@@ -54,13 +54,13 @@ class StudyServiceTest extends CommonBoardServiceTest {
     @Test
     void post() {
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title("sample title test post")
-                .place("sample place test post")
-                .techStack(Arrays.asList("tech1", "tech2"))
+                .title("스터디원 구합니다.")
+                .place("강남 어딘가...")
+                .techStack(Arrays.asList("java", "spring"))
                 .startDate(LocalDateTime.of(2021, 5, 1, 15, 0))
                 .endDate(LocalDateTime.of(2021, 7, 31, 23, 59))
                 .capacity(5)
-                .explanation("sample explanation test post")
+                .explanation("소통 잘 되시는 분 구해여")
                 .build();
 
         Long postId = studyService.post(requestDto, dummyPostWriter);
@@ -70,7 +70,7 @@ class StudyServiceTest extends CommonBoardServiceTest {
         assertNotNull(savedPost);
         assertEquals(requestDto.getTitle(), savedPost.getTitle());
         assertEquals(requestDto.getTechStack(), toStringArray(savedPost.getTechStack()));
-        assertEquals(requestDto.getCondition(), savedPost.getCondition());
+        assertEquals(requestDto.getCapacity(), savedPost.getCondition());
     }
 
     @Test
@@ -114,8 +114,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
     void delete() {
         studyService.delete(dummyPost.getId());
 
-        Optional<StudyRecruitment> findEntity = studyRepository.findById(dummyPost.getId());
-        assertFalse(findEntity.isPresent());
+        Optional<StudyRecruitment> deletedEntity = studyRepository.findById(dummyPost.getId());
+        assertFalse(deletedEntity.isPresent());
     }
 
     @Test

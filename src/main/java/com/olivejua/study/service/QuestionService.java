@@ -4,7 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
-import com.olivejua.study.utils.ImageUploader;
+import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
@@ -23,9 +23,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
-    private final CommentService commentService;
-    private final ImageUploader imageUploader;
-    private static final String BOARD_NAME = "question";
+    private final BoardImageUploader boardImageUploader;
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> list(Pageable pageable) {
@@ -37,32 +35,31 @@ public class QuestionService {
         return questionQueryRepository.search(searchDto, pageable);
     }
 
-    @Transactional(readOnly = true)
-    public PostReadResponseDto read(Long postId, String servletPath) {
-        Question entity = questionQueryRepository.findEntity(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
-
-        imageUploader.readImagesIn(entity.getContent(), servletPath,  BOARD_NAME, postId);
-
-        return new PostReadResponseDto(entity);
-    }
-
     public Long post(PostSaveRequestDto requestDto, User writer) {
         Question newPost = Question.savePost(
                 writer, requestDto.getTitle(), requestDto.getContent());
 
         questionRepository.save(newPost);
-        imageUploader.uploadImagesIn(
-                newPost.getContent(), BOARD_NAME, newPost.getId());
+        boardImageUploader.uploadImagesInQuestion(newPost);
 
         return newPost.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public PostReadResponseDto read(Long postId, String servletPath) {
+        Question entity = questionQueryRepository.findEntity(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+
+        boardImageUploader.readImagesInQuestion(entity, servletPath);
+
+        return new PostReadResponseDto(entity);
     }
 
     public Long update(Long postId, PostUpdateRequestDto requestDto) {
         Question post = findPost(postId);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
-        imageUploader.updateImagesIn(post.getContent(), BOARD_NAME, postId);
+        boardImageUploader.updateImagesInQuestion(post);
 
         return post.getId();
     }
@@ -70,9 +67,8 @@ public class QuestionService {
     public Long delete(Long postId) {
         Question post = findPost(postId);
 
-        commentService.deleteByPost(post);
         questionRepository.delete(post);
-        imageUploader.deleteImagesOf(BOARD_NAME, postId);
+        boardImageUploader.deleteImagesInQuestion(postId);
 
         return post.getId();
     }
