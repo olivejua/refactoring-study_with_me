@@ -9,6 +9,7 @@ import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 
@@ -20,7 +21,8 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, @LoginUser SessionUser user) {
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo
+            , @LoginUser SessionUser user, @RequestParam MultipartFile file) {
         PostReadResponseDto responseDto = placeService.read(postId, user.toEntity());
         responseDto.savePageInfo(pageInfo);
 

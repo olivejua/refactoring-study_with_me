@@ -4,6 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
+import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.utils.ImageUploader;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
@@ -24,6 +25,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
     private final ImageUploader imageUploader;
+    private final BoardImageUploader boardImageUploader;
     private static final String BOARD_NAME = "question";
 
     @Transactional(readOnly = true)
@@ -41,8 +43,7 @@ public class QuestionService {
                 writer, requestDto.getTitle(), requestDto.getContent());
 
         questionRepository.save(newPost);
-        imageUploader.uploadImagesIn(
-                newPost.getContent(), BOARD_NAME, newPost.getId());
+        boardImageUploader.uploadImagesInQuestion(newPost);
 
         return newPost.getId();
     }
@@ -52,7 +53,7 @@ public class QuestionService {
         Question entity = questionQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
 
-        imageUploader.readImagesIn(entity.getContent(), servletPath,  BOARD_NAME, postId);
+        boardImageUploader.readImagesInQuestion(entity, servletPath);
 
         return new PostReadResponseDto(entity);
     }
@@ -61,7 +62,7 @@ public class QuestionService {
         Question post = findPost(postId);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
-        imageUploader.uploadImagesIn(post.getContent(), BOARD_NAME, postId);
+        boardImageUploader.updateImagesInQuestion(post);
 
         return post.getId();
     }

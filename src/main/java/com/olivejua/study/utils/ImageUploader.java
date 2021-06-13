@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,46 +25,23 @@ import static java.io.File.separator;
 @Component
 public class ImageUploader {
     public static String tempPath = "";
-    private final String defaultPath;
 
-    public ImageUploader(ImageConfig imageConfig) {
-        this.defaultPath = imageConfig.getDefaultPath();
-    }
-
-    public void uploadImagesIn(String htmlCode, String board, Long postId) {
-        List<String> images = getImagesIn(htmlCode);
-
-        if (images.isEmpty()) {
-            return;
-        }
-        String savedPath = getDirectory(defaultPath, board, postId.toString());
+    public void uploadImagesIn(List<String> imagePaths, String savedPath) {
         makeDirectory(savedPath);
-
-        convertImages(images, tempPath, savedPath);
+        convertImages(imagePaths, tempPath, savedPath);
     }
 
-    public void readImagesIn(String htmlCode, String servletPath, String board, Long postId) {
-        List<String> images = getImagesIn(htmlCode);
-
-        if (images.isEmpty()) {
-            return;
-        }
-
-        String sourcePath = getDirectory(defaultPath, board, postId.toString());
-        String targetPath = servletPath + getDirectory("resource", "photo_upload");
-
+    public void readImagesIn(String sourcePath, String targetPath) {
         convertAllInDir(sourcePath, targetPath);
     }
 
-    public void updateImagesIn(String htmlCode, String board, Long postId) {
-        String path = getDirectory(defaultPath, board, postId.toString());
+    public void updateImagesIn(List<String> imagePaths, String path) {
         deleteDirectory(path);
-
-        uploadImagesIn(htmlCode, board, postId);
+        uploadImagesIn(imagePaths, path);
     }
 
-    public void deleteImagesOf(String board, Long postId) {
-        deleteDirectory(getDirectory(defaultPath, board, postId.toString()));
+    public void deleteImagesIn(String path) {
+        deleteDirectory(path);
     }
 
     private boolean deleteDirectory(String path) {
@@ -152,7 +130,7 @@ public class ImageUploader {
         return savedPath.mkdirs();
     }
 
-    private String getDirectory(String... categories) {
+    public String getDirectory(String... categories) {
         StringBuilder path =  new StringBuilder();
         for (String category : categories) {
             path.append(category)
@@ -160,21 +138,5 @@ public class ImageUploader {
         }
 
         return path.toString();
-    }
-
-    private List<String> getImagesIn(String htmlCode) {
-        List<String> paths = new ArrayList<>();
-
-        Document doc = Jsoup.parse(htmlCode);
-        Elements images = doc.getElementsByTag("img");
-
-        for (Element image : images) {
-            String name = image.attr("src")
-                    .replace("/resource/photo_upload/", "");
-
-            paths.add(name);
-        }
-
-        return paths;
     }
 }
