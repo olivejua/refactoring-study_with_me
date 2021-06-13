@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -113,8 +114,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
     void delete() {
         studyService.delete(dummyPost.getId());
 
-        StudyRecruitment deletedPost = studyRepository.findById(dummyPost.getId()).orElse(null);
-        assertNull(deletedPost);
+        Optional<StudyRecruitment> deletedEntity = studyRepository.findById(dummyPost.getId());
+        assertFalse(deletedEntity.isPresent());
     }
 
     @Test

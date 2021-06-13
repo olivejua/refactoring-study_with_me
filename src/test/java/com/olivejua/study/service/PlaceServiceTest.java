@@ -2,9 +2,7 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Board;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.board.*;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
@@ -22,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -83,54 +83,42 @@ public class PlaceServiceTest extends CommonBoardServiceTest {
     void read() {
         PostReadResponseDto responseDto = placeService.read(dummyPost.getId(), dummyPostWriter, dummyServletPath);
 
-        assertEquals(5, responseDto.getComments().size());
-        assertEquals(5, responseDto.getLikeCount());
-        assertEquals(0, responseDto.getDislikeCount());
+        assertThat(dummyPost).isExactlyInstanceOf(PlaceRecommendation.class);
+        PlaceRecommendation dummyPostInPlace = (PlaceRecommendation) dummyPost;
+        assertEquals(dummyPostInPlace.getTitle(), responseDto.getTitle());
+        assertEquals(dummyPostInPlace.getAddress(), responseDto.getAddress());
+        assertEquals(dummyPostInPlace.getComment().size(), responseDto.getComments().size());
         assertEquals(LikeStatus.NOT_YET, responseDto.getLikeStatus());
     }
 
     @Test
-    void testUpdate() {
+    void update() {
         //given
-        User writer = SampleUser.create();
-        userRepository.save(writer);
-
-        PlaceRecommendation post = SamplePlaceRecommendation.create(writer,
-                new String[] {"www.google.com", "www.naver.com", "www.tistory.com", "www.daum.net", "www.github.com"});
-
-        placeRecommendationRepository.save(post);
-        post.getLinks().forEach(linkRepository::save);
-
-        PostReadResponseDto readResponseDto = placeService.read(post.getId(), writer, dummyServletPath);
-
-        //when
-        String updatedTitle = post.getTitle() + " 수정";
-        String updatedAddress = post.getAddress() + " 수정";
-
         PostSaveRequestDto requestDto = new PostSaveRequestDto(
-                updatedTitle,
-                updatedAddress,
-                readResponseDto.getAddressDetail(),
-                readResponseDto.getLinks(),
-                readResponseDto.getThumbnailPath(),
-                readResponseDto.getContent());
+                "test update sample title",
+                "test update sample address",
+                "test update sample addressDetail",
+                Arrays.asList("updated links1", "updated links2", "updated links3"),
+                "test update sample thumbnailPath",
+                "test update sample content");
 
-        placeService.update(post.getId(), requestDto);
+        placeService.update(dummyPost.getId(), requestDto);
 
-        em.flush();
-        em.clear();
-
-        PlaceRecommendation entity = placeRecommendationRepository.findById(post.getId()).orElse(null);
+        PlaceRecommendation entity = placeRecommendationRepository.findById(dummyPost.getId()).orElse(null);
         assertNotNull(entity);
-        assertEquals(updatedTitle, entity.getTitle());
-        assertEquals(updatedAddress, entity.getAddress());
+
+        assertEquals(requestDto.getTitle(), entity.getTitle());
+        assertEquals(requestDto.getContent(), entity.getContent());
+        assertEquals(requestDto.getThumbnailPath(), entity.getThumbnailPath());
+        assertEquals(requestDto.getLinks(), toStringArray(entity.getLinks()));
     }
 
-    List<String> toList(String[] array) {
+    @Test
+    void delete() {
+        placeService.delete(dummyPost.getId());
 
-        List<String> list = new ArrayList<>(Arrays.asList(array));
-
-        return list;
+        Optional<PlaceRecommendation> deletedEntity = placeRecommendationRepository.findById(dummyPost.getId());
+        assertFalse(deletedEntity.isPresent());
     }
 
     @Override
@@ -177,5 +165,11 @@ public class PlaceServiceTest extends CommonBoardServiceTest {
         likeHistoryRepository.save(likeHistory1);
         likeHistoryRepository.save(likeHistory2);
         likeHistoryRepository.save(likeHistory3);
+    }
+
+    private List<String> toStringArray(List<Link> links) {
+        return links.stream()
+                .map(Link::getElement)
+                .collect(Collectors.toList());
     }
 }
