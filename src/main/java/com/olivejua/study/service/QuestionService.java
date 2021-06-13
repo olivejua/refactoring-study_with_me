@@ -5,7 +5,6 @@ import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.utils.BoardImageUploader;
-import com.olivejua.study.utils.ImageUploader;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
@@ -24,9 +23,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
-    private final ImageUploader imageUploader;
     private final BoardImageUploader boardImageUploader;
-    private static final String BOARD_NAME = "question";
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> list(Pageable pageable) {
@@ -71,7 +68,7 @@ public class QuestionService {
         Question post = findPost(postId);
 
         questionRepository.delete(post);
-        imageUploader.deleteImagesOf(BOARD_NAME, postId);
+        boardImageUploader.deleteImagesInQuestion(postId);
 
         return post.getId();
     }

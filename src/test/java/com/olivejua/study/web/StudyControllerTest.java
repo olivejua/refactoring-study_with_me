@@ -92,7 +92,7 @@ public class StudyControllerTest {
         em.persist(post);
         post.getTechStack().forEach(em::persist);
 
-        when(studyService.read(anyLong())).thenReturn(new PostReadResponseDto(post));
+        when(studyService.read(anyLong(), anyString())).thenReturn(new PostReadResponseDto(post));
 
         mvc.perform(get("/study/"+post.getId())
                 .param("page", String.valueOf(0)))

@@ -6,6 +6,7 @@ import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
+import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
@@ -24,6 +25,9 @@ public class PlaceService {
     private final PlaceRecommendationRepository placeRepository;
     private final PlaceRecommendationQueryRepository placeQueryRepository;
     private final LinkService linkService;
+    private final LikeHistoryService likeHistoryService;
+    private final BoardImageUploader boardImageUploader;
+    private final CommentService commentService;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
         return placeQueryRepository.list(pageable);
@@ -41,16 +45,19 @@ public class PlaceService {
 
         placeRepository.save(newPost);
         linkService.update(newPost);
+        boardImageUploader.uploadImagesInPlace(newPost);
 
         return newPost.getId();
     }
 
-    public PostReadResponseDto read(Long postId, User loginUser) {
+    public PostReadResponseDto read(Long postId, User loginUser, String servletPath) {
         PlaceRecommendation entity = placeQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
 
         LikeHistory likeHistory = placeQueryRepository.getLikeStatusByPostAndUser(postId, loginUser.getId())
                 .orElse(null);
+
+        boardImageUploader.readImagesInPlace(entity, servletPath);
 
         return new PostReadResponseDto(entity, likeHistory);
     }
@@ -61,6 +68,7 @@ public class PlaceService {
         post.edit(requestDto.getTitle(), requestDto.getAddress(), requestDto.getAddressDetail(),
                 requestDto.getThumbnailPath(), requestDto.getContent(), requestDto.getLinks());
         linkService.update(post);
+        boardImageUploader.updateImagesInPlace(post);
 
         return post.getId();
     }
@@ -68,11 +76,11 @@ public class PlaceService {
     public void delete(Long postId) {
         PlaceRecommendation post = findPost(postId);
         
-        //reply 지우기
-        //comment 지우기
-        //likeHistory 지우기
+        commentService.deleteByPost(post);
+        likeHistoryService.deleteByPost(post);
         linkService.delete(post);
         placeRepository.delete(post);
+        boardImageUploader.deleteImagesInPlace(postId);
     }
 
     private PlaceRecommendation findPost(Long postId) {

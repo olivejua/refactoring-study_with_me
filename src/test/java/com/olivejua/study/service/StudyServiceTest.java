@@ -120,7 +120,7 @@ class StudyServiceTest extends CommonBoardServiceTest {
     @Test
     void read() {
         //when
-        PostReadResponseDto responseDto = studyService.read(dummyPost.getId());
+        PostReadResponseDto responseDto = studyService.read(dummyPost.getId(), dummyServletPath);
 
         assertThat(dummyPost).isExactlyInstanceOf(StudyRecruitment.class);
         StudyRecruitment dummyPostInStudy = (StudyRecruitment) dummyPost;

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RequiredArgsConstructor
@@ -20,8 +21,9 @@ public class StudyController {
     private final StudyService studyService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo) {
-        PostReadResponseDto responseDto = studyService.read(postId);
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, HttpServletRequest httpServletRequest) {
+        PostReadResponseDto responseDto = studyService.read(
+                postId, httpServletRequest.getSession().getServletContext().getRealPath("/"));
         responseDto.savePageInfo(pageInfo);
 
         return ResponseEntity.ok(responseDto);

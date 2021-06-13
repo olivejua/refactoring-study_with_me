@@ -5,6 +5,7 @@ import com.olivejua.study.domain.board.StudyRecruitment;
 import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
+import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
 import com.olivejua.study.web.dto.board.study.PostReadResponseDto;
@@ -23,6 +24,7 @@ public class StudyService {
     private final StudyRecruitmentQueryRepository studyQueryRepository;
     private final TechStackService techStackService;
     private final CommentService commentService;
+    private final BoardImageUploader boardImageUploader;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
         return studyQueryRepository.list(pageable);
@@ -39,6 +41,7 @@ public class StudyService {
 
         studyRepository.save(newPost);
         techStackService.update(newPost);
+        boardImageUploader.uploadImagesInStudy(newPost);
 
         return newPost.getId();
     }
@@ -48,6 +51,7 @@ public class StudyService {
         
         post.update(requestDto.getTitle(), requestDto.getCondition(), requestDto.getTechStack());
         techStackService.update(post);
+        boardImageUploader.updateImagesInStudy(post);
 
         return post.getId();
     }
@@ -58,14 +62,16 @@ public class StudyService {
         commentService.deleteByPost(post);
         techStackService.deleteByPost(post);
         studyRepository.delete(post);
+        boardImageUploader.deleteImagesInStudy(postId);
 
         return post.getId();
     }
 
     @Transactional(readOnly = true)
-    public PostReadResponseDto read(Long postId) {
+    public PostReadResponseDto read(Long postId, String servletPath) {
         StudyRecruitment entity = studyQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
+        boardImageUploader.readImagesInStudy(entity, servletPath);
 
         return new PostReadResponseDto(entity);
     }
