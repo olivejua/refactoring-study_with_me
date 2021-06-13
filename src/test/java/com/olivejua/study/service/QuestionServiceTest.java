@@ -1,6 +1,7 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
@@ -20,11 +21,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
-class QuestionServiceTest {
+class QuestionServiceTest extends CommonBoardServiceTest {
 
     @Autowired
     QuestionService questionService;
@@ -32,18 +33,10 @@ class QuestionServiceTest {
     @Autowired
     QuestionRepository questionRepository;
 
-    @Autowired
-    UserRepository userRepository;
-
-    private User writer;
-
-    @BeforeEach
-    void setup() {
-        writer = userRepository.save(SampleUser.create());
-    }
-
     @AfterEach
     void cleanup() {
+        replyRepository.deleteAll();
+        commentRepository.deleteAll();
         questionRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -51,15 +44,15 @@ class QuestionServiceTest {
     @Test
     void post() {
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title("JPA 관련 질문입니다.")
-                .content("JPA에서 쿼리가 나가는 시점은?")
+                .title("test post sample title")
+                .content("test post sample content")
                 .build();
 
-        Long postId = questionService.post(requestDto, writer);
+        Long postId = questionService.post(requestDto, dummyPostWriter);
 
-        Question savedPost = questionRepository.findById(postId).get();
+        Question savedPost = questionRepository.findById(postId).orElse(null);
 
-        assertEquals(writer.getId(), savedPost.getWriter().getId());
+        assertNotNull(savedPost);
         assertEquals(requestDto.getTitle(), savedPost.getTitle());
         assertEquals(requestDto.getContent(), savedPost.getContent());
     }
@@ -67,37 +60,32 @@ class QuestionServiceTest {
     @Test
     void findPostBy_x() {
         assertThrows(IllegalArgumentException.class,
-                () -> questionService.read(1L, "/home/images/"),
+                () -> questionService.read(1000L, dummyServletPath),
                 "저장하지 않은 게시물을 가져오는 호출에는 예외가 발생해야한다."
         );
     }
 
     @Test
     void update() {
-        Question newPost = SampleQuestion.create(writer);
-        Long postId = questionRepository.save(newPost).getId();
-
         PostUpdateRequestDto requestDto = PostUpdateRequestDto.builder()
-                .title("JPA 관련 질문입니다. -수정")
-                .content("JPA에서 쿼리가 나가는 시점은? -수정")
+                .title("test update sample title")
+                .content("test update sample content")
                 .build();
 
-        questionService.update(postId, requestDto);
-        Question updatedPost = questionRepository.findById(postId).get();
+        questionService.update(dummyPost.getId(), requestDto);
+        Question updatedPost = questionRepository.findById(dummyPost.getId()).orElse(null);
 
+        assertNotNull(updatedPost);
         assertEquals(requestDto.getTitle(), updatedPost.getTitle());
         assertEquals(requestDto.getContent(), updatedPost.getContent());
     }
 
     @Test
     void delete() {
-        Question newPost = SampleQuestion.create(writer);
-        Long postId = questionRepository.save(newPost).getId();
+        questionService.delete(dummyPost.getId());
+        Optional<Question> findEntity = questionRepository.findById(dummyPost.getId());
 
-        questionService.delete(postId);
-        boolean isPresent = questionRepository.findById(postId).isPresent();
-
-        assertFalse(isPresent);
+        assertFalse(findEntity.isPresent());
     }
 
     @Test
@@ -138,5 +126,21 @@ class QuestionServiceTest {
         Page<PostListResponseDto> list = questionService.search(searchDto, paging);
 
         assertEquals(4, list.getTotalElements());
+    }
+
+    @Override
+    void saveDummyPost(Board post) {
+        if (post instanceof Question) {
+            Question postInQuestion = (Question) post;
+            questionRepository.save(postInQuestion);
+
+            dummyPost = postInQuestion;
+        }
+    }
+
+    @Override
+    Board createDummyPost() {
+        return Question.savePost(
+                dummyPostWriter, "sample title1", "sample content1");
     }
 }

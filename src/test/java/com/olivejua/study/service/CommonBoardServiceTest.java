@@ -26,6 +26,8 @@ public abstract class CommonBoardServiceTest extends CommonServiceTest {
 
     protected Board dummyPost;
 
+    protected final String dummyServletPath = "/home/images/";
+
     @BeforeEach
     void setup() {
         dummyPostWriter = User.createUser("post writer", "postWriter@gmail.com", Role.USER, "google");

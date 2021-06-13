@@ -23,6 +23,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final CommentService commentService;
     private final ImageUploader imageUploader;
     private static final String BOARD_NAME = "question";
 
@@ -36,6 +37,16 @@ public class QuestionService {
         return questionQueryRepository.search(searchDto, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public PostReadResponseDto read(Long postId, String servletPath) {
+        Question entity = questionQueryRepository.findEntity(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
+
+        imageUploader.readImagesIn(entity.getContent(), servletPath,  BOARD_NAME, postId);
+
+        return new PostReadResponseDto(entity);
+    }
+
     public Long post(PostSaveRequestDto requestDto, User writer) {
         Question newPost = Question.savePost(
                 writer, requestDto.getTitle(), requestDto.getContent());
@@ -47,21 +58,11 @@ public class QuestionService {
         return newPost.getId();
     }
 
-    @Transactional(readOnly = true)
-    public PostReadResponseDto read(Long postId, String servletPath) {
-        Question entity = questionQueryRepository.findEntity(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + postId));
-
-        imageUploader.readImagesIn(entity.getContent(), servletPath,  BOARD_NAME, postId);
-
-        return new PostReadResponseDto(entity);
-    }
-
     public Long update(Long postId, PostUpdateRequestDto requestDto) {
         Question post = findPost(postId);
 
         post.edit(requestDto.getTitle(), requestDto.getContent());
-        imageUploader.uploadImagesIn(post.getContent(), BOARD_NAME, postId);
+        imageUploader.updateImagesIn(post.getContent(), BOARD_NAME, postId);
 
         return post.getId();
     }
@@ -69,6 +70,7 @@ public class QuestionService {
     public Long delete(Long postId) {
         Question post = findPost(postId);
 
+        commentService.deleteByPost(post);
         questionRepository.delete(post);
         imageUploader.deleteImagesOf(BOARD_NAME, postId);
 
