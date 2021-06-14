@@ -1,5 +1,6 @@
 package com.olivejua.study.service;
 
+import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.web.dto.user.UserSignInResponseDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     @Transactional(readOnly = true)
     public List<String> findAllNames() {
@@ -29,16 +32,15 @@ public class UserService {
         user.changeRoleToUser();
 
         User savedUser = userRepository.save(user);
+        httpSession.setAttribute("user", new SessionUser(savedUser));
 
         return new UserSignupResponseDto(savedUser);
     }
 
-    public UserSignInResponseDto changeProfile(Long userId, String name) {
+    public void changeProfile(Long userId, String name) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 User가 없습니다."));
 
         user.changeProfile(name);
-
-        return new UserSignInResponseDto(user);
     }
 }

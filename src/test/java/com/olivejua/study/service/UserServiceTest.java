@@ -18,8 +18,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -88,10 +87,13 @@ class UserServiceTest {
 
         //when
         String changedName = "olivejua-수정";
-        UserSignInResponseDto responseDto = userService.changeProfile(user.getId(), changedName);
+        userService.changeProfile(user.getId(), changedName);
+
+        User result = userRepository.findById(user.getId()).orElse(null);
 
         //then
-        assertEquals(changedName, responseDto.getName());
+        assertNotNull(result);
+        assertEquals(changedName, result.getName());
     }
 
     @Test
