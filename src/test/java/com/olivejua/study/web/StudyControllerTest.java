@@ -80,8 +80,8 @@ public class StudyControllerTest {
 
         Condition condition = Condition.createCondition(
                 "sample place1",
-                LocalDateTime.of(2020, 06, 10, 00, 00),
-                LocalDateTime.of(2020, 12, 10, 00, 00),
+                LocalDateTime.of(2021, 06, 10, 00, 00),
+                LocalDateTime.of(2021, 12, 10, 00, 00),
                 10,
                 "sample explanation"
         );
@@ -121,8 +121,8 @@ public class StudyControllerTest {
                 "sample title",
                 techStack,
                 "sample place",
-                LocalDateTime.of(2020, 06, 10, 00, 00),
-                LocalDateTime.of(2020, 12, 10, 00, 00),
+                LocalDateTime.of(2021, 06, 10, 00, 00),
+                LocalDateTime.of(2021, 12, 10, 00, 00),
                 10,
                 "sample explanation");
 
@@ -146,8 +146,8 @@ public class StudyControllerTest {
                 "sample title",
                 techStack,
                 "sample place",
-                LocalDateTime.of(2020, 06, 10, 00, 00),
-                LocalDateTime.of(2020, 12, 10, 00, 00),
+                LocalDateTime.of(2021, 06, 10, 00, 00),
+                LocalDateTime.of(2021, 12, 10, 00, 00),
                 10,
                 "sample explanation");
 

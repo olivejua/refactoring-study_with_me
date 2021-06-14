@@ -33,7 +33,7 @@ public class PlaceController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
+    public ResponseEntity<Void> post(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user, MultipartFile imageFile) {
         Long savedPostId = placeService.post(requestDto, user.toEntity());
         return ResponseEntity.created(URI.create("/place/"+savedPostId)).build();
     }

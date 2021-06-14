@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.service.PlaceService;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
@@ -25,6 +26,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -90,11 +92,13 @@ public class PlaceControllerTest {
         em.persist(post);
         post.getLinks().forEach(em::persist);
 
-        when(placeService.read(anyLong(), any(), anyString())).thenReturn(new PostReadResponseDto(post, null));
+        PostReadResponseDto responseDto = new PostReadResponseDto(post, null);
+        when(placeService.read(anyLong(), any(), anyString())).thenReturn(responseDto);
 
         mvc.perform(get("/place/{postId}", 1L)
                 .param("page", String.valueOf(0))
-                .session(httpSession))
+                .session(httpSession)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.postId").isNotEmpty())
                 .andExpect(jsonPath("$.title").isNotEmpty())
@@ -105,6 +109,33 @@ public class PlaceControllerTest {
                 .andExpect(jsonPath("$.likeStatus").isNotEmpty())
                 .andExpect(jsonPath("$.comments").isArray())
                 .andDo(print());
+    }
+
+    @Test
+    void requestDtoTest() throws Exception {
+        User writer = User.createUser(
+                "user1",
+                "user1@gmail.com",
+                Role.USER,
+                "google"
+        );
+
+        PlaceRecommendation post = PlaceRecommendation.savePost(
+                writer,
+                "sample title1",
+                "sample address1",
+                "sample addressDetail1",
+                "thumbnail path1",
+                "sample content1",
+                Arrays.asList("link1", "link2", "link3"));
+
+        PostReadResponseDto responseDto = new PostReadResponseDto(post, null);
+
+        when(placeService.read(anyLong(), any(), anyString())).thenReturn(responseDto);
+
+        PostReadResponseDto response = placeService.read(post.getId(), writer, "/");
+        System.out.println(response);
+
     }
 
     @Test

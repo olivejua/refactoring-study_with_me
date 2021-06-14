@@ -21,7 +21,8 @@ public class StudyController {
     private final StudyService studyService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo,
+                                                    HttpServletRequest httpServletRequest) {
         PostReadResponseDto responseDto = studyService.read(
                 postId, httpServletRequest.getSession().getServletContext().getRealPath("/"));
         responseDto.savePageInfo(pageInfo);

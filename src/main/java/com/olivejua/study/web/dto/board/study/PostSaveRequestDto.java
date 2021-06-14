@@ -19,7 +19,6 @@ public class PostSaveRequestDto {
     private int capacity;
     private String explanation;
 
-    @Builder
     public PostSaveRequestDto(String title, List<String> techStack, String place,
                               LocalDateTime startDate, LocalDateTime endDate,
                               int capacity, String explanation) {

@@ -53,15 +53,14 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
     @Test
     void post() {
-        PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title("스터디원 구합니다.")
-                .place("강남 어딘가...")
-                .techStack(Arrays.asList("java", "spring"))
-                .startDate(LocalDateTime.of(2021, 5, 1, 15, 0))
-                .endDate(LocalDateTime.of(2021, 7, 31, 23, 59))
-                .capacity(5)
-                .explanation("소통 잘 되시는 분 구해여")
-                .build();
+        PostSaveRequestDto requestDto = new PostSaveRequestDto(
+                "test post sample title",
+                Arrays.asList("test post sample tech1", "test post sample tech2", "test post sample tech3"),
+                "test post sample place",
+                LocalDateTime.of(2021, 06, 13, 00, 00),
+                LocalDateTime.of(2021, 12, 13, 00, 00),
+                10,
+                "test post sample explanation");
 
         Long postId = studyService.post(requestDto, dummyPostWriter);
 
@@ -69,36 +68,20 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
         assertNotNull(savedPost);
         assertEquals(requestDto.getTitle(), savedPost.getTitle());
-        assertEquals(requestDto.getTechStack(), toStringArray(savedPost.getTechStack()));
-        assertEquals(requestDto.getCapacity(), savedPost.getCondition());
+        assertEquals(requestDto.getTechStack(), toStringList(savedPost.getTechStack()));
+        assertEquals(requestDto.getCondition(), savedPost.getCondition());
     }
 
     @Test
     void update() {
-        //when
-        Condition updatedCondition = Condition.createCondition(
-                "sample place2",
-                LocalDateTime.of(2021, 07, 01, 00, 00),
-                LocalDateTime.of(2022, 01, 31, 00, 00),
-                20,
-                "sample explanation blah blah updated");
-        String updatedTitle = "sample title2";
-
-        List<String> updatedTechStack = new ArrayList<>();
-        updatedTechStack.add("sample tech5");
-        updatedTechStack.add("sample tech6");
-        updatedTechStack.add("sample tech7");
-        updatedTechStack.add("sample tech8");
-
-        PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title(updatedTitle)
-                .place(updatedCondition.getPlace())
-                .techStack(updatedTechStack)
-                .startDate(updatedCondition.getStartDate())
-                .endDate(updatedCondition.getEndDate())
-                .capacity(updatedCondition.getCapacity())
-                .explanation(updatedCondition.getExplanation())
-                .build();
+        PostSaveRequestDto requestDto = new PostSaveRequestDto(
+                "test update sample title",
+                Arrays.asList("test update sample tech1", "test update sample tech2", "test update sample tech3"),
+                "test update sample place",
+                LocalDateTime.of(2021, 06, 13, 00, 00),
+                LocalDateTime.of(2021, 12, 13, 00, 00),
+                10,
+                "test update sample explanation");
 
         studyService.update(dummyPost.getId(), requestDto);
 
@@ -107,7 +90,7 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
         assertNotNull(updatedPost);
         assertEquals(requestDto.getCondition(), updatedPost.getCondition());
-        assertEquals(updatedTechStack, toStringArray(updatedPost.getTechStack()));
+        assertEquals(requestDto.getTechStack(), toStringList(updatedPost.getTechStack()));
     }
 
     @Test
@@ -128,7 +111,7 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
         assertEquals(dummyPostInStudy.getId(), responseDto.getPostId());
         assertEquals(dummyPostInStudy.getTitle(), responseDto.getTitle());
-        assertEquals(toStringArray(dummyPostInStudy.getTechStack()), responseDto.getTechStack());
+        assertEquals(toStringList(dummyPostInStudy.getTechStack()), responseDto.getTechStack());
         assertEquals(dummyPostInStudy.getComment().size(), responseDto.getComments().size());
     }
 
@@ -179,21 +162,7 @@ class StudyServiceTest extends CommonBoardServiceTest {
         });
     }
 
-    private Long beforeUpdating() {
-        PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title("스터디원 구합니다.")
-                .place("강남 어딘가...")
-                .techStack(Arrays.asList("java", "spring"))
-                .startDate(LocalDateTime.of(2021, 5, 1, 15, 0))
-                .endDate(LocalDateTime.of(2021, 7, 31, 23, 59))
-                .capacity(5)
-                .explanation("소통 잘 되시는 분 구해여")
-                .build();
-
-        return studyService.post(requestDto, dummyPostWriter);
-    }
-
-    private List<String> toStringArray(List<TechStack> techStack) {
+    private List<String> toStringList(List<TechStack> techStack) {
         return techStack.stream()
                 .map(TechStack::getElement)
                 .collect(Collectors.toList());
@@ -219,8 +188,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
         Condition condition = Condition.createCondition(
                 "sample place",
-                LocalDateTime.of(2020, 06, 12, 00, 00),
-                LocalDateTime.of(2020, 12, 12, 00, 00),
+                LocalDateTime.of(2021, 06, 12, 00, 00),
+                LocalDateTime.of(2021, 12, 12, 00, 00),
                 10,
                 "sample explanation"
         );
