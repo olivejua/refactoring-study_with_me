@@ -22,9 +22,12 @@ public class Link {
 
     private String element;
 
-    public Link(PlaceRecommendation post, String element) {
-        this.post = post;
-        this.element = element;
+    public static Link createLink(PlaceRecommendation post, String element) {
+        Link link = new Link();
+        link.post = post;
+        link.element = element;
+
+        return link;
     }
 
     @Override

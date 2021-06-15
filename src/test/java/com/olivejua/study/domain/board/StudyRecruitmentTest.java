@@ -87,6 +87,7 @@ class StudyRecruitmentTest {
         changedTechStack.add("tech8");
 
         //when
+        post.getTechStack().forEach(em::remove);
         post.update("changedTitle", changedCondition, changedTechStack);
         post.getTechStack().forEach(em::persist);
 
@@ -99,7 +100,7 @@ class StudyRecruitmentTest {
         assertEquals(post.getId(), findPost.getId());
         assertEquals(post.getWriter().getId(), findPost.getWriter().getId());
         assertEquals(post.getTitle(), findPost.getTitle());
-//        assertEquals(post.getTechStack(), findPost.getTechStack());
+        assertEquals(post.getTechStack().size(), findPost.getTechStack().size());
         assertEquals(post.getCondition(), post.getCondition());
     }
 }

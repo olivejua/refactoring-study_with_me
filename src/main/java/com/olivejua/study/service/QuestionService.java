@@ -23,6 +23,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final CommentService commentService;
     private final BoardImageUploader boardImageUploader;
 
     @Transactional(readOnly = true)
@@ -67,6 +68,7 @@ public class QuestionService {
     public Long delete(Long postId) {
         Question post = findPost(postId);
 
+        commentService.deleteByPost(post);
         questionRepository.delete(post);
         boardImageUploader.deleteImagesInQuestion(postId);
 
