@@ -56,6 +56,9 @@
 
 
 # 리팩토링
-1. [Querydsl을 활용한 select 쿼리 최적화](/docs/refactoring/aboutQuerydsl/updateQueries.md)
-2. 엔티티 연관관계 보완
-3. 1메소드당 최소 1테스트케이스 작성
+1. select 쿼리는 Querydsl을 이용하여 조회쿼리 최적화
+    - 연관관계 엔티티 join mapping.
+    - 목록 조회시 페이징 쿼리 최적화
+2. controller return type을 http 응답메시지의 상태별로 구분하여 전송
+3. 
+
