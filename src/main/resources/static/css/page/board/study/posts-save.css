@@ -1,0 +1,110 @@
+.col-md-4 {
+    max-width: 100%;
+}
+
+#smart_editor2 {
+    width: 100%;
+}
+
+col-form-label {
+    vertical-align: middle;
+}
+
+.ui-datepicker-trigger {
+    display: none;
+}
+
+#btn-save #btn-cancel {
+    float: right;
+    margin-top: 5%;
+}
+
+#period>input {
+    display: inline;
+    width: 48%;
+}
+
+#startDate {
+    margin-right: 3%;
+}
+
+#label-languages, #add-languages {
+    margin-bottom: 1%;
+}
+
+#add-languages > .form-control {
+    display: inline;
+}
+
+#add-languages > input[type=text] {
+    width: 90%;
+}
+
+#add-languages > button {
+    margin-left: 0.5%;
+    width: 9%;
+}
+
+#languages-box {
+    background-color: beige;
+    height: 80px;
+    border: 0;
+    padding: 2% 1%;
+    overflow: auto;
+}
+
+.language-lumps {
+    margin: 3px 0.5% 3px 0.5%;
+    padding: 0.5% 1.5%;
+    border-radius: 15px;
+    background-color: dodgerblue;
+    color: aliceblue;
+    font-weight: bold;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.delete-lumps {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none transparent;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 0 0 0 7px;
+}
+
+.delete-lumps:focus {
+    outline: none;
+}
+
+.bottom-line {
+    float: right;
+    margin: 3% 0;
+}
+
+.modal-title {
+    font-size: large;
+}
+
+.modal-header > button {
+    display: block;
+    width: 25%;
+    margin-left: 35%;
+    margin-top: 15px;
+}
+
+form {
+    font-size: medium;
+}
+
+input[type=text] {
+    font-size: medium;
+}
+
+input[type=date] {
+    font-size: medium;
+}
+
+#btn-add-language {
+    font-size: medium;
+}

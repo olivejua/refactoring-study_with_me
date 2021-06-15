@@ -1,0 +1,17 @@
+.jumbotron {
+    background-color: coral;
+    background-size: 100%;
+    color: aliceblue;
+    padding: 30px;
+    height: 200px;
+}
+.jumbotron>h1 {
+    display: inline-flex;
+    margin-top: 4.5%;
+}
+
+.jumbotron>img {
+    height: 150px;
+    float: right;
+    margin-right: 3rem;
+}

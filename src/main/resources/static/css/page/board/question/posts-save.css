@@ -1,0 +1,40 @@
+.col-md-4 {
+    max-width: 100%;
+}
+
+#smart_editor2 {
+    width: 100%;
+}
+
+col-form-label {
+    vertical-align: middle;
+}
+
+form {
+    font-size: medium;
+}
+
+#title {
+    font-size: medium;
+}
+
+#btn-save #btn-cancel {
+    float: right;
+    margin-top: 5%;
+}
+
+.bottom-line {
+    float: right;
+    margin: 3% 0;
+}
+
+.modal-title {
+    font-size: large;
+}
+
+.modal-header > button {
+    display: block;
+    width: 25%;
+    margin-left: 35%;
+    margin-top: 15px;
+}

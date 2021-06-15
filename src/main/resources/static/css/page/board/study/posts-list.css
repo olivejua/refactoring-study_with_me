@@ -1,0 +1,65 @@
+.form-control {
+    margin-right: 0.5rem;
+}
+
+#search-keyword {
+    width: 300px;
+}
+
+table {
+    font-size: small;
+}
+
+tr {
+    height: 40px;
+}
+
+th {
+    text-align: center;
+}
+
+.table-row-postNo {
+    width: 100px;
+    text-align: center;
+}
+
+.table-row-title {
+    width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-row-title > span {
+    display: inline-block;
+}
+
+.table-row-title>.text-title {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 500px;
+}
+
+.table-row-title>.badge {
+    float: right;
+    margin-right: 1rem;
+    font-size: small;
+}
+
+.table-row-writer {
+    width: 130px;
+    text-align: center;
+}
+
+.table-row-date {
+    width: 170px;
+    text-align: center;
+}
+
+.table-row-views {
+    width: 80px;
+    text-align: center;
+}
+
+.pagination {
+    justify-content: center;
+}
