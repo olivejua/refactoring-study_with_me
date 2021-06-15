@@ -40,6 +40,16 @@ public class ImageUploader {
         uploadImagesIn(imagePaths, path);
     }
 
+    public void transferImageByFile(MultipartFile image, String movedPath, String imageName) {
+        try {
+            makeDirectory(movedPath);
+            File dest = new File(movedPath + imageName);
+            image.transferTo(dest);
+        } catch (IOException e) {
+            log.error("[ImageUploader] 해당 디렉토리에 이미지를 이동시킬 수 없습니다.");
+        }
+    }
+
     public void deleteImagesIn(String path) {
         deleteDirectory(path);
     }
@@ -48,7 +58,7 @@ public class ImageUploader {
         try {
             FileUtils.deleteDirectory(new File(path));
         } catch (IOException e) {
-            log.error("해당 디렉토리를 삭제할 수 없습니다. location=" + path);
+            log.error("[ImageUploader] 해당 디렉토리를 삭제할 수 없습니다. location=" + path);
             return false;
         }
 
@@ -62,7 +72,7 @@ public class ImageUploader {
         try {
             FileUtils.copyDirectory(source, target);
         } catch(IOException e) {
-            log.error("[image] source 경로가 존재하지 않습니다.");
+            log.error("[ImageUploader] source 경로가 존재하지 않습니다.");
         }
     }
 
@@ -109,16 +119,16 @@ public class ImageUploader {
 
     private boolean validatePaths(Path source, Path target) {
        if (tempPath.isEmpty()) {
-            log.error("[image] temp 경로가 비어있습니다.");
+            log.error("[ImageUploader] temp 경로가 비어있습니다.");
             return false;
         } else if (source==null || target==null) {
-            log.error("[image] source 또는 target 경로가 존재하지 않습니다.");
+            log.error("[ImageUploader] source 또는 target 경로가 존재하지 않습니다.");
             return false;
         } else if (!Files.exists(source)) {
-            log.error("[image] source 경로가 존재하지 않습니다.");
+            log.error("[ImageUploader] source 경로가 존재하지 않습니다.");
             return false;
         } else if (source == target) {
-            log.error("[image] source와 target 경로가 같습니다.");
+            log.error("[ImageUploader] source와 target 경로가 같습니다.");
             return false;
         }
 

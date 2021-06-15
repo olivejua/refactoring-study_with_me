@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,11 @@ public class BoardImageUploader {
     public BoardImageUploader(ImageUploader imageUploader, ImageConfig imageConfig) {
         this.imageUploader = imageUploader;
         this.basePath = imageConfig.getDefaultPath();
+    }
+
+    public void uploadThumbnailInPlace(MultipartFile thumbnail, PlaceRecommendation post) {
+        String movedPath = getBoardPathOnBasePath(PLACE_RECOMMENDATION, post.getId());
+        imageUploader.transferImageByFile(thumbnail, movedPath, post.getThumbnailName());
     }
 
     /**

@@ -48,6 +48,6 @@ public class PlaceRecommendationRepositoryTest {
         assertEquals(post.getAddressDetail(), findPost.getAddressDetail());
         assertEquals(post.getLinks(), findPost.getLinks());
         assertEquals(post.getContent(), findPost.getContent());
-        assertEquals(post.getThumbnailPath(), findPost.getThumbnailPath());
+        assertEquals(post.getThumbnailName(), findPost.getThumbnailName());
     }
 }
