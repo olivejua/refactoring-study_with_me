@@ -5,32 +5,6 @@
  
 ## 목적
 
- 
-  
-## 기술스택
-### Back-End
-- JAVA 8버전
-- Spring Boot 2.4.4버전
-- JPA
-- Querydsl
-- Spring Security
-- Junit Test
-- MariaDB
-### Front-End
-- HTML
-- Thymeleaf
-- AJAX
-- JavaScript
-- JQuery
-- Bootstrap
-### Tools & ETC
-- IntelliJ
-- GitHub
-- AWS
-- [편집 API] Naver Editor
-- [지도 API] Kakao Map
-- [주소 API] postcodify
-  
 
 ## 구현 목표
 - 유저
@@ -42,11 +16,19 @@
     - 참여하고 싶은 관련 기술스택을 검색할 수 있다.
     - 참여하고 싶은 스터디 모임 장소를 검색할 수 있다.
     - 
+  
+## 기술스택
+|Back-End|Front-End|Tools & ETC|
+|:---:|:---:|:---:|
+|JAVA 11|HTML|IntelliJ|
+|Spring Boot 2.4.4|Thymeleaf|GitHub|
+|JPA & hibernate|AJAX|AWS|
+|Junit|JavaScript||
+|MariaDB|Bootstrap||
+  
 
 
-
-- 구동 화면
-# 기능
+## 기능별 구동 화면
 1. [회원가입/로그인](/docs/function/user/userPage.md)
 2. 게시판
     1. 스터디 모집
@@ -55,7 +37,7 @@
 3. 웹 구축
 
 
-# 리팩토링
+## 리팩토링
 1. select 쿼리는 Querydsl을 이용하여 조회쿼리 최적화
     - 연관관계 엔티티 join mapping.
     - 목록 조회시 페이징 쿼리 최적화
