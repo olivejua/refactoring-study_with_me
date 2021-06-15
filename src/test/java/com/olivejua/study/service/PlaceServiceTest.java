@@ -6,8 +6,6 @@ import com.olivejua.study.domain.board.*;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
-import com.olivejua.study.sampleData.SamplePlaceRecommendation;
-import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.place.like.LikeStatus;
@@ -109,7 +107,7 @@ public class PlaceServiceTest extends CommonBoardServiceTest {
 
         assertEquals(requestDto.getTitle(), entity.getTitle());
         assertEquals(requestDto.getContent(), entity.getContent());
-        assertEquals(requestDto.getThumbnailPath(), entity.getThumbnailPath());
+        assertEquals(requestDto.getThumbnailPath(), entity.getThumbnailName());
         assertEquals(requestDto.getLinks(), toStringArray(entity.getLinks()));
     }
 

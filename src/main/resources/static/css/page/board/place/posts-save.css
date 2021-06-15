@@ -1,0 +1,72 @@
+.col-md-4 {
+    max-width: 100%;
+}
+
+form {
+    font-size: medium;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+input[type=text] {
+    font-size: medium;
+}
+
+#postcodify_search_button {
+    font-size: medium;
+}
+
+
+col-form-label {
+    vertical-align: middle;
+}
+
+#btn-save #btn-cancel {
+    float: right;
+    margin-top: 5%;
+}
+
+.add-icon {
+    width: 19px;
+}
+
+#add-link {
+    margin-left: 1%;
+}
+
+label[name=link] {
+    margin-left: 1%;
+}
+
+div[name=div-link] {
+    margin-top: 1%
+}
+
+.bottom-line {
+    float: right;
+    margin: 3% 0;
+}
+
+#preview-thumbnail {
+    background-color: floralwhite;
+    text-align: center;
+    margin-bottom: 3%;
+}
+
+#preview-thumbnail > img {
+    max-height: 365px;
+    max-width: 800px;
+}
+
+.modal-title {
+    font-size: large;
+}
+
+.modal-header > button {
+    display: block;
+    width: 25%;
+    margin-left: 35%;
+    margin-top: 15px;
+}

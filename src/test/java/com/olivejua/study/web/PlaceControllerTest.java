@@ -112,33 +112,6 @@ public class PlaceControllerTest {
     }
 
     @Test
-    void requestDtoTest() throws Exception {
-        User writer = User.createUser(
-                "user1",
-                "user1@gmail.com",
-                Role.USER,
-                "google"
-        );
-
-        PlaceRecommendation post = PlaceRecommendation.savePost(
-                writer,
-                "sample title1",
-                "sample address1",
-                "sample addressDetail1",
-                "thumbnail path1",
-                "sample content1",
-                Arrays.asList("link1", "link2", "link3"));
-
-        PostReadResponseDto responseDto = new PostReadResponseDto(post, null);
-
-        when(placeService.read(anyLong(), any(), anyString())).thenReturn(responseDto);
-
-        PostReadResponseDto response = placeService.read(post.getId(), writer, "/");
-        System.out.println(response);
-
-    }
-
-    @Test
     @DisplayName("[PlaceRecommendation] 게시글을 작성한다")
     public void saveTest() throws Exception {
         User user =
@@ -157,6 +130,8 @@ public class PlaceControllerTest {
                 links,
                 "sample thumbnailPath",
                 "sample content");
+
+        when(placeService.post(any(), any())).thenReturn(1L);
 
         mvc.perform(post("/place")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

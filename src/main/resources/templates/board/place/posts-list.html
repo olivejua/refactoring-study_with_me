@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layouts/default_layout">
+>
+<th:block layout:fragment="custom-css">
+    <link rel="stylesheet" th:href="@{/css/page/board/place/place.css}">
+    <link rel="stylesheet" th:href="@{/css/page/board/place/place-list.css}">
+    <style>
+        .card {
+            margin-bottom: 15%;
+        }
+    </style>
+</th:block>
+<th:block layout:fragment="custom-header">
+    <div class="jumbotron">
+        <h1>스터디 장소 추천</h1>
+        <img id="header-icon" src="/img/place/header-icon.png">
+    </div>
+</th:block>
+    <th:block layout:fragment="custom-content">
+        <div class="container">
+            <nav class="navbar navbar-light bg-light">
+                <form class="form-inline" id="form-search" method="get">
+                    <th:block th:unless="${search}==null">
+                        <input type="hidden" id="searchType" th:value="${search.searchType}">
+                        <input type="hidden" id="keyword" th:value="${search.keyword}">
+                    </th:block>
+                    <select class="form-control" id="search-category">
+                        <option value="none" selected>검색조건</option>
+                        <option value="title">제목+내용</option>
+                        <option value="address">장소</option>
+                    </select>
+                    <input class="form-control mr-sm-2" type="search" id="search-keyword" placeholder="Search" aria-label="Search" autocomplete="off">
+                    <button type="button" class="btn btn-outline-primary my-2 my-sm-0" id="btn-search">Search</button>
+                </form>
+                <a href="/place/posts/write" class="btn btn-lg btn-primary" role="button">글 등록</a>
+            </nav>
+            <div class="row">
+                <div class="col-sm-3" th:each="post : ${list.content}">
+                    <div class="card" style="width: 15rem;">
+                        <img class="card-img-top" th:src="${post.thumbnailPath}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 th:if="${search==null}" class="card-title"><a th:href="@{/place/posts(postNo=${post.postNo},page=${list.pageable.pageNumber})}">[[${post.title}]]</a></h5>
+                            <h5 th:unless="${search==null}" class="card-title"><a th:href="@{/place/posts(postNo=${post.postNo},page=${list.pageable.pageNumber},searchType=${search.searchType},keyword=${search.keyword})}">[[${post.title}]]</a></h5>
+                            <p class="card-text">[[${post.address}]]</p>
+                            <span class="card-text">추천 수 : [[${post.likeCount}]]</span>
+                            <span class="card-text">비추 수 : [[${post.dislikeCount}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav aria-label="Page navigation example" style="text-align: center;"
+                 th:with="start=${T(Math).floor(list.number/10)*10 + 1},
+                        last=(${start + 9 < list.totalPages ? start + 9 : list.totalPages})">
+
+                <ul class="pagination">
+                    <li th:class="${list.first} ? 'disabled page-item' : 'page-item'">
+                        <th:block th:if="${search}">
+                            <a class="page-link" th:href="${list.first} ? '#' : @{/place/search(searchType=${search.searchType},keyword=${search.keyword},page=${list.number}-1)}">Previous</a>
+                        </th:block>
+                        <th:block th:unless="${search}">
+                            <a class="page-link" th:href="${list.first} ? '#' : @{/place/list(page=${list.number}-1)}">Previous</a>
+                        </th:block>
+                    </li>
+                    <li th:each="page : ${#numbers.sequence(start, last)}" th:class="${page == list.number + 1} ? 'active page-item' : 'page-item'">
+                        <th:block th:if="${search}" >
+                            <a class="page-link" th:href="@{/place/search(searchType=${search.searchType},keyword=${search.keyword},page=${page-1})}">[[${page}]]</a>
+                        </th:block>
+                        <th:block th:unless="${search}">
+                            <a class="page-link" th:href="@{/place/list(page=${page-1})}">[[${page}]]</a>
+                        </th:block>
+                    </li>
+                    <li th:class="${list.last} ? 'disabled page-item' : 'page-item'">
+                        <th:block th:if="${search}">
+                            <a class="page-link" th:href="${list.last} ? '#' : @{/place/search(searchType=${search.searchType},keyword=${search.keyword},page=${list.number + 1})}">Next</a>
+                        </th:block>
+                        <th:block th:unless="${search}">
+                            <a class="page-link" th:href="${list.last} ? '#' : @{/place/list(page=${list.number + 1})}">Next</a>
+                        </th:block>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </th:block>
+    <th:block layout:fragment="custom-script">
+        <script th:src="@{/js/page/board/place/posts-api.js}" th:inline="javascript" type="text/javascript"></script>
+        <script th:src="@{/js/page/board/place/posts-list.js}" th:inline="javascript" type="text/javascript"></script>
+        <script type="text/javascript" th:inline="javascript">
+            console.log([[${post}]]);
+        </script>
+    </th:block>
+</html>

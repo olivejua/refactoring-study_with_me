@@ -1,0 +1,46 @@
+.modal-header {
+    display: block;
+    text-align: center;
+}
+
+#loginModalLabel {
+    font-size: 25px;
+}
+
+.modal-body>a {
+    display: block;
+    margin: 2%;
+    padding: 2%;
+    font-size: 18px;
+}
+
+#login-google {
+    background: orangered;
+    border: orangered;
+}
+
+#login-naver {
+    background: #2DB400;
+    border: #2DB400;
+}
+
+#btn-login-close {
+    font-size: 15px;
+}
+
+#modal-messageToGuest > .modal-dialog > .modal-sm {
+    max-width: 72%;
+}
+
+#modal-changeNickname > .modal-dialog > .modal-sm {
+    max-width: 72%;
+}
+
+.btn-become-user-modal {
+    width: 100%;
+}
+
+.label-nickname {
+    max-width: 20%;
+    padding-top: 8px;
+}

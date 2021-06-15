@@ -1,6 +1,5 @@
 package com.olivejua.study.web.dto.board.place;
 
-import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import lombok.Getter;
@@ -25,7 +24,7 @@ public class PostListResponseDto {
         this.postId = entity.getId();
         this.writerName = entity.getWriter().getName();
         this.title = entity.getTitle();
-        this.thumbnailPath = entity.getThumbnailPath();
+        this.thumbnailPath = entity.getThumbnailName();
         this.viewCount = entity.getViewCount();
         this.createdDate = entity.getCreatedDate();
         this.likeCount = (int) likeCount;

@@ -1,7 +1,6 @@
 package com.olivejua.study.web.dto.board.place;
 
 import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
@@ -42,7 +41,7 @@ public class PostReadResponseDto {
         this.writer = new WriterReadDto(entity.getWriter());
         this.address = entity.getAddress();
         this.addressDetail = entity.getAddressDetail();
-        this.thumbnailPath = entity.getThumbnailPath();
+        this.thumbnailPath = entity.getThumbnailName();
         this.content = entity.getContent();
         this.links = changeLinkEntityToStrings(entity.getLinks());
         this.viewCount = entity.getViewCount();

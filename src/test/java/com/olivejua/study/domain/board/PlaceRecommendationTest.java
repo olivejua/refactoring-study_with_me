@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ class PlaceRecommendationTest {
         assertEquals(post.getTitle(), findPost.getTitle());
         assertEquals(post.getAddress(), post.getAddress());
         assertEquals(post.getAddressDetail(), post.getAddressDetail());
-        assertEquals(post.getThumbnailPath(), post.getThumbnailPath());
+        assertEquals(post.getThumbnailName(), post.getThumbnailName());
         assertEquals(post.getContent(), post.getContent());
     }
 
@@ -83,16 +82,20 @@ class PlaceRecommendationTest {
         em.persist(post);
         post.getLinks().forEach(em::persist);
 
-        em.flush();
-        em.clear();
+        post = em.find(PlaceRecommendation.class, post.getId());
 
         //when
+        post.getLinks().forEach(em::remove);
         post.edit("강남 스터디카페 추천합니다. -수정", 
                 "서울시 강남구-수정",
                 "강남역 1번출구 노란건물 1층 -수정",
                 "/abc/def/gh-수정",
                 "한번 가보시길.. -수정",
                 Arrays.asList("www.google.com"));
+        post.getLinks().forEach(em::persist);
+
+        em.flush();
+        em.clear();
 
         //then
         PlaceRecommendation findPost = em.find(PlaceRecommendation.class, post.getId());
@@ -100,8 +103,8 @@ class PlaceRecommendationTest {
         assertEquals(post.getTitle(), findPost.getTitle());
         assertEquals(post.getAddress(), findPost.getAddress());
         assertEquals(post.getAddressDetail(), findPost.getAddressDetail());
-        assertEquals(post.getThumbnailPath(), findPost.getThumbnailPath());
+        assertEquals(post.getThumbnailName(), findPost.getThumbnailName());
         assertEquals(post.getContent(), findPost.getContent());
-        assertEquals(post.getLinks(), findPost.getLinks());
+        assertEquals(post.getLinks().size(), findPost.getLinks().size());
     }
 }

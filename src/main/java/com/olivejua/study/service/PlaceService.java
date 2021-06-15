@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -38,16 +39,27 @@ public class PlaceService {
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
+        PlaceRecommendation newPost = saveNewPost(requestDto, writer);
+
+        return newPost.getId();
+    }
+
+    public Long post(PostSaveRequestDto requestDto, User writer, MultipartFile thumbnail) {
+        PlaceRecommendation newPost = saveNewPost(requestDto, writer);
+        boardImageUploader.uploadThumbnailInPlace(thumbnail, newPost);
+        return newPost.getId();
+    }
+
+    private PlaceRecommendation saveNewPost(PostSaveRequestDto requestDto, User writer) {
         PlaceRecommendation newPost =
                 PlaceRecommendation.savePost(writer, requestDto.getTitle(),
                         requestDto.getAddress(), requestDto.getAddressDetail(), requestDto.getThumbnailPath(),
-                        requestDto.getContent(),requestDto.getLinks());
+                        requestDto.getContent(), requestDto.getLinks());
 
         placeRepository.save(newPost);
         linkService.update(newPost);
         boardImageUploader.uploadImagesInPlace(newPost);
-
-        return newPost.getId();
+        return newPost;
     }
 
     public PostReadResponseDto read(Long postId, User loginUser, String servletPath) {

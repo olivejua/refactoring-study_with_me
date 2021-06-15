@@ -1,0 +1,152 @@
+<div th:fragment="common-script" xmlns:th="http://www.thymeleaf.org">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <script th:inline="javascript">
+        let nicknames = [];
+
+        $(document).ready(function(){
+            const messageToGuest = [[${messageToGuest}]];
+            if (messageToGuest) {
+                $.ajax({
+                    type: 'GET',
+                    url: `/logout`,
+                }).done(function () {
+                    console.log('logout complete.')
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+
+                $('#modal-messageToGuest').modal('show');
+            } else {
+                $('#modal-messageToGuest').modal('hide');
+            }
+        });
+
+        $(document).on('click', '#processSignup', function () {
+            $('#form-signup>input[name=nickname]').val($('#nickname').val());
+
+            const data = {
+                name: $('#form-signup>input[name=name]').val(),
+                email: $('#form-signup>input[name=email]').val(),
+                role: $('#form-signup>input[name=role]').val(),
+                socialCode: $('#form-signup>input[name=socialCode]').val(),
+                nickname: $('#form-signup>input[name=nickname]').val(),
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/user/signup',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function () {
+                $('#modal-messageToGuest').modal('hide');
+                $('#message-complete-signup').css('display', 'block');
+                $('#loginModal').modal('show');
+            }).fail(function (error) {
+                $('#modal-messageToGuest').modal('hide');
+                alert(JSON.stringify(error));
+            });
+        });
+
+        $(document).on('click', '#processChange', function () {
+            const nickname_new = $('#change-nickname').val();
+
+            $.ajax({
+                type: 'PUT',
+                url: '/user/name/' + nickname_new,
+            }).done(function () {
+                $('#modal-changeNickname').modal('hide');
+                $('#modal-changeNickname-complete').modal('show');
+                setTimeout(function () {
+                    $('#modal-changeNickname-complete').modal('hide');
+                }, 1500);
+
+                $('#a-login-nickname').text(nickname_new);
+            }).fail(function (error) {
+                $('#modal-changeNickname').modal('hide');
+                alert(JSON.stringify(error));
+            });
+        });
+
+        $(document).on('input', '#nickname', function (e) {
+            const target = e.target;
+            const label_valid = $('#modal-messageToGuest>input[name=div-valid]');
+            const label_invalid = $('#modal-messageToGuest>input[name=div-invalid]');
+            const processBtn = $('#processSignup');
+
+            nicknames = [[${existedNicknameList}]];
+
+            validation_nickname(target, label_valid, label_invalid, processBtn);
+        });
+
+        $(document).on('click', '#btn-change-nickname', function () {
+            $.ajax({
+                type: 'GET',
+                url: `/user/allTheNames`,
+
+            }).done(function (response) {
+                const nicknameList = JSON.parse(response);
+                const loginNickname = $('#a-login-nickname').text();
+
+                for(let i=0; i<nicknameList.length; i++) {
+                    if(loginNickname !== nicknameList[i]) {
+                        nicknames.push(nicknameList[i]);
+                    }
+                }
+
+                $('#modal-changeNickname').modal('show');
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+        $(document).on('input', '#change-nickname', function (e) {
+            const target = e.target;
+            const label_valid = $('#modal-changeNickname>input[name=div-valid]');
+            const label_invalid = $('#modal-changeNickname>input[name=div-invalid]');
+            const processBtn = $('#processChange');
+
+            validation_nickname(target, label_valid, label_invalid, processBtn);
+        });
+
+        const validation_nickname = function (target, label_valid, label_invalid, processBtn) {
+            const value = target.value;
+
+            if(value === "") {
+                $(target).removeClass('is-valid');
+                $(target).removeClass('is-invalid');
+                $(label_valid).css('display', 'none');
+                $(label_invalid).css('display', 'none');
+                $(processBtn).addClass('disabled');
+                return;
+            }
+
+            let isDuplicated = false;
+
+            nicknames.forEach(nickname => {
+                if(nickname===value) {
+                    isDuplicated = true;
+                }
+            });
+
+            if(!isDuplicated) {
+                $(target).addClass('is-valid');
+                $(target).removeClass('is-invalid');
+                $(label_valid).css('display', 'block');
+                $(label_invalid).css('display', 'none');
+                $(processBtn).attr('disabled', false);
+                $(processBtn).removeClass('disabled');
+            } else {
+                $(target).addClass('is-invalid');
+                $(target).removeClass('is-valid');
+                $(label_valid).css('display', 'none');
+                $(label_invalid).css('display', 'block');
+                $(processBtn).attr('disabled', true);
+                $(processBtn).addClass('disabled');
+            }
+        };
+
+    </script>
+</div>
