@@ -2,9 +2,6 @@
  
 ## 주제
 나에게 맞는 스터디를 조건으로 검색하여 찾는 웹서비스
- 
-## 목적
-
 
 ## 구현 목표
 - 유저
@@ -33,7 +30,14 @@
 
 
 ## 기능별 구동 화면
-1. [회원가입/로그인](/docs/function/user/userPage.md)
+
+<div>
+    <video controls muted autoplay>
+        <source src="/docs/function/video/study_with_me.mp4" type="video/mp4">
+        <strong>Your browser does not support the video tag.</strong>
+    </video>
+</div>
+1. 회원가입/로그인
 2. 게시판
     1. 스터디 모집
     2. 장소 추천
