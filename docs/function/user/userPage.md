@@ -1,11 +1,4 @@
-### 주요 기술
-- Spring Security
 
-## Usecase Diagram
-![usecase](images/user/%5Busecase%5D%20home.png)
-
-
-## 구동화면
 
 ### 로그인- 요청
 

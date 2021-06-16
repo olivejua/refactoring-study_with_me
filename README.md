@@ -31,12 +31,8 @@
 
 ## 기능별 구동 화면
 
-<div>
-    <video controls muted autoplay>
-        <source src="/docs/function/video/study_with_me.mp4" type="video/mp4">
-        <strong>Your browser does not support the video tag.</strong>
-    </video>
-</div>
+<img class="project-thumbnail" src="docs/function/video/study_with_me.gif"/>
+
 1. 회원가입/로그인
 2. 게시판
     1. 스터디 모집
