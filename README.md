@@ -31,15 +31,14 @@
 
 ## 기능별 구동 화면
 
-<img class="project-thumbnail" src="docs/function/video/study_with_me.gif"/>
-
-1. 회원가입/로그인
+1. [유저](/docs/function/user.md)
+    - 회원가입 / 로그인
 2. 게시판
     1. 스터디 모집
     2. 장소 추천
     3. 질문
 3. 웹 구축
-
+    - [웹 사이트 구경하기](http://ec2-15-164-33-81.ap-northeast-2.compute.amazonaws.com:8080/)
 
 ## 리팩토링
 1. select 쿼리는 Querydsl을 이용하여 조회쿼리 최적화
