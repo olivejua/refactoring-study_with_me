@@ -4,15 +4,22 @@ import com.olivejua.study.config.auth.LoginUser;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.QuestionService;
 import com.olivejua.study.web.dto.PageDto;
+import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
+import com.olivejua.study.web.dto.board.search.SearchDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RequiredArgsConstructor
 @RequestMapping("/question")
@@ -20,6 +27,16 @@ import java.net.URI;
 public class QuestionController {
 
     private final QuestionService questionService;
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<PostListResponseDto>> list(@PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
+                                                          SearchDto searchInfo) {
+        Page<PostListResponseDto> results = searchInfo == null ?
+                                                questionService.list(pageable) :
+                                                questionService.search(searchInfo, pageable);
+
+        return ResponseEntity.ok(results);
+    }
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostReadResponseDto> read(@PathVariable Long postId, PageDto pageInfo, HttpServletRequest request) {
