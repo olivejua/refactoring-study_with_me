@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -67,7 +65,7 @@ class QuestionRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> posts = questionQueryRepository.list(paging);
+        Page<PostListResponseDto> posts = questionQueryRepository.findEntities(paging);
         assertEquals(10, posts.getNumberOfElements());
     }
 
@@ -91,7 +89,7 @@ class QuestionRepositoryTest {
 
         SearchDto searchDto = new SearchDto("TITLE", "제목3");
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
-        Page<PostListResponseDto> savedPosts = questionQueryRepository.search(searchDto, paging);
+        Page<PostListResponseDto> savedPosts = questionQueryRepository.findEntitiesWith(searchDto, paging);
 
         assertEquals(4, savedPosts.getTotalElements());
     }

@@ -28,12 +28,12 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> list(Pageable pageable) {
-        return questionQueryRepository.list(pageable);
+        return questionQueryRepository.findEntities(pageable);
     }
 
     @Transactional(readOnly = true)
     public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
-        return questionQueryRepository.search(searchDto, pageable);
+        return questionQueryRepository.findEntitiesWith(searchDto, pageable);
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
