@@ -2,6 +2,7 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.exception.NotExistingUserException;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.web.dto.user.UserSignInResponseDto;
 import com.olivejua.study.web.dto.user.UserSignupRequestDto;
@@ -39,7 +40,7 @@ public class UserService {
 
     public void changeProfile(Long userId, String name) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 User가 없습니다."));
+                .orElseThrow(() -> new NotExistingUserException("해당 User가 없습니다."));
 
         user.changeProfile(name);
     }

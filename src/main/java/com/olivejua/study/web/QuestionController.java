@@ -4,6 +4,7 @@ import com.olivejua.study.config.auth.LoginUser;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.QuestionService;
 import com.olivejua.study.web.dto.PageDto;
+import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/question")

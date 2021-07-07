@@ -7,4 +7,8 @@ public class NotExistingUserException extends RuntimeException {
     public NotExistingUserException() {
         super(NOT_EXISTING_USER_MESSAGE);
     }
+
+    public NotExistingUserException(String message) {
+        super(message);
+    }
 }
