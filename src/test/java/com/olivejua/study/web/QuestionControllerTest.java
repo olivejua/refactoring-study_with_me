@@ -1,6 +1,5 @@
 package com.olivejua.study.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
@@ -9,22 +8,10 @@ import com.olivejua.study.service.QuestionService;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
-
-import javax.persistence.EntityManager;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,33 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureMockMvc
-public class QuestionControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private EntityManager em;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class QuestionControllerTest extends CommonControllerTest {
 
     @MockBean
     private QuestionService questionService;
-
-    private MockHttpSession httpSession;
-
-    @BeforeEach
-    void setup(WebApplicationContext webApplicationContext) {
-        this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .addFilter(new CharacterEncodingFilter("UTF-8", true))
-                .build();
-
-        httpSession = new MockHttpSession();
-    }
 
     @Test
     @DisplayName("[Question] 게시글을 하나 조회한다")

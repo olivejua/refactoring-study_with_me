@@ -30,21 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureMockMvc
-public class ReplyControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private EntityManager em;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private MockHttpSession httpSession;
+public class ReplyControllerTest extends CommonControllerTest {
 
     @MockBean
     private ReplyService replyService;
@@ -55,12 +41,7 @@ public class ReplyControllerTest {
 
     @BeforeEach
     void setup(WebApplicationContext webApplicationContext) {
-        this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .addFilter(new CharacterEncodingFilter("UTF-8", true))
-                .build();
-
-        httpSession = new MockHttpSession();
-
+        super.setup(webApplicationContext);
 
         User postWriter = User.createUser(
                 "user1",

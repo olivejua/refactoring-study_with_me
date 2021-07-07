@@ -27,6 +27,32 @@ public class QuestionQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * entity 전체목록 조회
+     */
+    public Page<PostListResponseDto> findEntities(Pageable pageable) {
+        List<PostListResponseDto> content = selectEntities(pageable);
+        JPAQuery<Question> countQuery = queryFactory
+                .selectFrom(question);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    /**
+     * entity 검색목록 조회
+     */
+    public Page<PostListResponseDto> findEntitiesWith(SearchDto cond, Pageable pageable) {
+        List<PostListResponseDto> content = selectEntities(pageable, cond);
+        JPAQuery<Question> countQuery = queryFactory
+                .selectFrom(question)
+                .where(allEq(cond));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    /**
+     * entity 1개 조회
+     */
     public Optional<Question> findEntity(Long postId) {
         return Optional.ofNullable(
                 queryFactory
@@ -38,28 +64,14 @@ public class QuestionQueryRepository {
                 .fetchOne());
     }
 
-    public Page<PostListResponseDto> list(Pageable pageable) {
-        List<PostListResponseDto> content = selectPosts(pageable);
-        JPAQuery<Question> countQuery = queryFactory
-                .selectFrom(question);
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    /**
+     * 목록 조회 쿼리
+     */
+    private List<PostListResponseDto> selectEntities(Pageable pageable) {
+        return selectEntities(pageable, null);
     }
 
-    public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
-        List<PostListResponseDto> content = selectPosts(pageable, cond);
-        JPAQuery<Question> countQuery = queryFactory
-                .selectFrom(question)
-                .where(allEq(cond));
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
-    }
-
-    private List<PostListResponseDto> selectPosts(Pageable pageable) {
-        return selectPosts(pageable, null);
-    }
-
-    private List<PostListResponseDto> selectPosts(Pageable pageable, SearchDto cond) {
+    private List<PostListResponseDto> selectEntities(Pageable pageable, SearchDto cond) {
         List<Question> entities = queryFactory
                 .selectFrom(question)
                 .innerJoin(question.writer, user)
@@ -73,6 +85,9 @@ public class QuestionQueryRepository {
         return toPostListResponseDtos(entities);
     }
 
+    /**
+     * List<Entity> 에서 List<postId>만 추출
+     */
     private List<PostListResponseDto> toPostListResponseDtos(List<Question> entities) {
         return entities.stream()
                 .map(entity -> new PostListResponseDto(
@@ -85,6 +100,9 @@ public class QuestionQueryRepository {
                 )).collect(Collectors.toList());
     }
 
+    /**
+     * Column 조건
+     */
     private BooleanExpression allEq(SearchDto cond) {
         if (cond==null) {
             return null;

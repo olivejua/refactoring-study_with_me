@@ -27,11 +27,11 @@ public class StudyService {
     private final BoardImageUploader boardImageUploader;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
-        return studyQueryRepository.list(pageable);
+        return studyQueryRepository.findEntities(pageable);
     }
 
     public Page<PostListResponseDto> search(SearchDto searchDto, Pageable pageable) {
-        return studyQueryRepository.search(searchDto, pageable);
+        return studyQueryRepository.findEntitiesWith(searchDto, pageable);
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {

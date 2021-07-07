@@ -1,9 +1,7 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.Link;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
@@ -44,8 +42,11 @@ public class PlaceRecommendationQueryRepository {
     private final String columnLikeCount = "likeCount";
     private final String columnDislikeCount = "dislikeCount";
 
-    public Page<PostListResponseDto> list(Pageable pageable) {
-        List<PlaceRecommendation> entities = findPosts(pageable);
+    /**
+     * entity 전체목록 조회
+     */
+    public Page<PostListResponseDto> findEntities(Pageable pageable) {
+        List<PlaceRecommendation> entities = selectEntities(pageable);
 
         List<Tuple> tuples = findAllJoinCountsByPostIds(toPostIds(entities));
 
@@ -62,8 +63,11 @@ public class PlaceRecommendationQueryRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
-        List<PlaceRecommendation> entities = findPosts(pageable, cond);
+    /**
+     * entity 검색목록 조회
+     */
+    public Page<PostListResponseDto> findEntitiesWith(SearchDto cond, Pageable pageable) {
+        List<PlaceRecommendation> entities = selectEntities(pageable, cond);
 
         List<Tuple> tuples = findAllJoinCountsByPostIds(toPostIds(entities));
         List<PostListResponseDto> content = toListDtos(
@@ -84,17 +88,9 @@ public class PlaceRecommendationQueryRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    private Map<Long, Long> tupleToMap(List<Tuple> tuples, String extractingColumn) {
-        Map<Long, Long> result = new HashMap<>();
-        for (Tuple tuple : tuples) {
-            result.put(
-                    tuple.get(placeRecommendation.id),
-                    tuple.get(Expressions.numberPath(
-                            Long.class, extractingColumn)));
-        }
-        return result;
-    }
-
+    /**
+     * entity 1개 조회
+     */
     public Optional<PlaceRecommendation> findEntity(Long postId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(placeRecommendation)
@@ -106,7 +102,10 @@ public class PlaceRecommendationQueryRepository {
                 .fetchOne());
     }
 
-    public Optional<LikeHistory> getLikeStatusByPostAndUser(Long postId, Long userId) {
+    /**
+     * 로그인 중인 User가 특정 Post의 '좋아요 entity' 조회
+     */
+    public Optional<LikeHistory> findLikeHistoryByPostAndUser(Long postId, Long userId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(likeHistory)
                 .join(likeHistory.user, user)
@@ -117,6 +116,30 @@ public class PlaceRecommendationQueryRepository {
                 .fetchOne());
     }
 
+    /**
+     * 목록 조회 쿼리
+     */
+    private List<PlaceRecommendation> selectEntities(Pageable pageable) {
+        return selectEntities(pageable, null);
+    }
+
+    private List<PlaceRecommendation> selectEntities(Pageable pageable, SearchDto cond) {
+        return queryFactory
+                .selectFrom(placeRecommendation)
+                .join(placeRecommendation.writer, user).fetchJoin()
+                .where(
+                        titleContains(cond),
+                        contentContains(cond),
+                        addressContains(cond)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    /**
+     * 변환 후 리턴: List<Entity> -> List<ResponseDto>
+     */
     private List<PostListResponseDto> toListDtos(List<PlaceRecommendation> entities, Map<Long, Long> likeCount,
                                                  Map<Long, Long> dislikeCount, Map<Long, Long> commentCount) {
         return entities.stream()
@@ -129,16 +152,18 @@ public class PlaceRecommendationQueryRepository {
                 .collect(Collectors.toList());
     }
 
-    private List<PlaceRecommendation> findPosts(Pageable pageable) {
-        return findPosts(pageable, null);
-    }
-
+    /**
+     * List<Entity> 에서 List<postId>만 추출
+     */
     private List<Long> toPostIds(List<PlaceRecommendation> entities) {
         return entities.stream()
                 .map(Board::getId)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * join columns (comment, like, dislike) counts를 하나의 쿼리에서 모두 조회
+     */
     private List<Tuple> findAllJoinCountsByPostIds(List<Long> postIds) {
         return queryFactory
                 .select(
@@ -161,38 +186,23 @@ public class PlaceRecommendationQueryRepository {
                 .fetch();
     }
 
-    private Map<Long, Long> findCommentCountsByPostId(List<Long> postIds) {
-        List<Tuple> tuples = queryFactory
-                .select(
-                        comment.post.id,
-                        comment.count())
-                .from(comment)
-                .where(comment.post.id.in(postIds))
-                .groupBy(comment.post.id)
-                .fetch();
-
+    /**
+     * counts of join columns을 map<join column 명, count 조회값> 으로 조합하여 리턴
+     */
+    private Map<Long, Long> tupleToMap(List<Tuple> tuples, String extractingColumn) {
         Map<Long, Long> result = new HashMap<>();
         for (Tuple tuple : tuples) {
-            result.put(tuple.get(comment.post.id), tuple.get(comment.count()));
+            result.put(
+                    tuple.get(placeRecommendation.id),
+                    tuple.get(Expressions.numberPath(
+                            Long.class, extractingColumn)));
         }
-
         return result;
     }
 
-    private List<PlaceRecommendation> findPosts(Pageable pageable, SearchDto cond) {
-        return queryFactory
-                .selectFrom(placeRecommendation)
-                .join(placeRecommendation.writer, user).fetchJoin()
-                .where(
-                        titleContains(cond),
-                        contentContains(cond),
-                        addressContains(cond)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-    }
-
+    /**
+     * Column 조건
+     */
     private BooleanExpression idEq(Long postId) {
         return placeRecommendation.id.eq(postId);
     }

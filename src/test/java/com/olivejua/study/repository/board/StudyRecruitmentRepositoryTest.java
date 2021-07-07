@@ -82,7 +82,7 @@ class StudyRecruitmentRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
-        Page<PostListResponseDto> posts = studyQueryRepository.list(paging);
+        Page<PostListResponseDto> posts = studyQueryRepository.findEntities(paging);
 //        PostListResponseDto listResponseDto = posts.get(0);
 //
 //        assertEquals(post.getId(), listResponseDto.getPostId());
@@ -120,7 +120,7 @@ class StudyRecruitmentRepositoryTest {
         PageRequest paging = PageRequest.of(0, 10, Sort.Direction.ASC, "POST_ID");
 
         Page<PostListResponseDto> savedPosts =
-                studyQueryRepository.search(new SearchDto(SearchType.TECH_STACK.name(), "java"), paging);
+                studyQueryRepository.findEntitiesWith(new SearchDto(SearchType.TECH_STACK.name(), "java"), paging);
     }
 
 }

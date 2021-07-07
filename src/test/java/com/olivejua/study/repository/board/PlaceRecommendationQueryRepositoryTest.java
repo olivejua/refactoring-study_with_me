@@ -2,20 +2,15 @@ package com.olivejua.study.repository.board;
 
 import com.olivejua.study.domain.*;
 import com.olivejua.study.domain.board.*;
-import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.olivejua.study.domain.QComment.*;
-import static com.olivejua.study.domain.QUser.*;
 import static com.olivejua.study.domain.board.QLikeHistory.*;
-import static com.olivejua.study.domain.board.QLink.*;
 import static com.olivejua.study.domain.board.QPlaceRecommendation.*;
 import static com.querydsl.jpa.JPAExpressions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -162,7 +155,7 @@ class PlaceRecommendationQueryRepositoryTest {
         em.clear();
 
         PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
-        Page<PostListResponseDto> results = repository.list(paging);
+        Page<PostListResponseDto> results = repository.findEntities(paging);
         List<PostListResponseDto> list = results.getContent();
 
         assertEquals(2, list.size());
@@ -211,14 +204,14 @@ class PlaceRecommendationQueryRepositoryTest {
 
         PageRequest paging = PageRequest.of(0, 20, Sort.Direction.ASC, "POST_ID");
         SearchDto searchDto = new SearchDto(SearchType.TITLE.name(), "tle1");
-        Page<PostListResponseDto> results1 = repository.search(searchDto, paging);
+        Page<PostListResponseDto> results1 = repository.findEntitiesWith(searchDto, paging);
         List<PostListResponseDto> list1 = results1.getContent();
 
         assertEquals(1, list1.size());
         assertEquals("title1", list1.get(0).getTitle());
 
         searchDto = new SearchDto(SearchType.ADDRESS.name(), "ress2");
-        Page<PostListResponseDto> results2 = repository.search(searchDto, paging);
+        Page<PostListResponseDto> results2 = repository.findEntitiesWith(searchDto, paging);
         List<PostListResponseDto> list2 = results2.getContent();
 
         assertEquals(1, list2.size());
@@ -226,7 +219,7 @@ class PlaceRecommendationQueryRepositoryTest {
 
 
         searchDto = new SearchDto(SearchType.CONTENT.name(), "content");
-        Page<PostListResponseDto> results3 = repository.search(searchDto, paging);
+        Page<PostListResponseDto> results3 = repository.findEntitiesWith(searchDto, paging);
         List<PostListResponseDto> list3 = results3.getContent();
 
         assertEquals(2, list3.size());

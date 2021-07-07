@@ -31,11 +31,11 @@ public class PlaceService {
     private final CommentService commentService;
 
     public Page<PostListResponseDto> list(Pageable pageable) {
-        return placeQueryRepository.list(pageable);
+        return placeQueryRepository.findEntities(pageable);
     }
 
     public Page<PostListResponseDto> search(SearchDto cond, Pageable pageable) {
-        return placeQueryRepository.search(cond, pageable);
+        return placeQueryRepository.findEntitiesWith(cond, pageable);
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
@@ -66,7 +66,7 @@ public class PlaceService {
         PlaceRecommendation entity = placeQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
 
-        LikeHistory likeHistory = placeQueryRepository.getLikeStatusByPostAndUser(postId, loginUser.getId())
+        LikeHistory likeHistory = placeQueryRepository.findLikeHistoryByPostAndUser(postId, loginUser.getId())
                 .orElse(null);
 
         boardImageUploader.readImagesInPlace(entity, servletPath);
