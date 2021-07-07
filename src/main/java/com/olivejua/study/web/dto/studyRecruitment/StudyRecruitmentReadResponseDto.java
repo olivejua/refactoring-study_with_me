@@ -3,6 +3,7 @@ package com.olivejua.study.web.dto.studyRecruitment;
 import com.olivejua.study.domain.studyRecruitment.Condition;
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,17 +27,31 @@ public class StudyRecruitmentReadResponseDto {
     private int capacity;
     private String explanation;
     private LocalDateTime createdDate;
+    private List<CommentResponseDto> comments;
 
-    public StudyRecruitmentReadResponseDto(StudyRecruitment post) {
-        id = post.getId();
-        initAuthor(post.getAuthor());
-        title = post.getTitle();
-        techs.addAll(post.getElementsOfTechs());
-        initCondition(post.getCondition());
-        createdDate = post.getCreatedDate();
+    public StudyRecruitmentReadResponseDto(StudyRecruitment entity) {
+        id = entity.getId();
+        initAuthor(entity.getAuthor());
+        title = entity.getTitle();
+        techs.addAll(entity.getElementsOfTechs());
+        initCondition(entity.getCondition());
+        createdDate = entity.getCreatedDate();
     }
 
-    public void initAuthor(User author) {
+    @QueryProjection
+    public StudyRecruitmentReadResponseDto(Long id, User author, String title, String meetingPlace, LocalDate startDate, LocalDate endDate, int capacity, String explanation, LocalDateTime createdDate) {
+        this.id = id;
+        initAuthor(author);
+        this.title = title;
+        this.meetingPlace = meetingPlace;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.capacity = capacity;
+        this.explanation = explanation;
+        this.createdDate = createdDate;
+    }
+
+    private void initAuthor(User author) {
         this.author = new AuthorResponseDto(author);
     }
 
@@ -59,6 +74,12 @@ public class StudyRecruitmentReadResponseDto {
             name = user.getName();
         }
     }
+
+    @NoArgsConstructor(access = PROTECTED)
+    @Getter
+    private static class CommentResponseDto {
+        private Long id;
+        private String content;
+        private AuthorResponseDto author;
+    }
 }
-
-
