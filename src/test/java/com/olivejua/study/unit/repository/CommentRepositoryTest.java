@@ -1,4 +1,4 @@
-package com.olivejua.study.repository;
+package com.olivejua.study.unit.repository;
 
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
@@ -6,17 +6,15 @@ import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.domain.board.QBoard;
 import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.repository.board.QuestionRepository;
+import com.olivejua.study.unit.repository.board.QuestionRepository;
 import com.olivejua.study.sampleData.SampleComment;
 import com.olivejua.study.sampleData.SampleQuestion;
 import com.olivejua.study.sampleData.SampleUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +22,6 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.olivejua.study.domain.board.QBoard.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest

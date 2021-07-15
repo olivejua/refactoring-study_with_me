@@ -3,10 +3,8 @@ package com.olivejua.study.config.auth;
 import com.olivejua.study.config.auth.dto.OAuthAttributes;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.exception.NotExistingUserException;
-import com.olivejua.study.repository.UserRepository;
-import com.olivejua.study.service.UserService;
-import com.olivejua.study.web.dto.user.UserSignInResponseDto;
+import com.olivejua.study.exception.NotExistsUserException;
+import com.olivejua.study.unit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -54,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private User verifyUser(OAuthAttributes attributes) {
         Optional<User> userOptional = userRepository.findByEmailAndSocialCode(attributes.getEmail(), attributes.getSocialCode());
         if (userOptional.isEmpty()) {
-            throw new NotExistingUserException();
+            throw new NotExistsUserException();
         }
 
         User user = userOptional.get();

@@ -5,9 +5,9 @@
 //import com.olivejua.study.domain.Role;
 //import com.olivejua.study.domain.User;
 //import com.olivejua.study.domain.board.*;
-//import com.olivejua.study.repository.UserRepository;
-//import com.olivejua.study.repository.board.StudyRecruitmentRepository;
-//import com.olivejua.study.repository.board.TechStackRepository;
+//import com.olivejua.study.unit.repository.UserRepository;
+//import com.olivejua.study.unit.repository.board.StudyRecruitmentRepository;
+//import com.olivejua.study.unit.repository.board.TechStackRepository;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.context.annotation.Profile;
 //import org.springframework.stereotype.Component;

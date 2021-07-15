@@ -1,4 +1,4 @@
-package com.olivejua.study.repository.board;
+package com.olivejua.study.unit.repository.board;
 
 import com.olivejua.study.domain.board.Question;
 import org.springframework.data.jpa.repository.JpaRepository;

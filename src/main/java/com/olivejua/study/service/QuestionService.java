@@ -2,8 +2,8 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.repository.board.QuestionQueryRepository;
-import com.olivejua.study.repository.board.QuestionRepository;
+import com.olivejua.study.unit.repository.board.QuestionQueryRepository;
+import com.olivejua.study.unit.repository.board.QuestionRepository;
 import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostReadResponseDto;

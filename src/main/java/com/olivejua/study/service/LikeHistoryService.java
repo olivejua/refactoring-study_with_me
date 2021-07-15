@@ -1,11 +1,10 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
-import com.olivejua.study.repository.board.LikeHistoryRepository;
-import com.olivejua.study.repository.board.PlaceRecommendationRepository;
+import com.olivejua.study.unit.repository.board.LikeHistoryRepository;
+import com.olivejua.study.unit.repository.board.PlaceRecommendationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
-package com.olivejua.study.repository.board;
+package com.olivejua.study.unit.repository.board;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.PlaceRecommendation;
-import com.olivejua.study.repository.UserRepository;
+import com.olivejua.study.unit.repository.UserRepository;
 import com.olivejua.study.sampleData.SamplePlaceRecommendation;
 import com.olivejua.study.sampleData.SampleUser;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package com.olivejua.study.repository.board;
+package com.olivejua.study.unit.repository.board;
 
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.LikeHistoryPK;

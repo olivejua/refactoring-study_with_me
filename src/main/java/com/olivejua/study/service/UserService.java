@@ -2,9 +2,8 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.exception.NotExistingUserException;
-import com.olivejua.study.repository.UserRepository;
-import com.olivejua.study.web.dto.user.UserSignInResponseDto;
+import com.olivejua.study.exception.NotExistsUserException;
+import com.olivejua.study.unit.repository.UserRepository;
 import com.olivejua.study.web.dto.user.UserSignupRequestDto;
 import com.olivejua.study.web.dto.user.UserSignupResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +38,7 @@ public class UserService {
 
     public void changeProfile(Long userId, String name) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotExistingUserException("해당 User가 없습니다."));
+                .orElseThrow(() -> new NotExistsUserException("해당 User가 없습니다."));
 
         user.changeProfile(name);
     }

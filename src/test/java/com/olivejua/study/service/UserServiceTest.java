@@ -2,9 +2,8 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.repository.UserRepository;
+import com.olivejua.study.unit.repository.UserRepository;
 import com.olivejua.study.sampleData.SampleUser;
-import com.olivejua.study.web.dto.user.UserSignInResponseDto;
 import com.olivejua.study.web.dto.user.UserSignupRequestDto;
 import com.olivejua.study.web.dto.user.UserSignupResponseDto;
 import org.junit.jupiter.api.AfterEach;
