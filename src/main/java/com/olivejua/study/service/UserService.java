@@ -3,7 +3,7 @@ package com.olivejua.study.service;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.exception.NotExistsUserException;
-import com.olivejua.study.unit.repository.UserRepository;
+import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.web.dto.user.UserSignupRequestDto;
 import com.olivejua.study.web.dto.user.UserSignupResponseDto;
 import lombok.RequiredArgsConstructor;

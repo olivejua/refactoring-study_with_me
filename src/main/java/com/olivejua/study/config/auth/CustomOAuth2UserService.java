@@ -4,7 +4,7 @@ import com.olivejua.study.config.auth.dto.OAuthAttributes;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.exception.NotExistsUserException;
-import com.olivejua.study.unit.repository.UserRepository;
+import com.olivejua.study.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

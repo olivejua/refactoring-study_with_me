@@ -1,4 +1,4 @@
-package com.olivejua.study.unit.repository;
+package com.olivejua.study.repository;
 
 import com.olivejua.study.domain.Reply;
 import com.olivejua.study.domain.board.Board;

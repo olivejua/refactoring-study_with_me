@@ -1,4 +1,4 @@
-package com.olivejua.study.unit.repository;
+package com.olivejua.study.repository;
 
 import com.olivejua.study.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

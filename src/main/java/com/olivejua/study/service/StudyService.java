@@ -2,9 +2,9 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.StudyRecruitment;
-import com.olivejua.study.unit.repository.board.StudyRecruitmentQueryRepository;
-import com.olivejua.study.unit.repository.board.StudyRecruitmentRepository;
-import com.olivejua.study.unit.repository.board.TechStackRepository;
+import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
+import com.olivejua.study.repository.board.StudyRecruitmentRepository;
+import com.olivejua.study.repository.board.TechStackRepository;
 import com.olivejua.study.utils.BoardImageUploader;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
