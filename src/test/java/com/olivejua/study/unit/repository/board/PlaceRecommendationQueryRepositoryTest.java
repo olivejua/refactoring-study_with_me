@@ -2,6 +2,7 @@ package com.olivejua.study.unit.repository.board;
 
 import com.olivejua.study.domain.*;
 import com.olivejua.study.domain.board.*;
+import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;

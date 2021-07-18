@@ -5,9 +5,9 @@ import com.olivejua.study.domain.Reply;
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
-import com.olivejua.study.unit.repository.CommentRepository;
-import com.olivejua.study.unit.repository.ReplyRepository;
-import com.olivejua.study.unit.repository.UserRepository;
+import com.olivejua.study.repository.CommentRepository;
+import com.olivejua.study.repository.ReplyRepository;
+import com.olivejua.study.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 

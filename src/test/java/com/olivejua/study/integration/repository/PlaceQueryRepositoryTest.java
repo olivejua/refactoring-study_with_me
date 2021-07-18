@@ -1,9 +1,8 @@
-package com.olivejua.study.unit.repository;
+package com.olivejua.study.integration.repository;
 
-import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.unit.repository.board.QuestionQueryRepository;
-import com.olivejua.study.unit.repository.board.QuestionRepository;
+import com.olivejua.study.repository.board.QuestionQueryRepository;
+import com.olivejua.study.repository.board.QuestionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

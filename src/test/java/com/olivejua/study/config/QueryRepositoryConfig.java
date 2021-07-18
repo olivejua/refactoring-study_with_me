@@ -1,8 +1,8 @@
 package com.olivejua.study.config;
 
-import com.olivejua.study.unit.repository.board.PlaceRecommendationQueryRepository;
-import com.olivejua.study.unit.repository.board.QuestionQueryRepository;
-import com.olivejua.study.unit.repository.board.StudyRecruitmentQueryRepository;
+import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
+import com.olivejua.study.repository.board.QuestionQueryRepository;
+import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;

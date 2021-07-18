@@ -2,26 +2,22 @@ package com.olivejua.study.unit.repository.board;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.unit.repository.UserRepository;
+import com.olivejua.study.repository.UserRepository;
+import com.olivejua.study.repository.board.QuestionQueryRepository;
+import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.sampleData.SampleQuestion;
 import com.olivejua.study.sampleData.SampleUser;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

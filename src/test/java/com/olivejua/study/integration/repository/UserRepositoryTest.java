@@ -1,15 +1,10 @@
-package com.olivejua.study.unit.repository;
+package com.olivejua.study.integration.repository;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.integration.repository.CommonRepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,5 +29,15 @@ class UserRepositoryTest extends CommonRepositoryTest {
     private User saveUser() {
         return User.createUser(
                 "sample username", "user@gmail.com", Role.GUEST, "google");
+    }
+
+    @Override
+    void setup() {
+
+    }
+
+    @Override
+    void clearAll() {
+
     }
 }
