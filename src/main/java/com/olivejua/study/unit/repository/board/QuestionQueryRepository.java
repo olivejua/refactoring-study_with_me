@@ -25,14 +25,14 @@ import static com.olivejua.study.domain.board.QQuestion.question;
 @Repository
 public class QuestionQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * entity 전체목록 조회
      */
     public Page<PostListResponseDto> findEntities(Pageable pageable) {
         List<PostListResponseDto> content = selectEntities(pageable);
-        JPAQuery<Question> countQuery = queryFactory
+        JPAQuery<Question> countQuery = jpaQueryFactory
                 .selectFrom(question);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
@@ -43,7 +43,7 @@ public class QuestionQueryRepository {
      */
     public Page<PostListResponseDto> findEntitiesWith(SearchDto cond, Pageable pageable) {
         List<PostListResponseDto> content = selectEntities(pageable, cond);
-        JPAQuery<Question> countQuery = queryFactory
+        JPAQuery<Question> countQuery = jpaQueryFactory
                 .selectFrom(question)
                 .where(allEq(cond));
 
@@ -55,7 +55,7 @@ public class QuestionQueryRepository {
      */
     public Optional<Question> findEntity(Long postId) {
         return Optional.ofNullable(
-                queryFactory
+                jpaQueryFactory
                 .selectFrom(question)
                 .innerJoin(question.writer, user)
                 .leftJoin(question.comment, comment)
@@ -72,7 +72,7 @@ public class QuestionQueryRepository {
     }
 
     private List<PostListResponseDto> selectEntities(Pageable pageable, SearchDto cond) {
-        List<Question> entities = queryFactory
+        List<Question> entities = jpaQueryFactory
                 .selectFrom(question)
                 .innerJoin(question.writer, user)
                 .leftJoin(question.comment, comment)
