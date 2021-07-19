@@ -21,34 +21,14 @@ public abstract class CommonRepositoryTest {
     @Autowired
     protected UserRepository userRepository;
 
-    protected User sampleWriter;
-    protected List<Question> samplePosts;
-    protected List<Comment> sampleComment;
-
     private static int userIndex = 1;
-
-    @BeforeEach
-    void setupCommon() {
-        sampleWriter = createUser();
-        setup();
-    }
-
-    @AfterEach
-    void clearAllCommon() {
-        clearAll();
-        userRepository.deleteAll();
-    }
-
-    abstract void setup();
-    abstract void clearAll();
 
     protected User createUser() {
         String username = "sampleUser" + (userIndex++);
 
         User user = User.createUser(
                 username, username + "@gmail.com", Role.USER, "google");
-        userRepository.save(sampleWriter);
 
-        return user;
+        return userRepository.save(user);
     }
 }

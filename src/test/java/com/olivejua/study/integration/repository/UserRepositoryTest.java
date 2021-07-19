@@ -1,43 +1,51 @@
 package com.olivejua.study.integration.repository;
 
-import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.integration.repository.CommonRepositoryTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UserRepositoryTest extends CommonRepositoryTest {
 
+    @AfterEach
+    void clearAll() {
+        userRepository.deleteAll();
+    }
+
     @Test
-    @DisplayName("user를 repository에 저장한다")
-    public void save() {
+    @DisplayName("모든 usernames을 가져온다")
+    public void testFindAllNames() {
+        int expectedSize = 15;
+
+        for (int i=0; i<expectedSize; i++) {
+            createUser();
+        }
+
+        List<String> usernames = userRepository.findAllNames();
+
+        assertEquals(expectedSize, usernames.size());
+    }
+    
+    @Test
+    @DisplayName("email과 socialcode로 user 찾기")
+    public void testFindByEmailAndSocialCode() {
         //given
-        User user = saveUser();
+        User sampleUser = createUser();
+        String email = sampleUser.getEmail();
+        String socialCode = sampleUser.getSocialCode();
 
         //when
-        userRepository.save(user);
+        User findUser = userRepository.findByEmailAndSocialCode(email, socialCode).orElse(null);
 
-
-        User findUser = userRepository.findAll().get(0);
-
-        assertEquals(user, findUser);
-        assertEquals(user.getId(), findUser.getId());
-    }
-
-    private User saveUser() {
-        return User.createUser(
-                "sample username", "user@gmail.com", Role.GUEST, "google");
-    }
-
-    @Override
-    void setup() {
-
-    }
-
-    @Override
-    void clearAll() {
-
+        //then
+        assertNotNull(findUser);
+        assertEquals(sampleUser.getId(), findUser.getId());
+        assertEquals(sampleUser.getName(), findUser.getName());
+        assertEquals(sampleUser.getRole(), findUser.getRole());
     }
 }
