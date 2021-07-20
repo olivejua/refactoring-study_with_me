@@ -39,10 +39,6 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
     @Autowired
     private LikeHistoryRepository likeHistoryRepository;
 
-    @Autowired
-    private EntityManager em;
-
-
     /**
      * test template zone
      */
@@ -51,6 +47,7 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
 
     @Override
     void clearAll() {
+        likeHistoryRepository.deleteAll();
         linkRepository.deleteAll();
         placeRepository.deleteAll();
     }
@@ -77,6 +74,7 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
         assertTrue(findPost.getLinks().containsAll(post.getLinks()));
         assertEquals(post.getLikes().size(), findPost.getLikes().size());
         assertTrue(post.getLikes().containsAll(findPost.getLikes()));
+        assertEquals(post.getComment().size(), findPost.getComment().size());
     }
 
     @Test
@@ -124,7 +122,7 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
         dummyPosts.add(placeRepository.save(expectedPost));
 
         PageRequest paging = PageRequest.of(0, 10);
-        SearchDto searchDto = new SearchDto(SearchType.TITLE.name(), "target");
+        SearchDto searchDto = new SearchDto(SearchType.ADDRESS.name(), "target");
 
         //when
         Page<PostListResponseDto> entities = placeQueryRepository.findEntitiesWith(searchDto, paging);

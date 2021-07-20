@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,9 @@ public abstract class CommonBoardRepositoryTest extends CommonRepositoryTest {
 
     @Autowired
     protected CommentRepository commentRepository;
+
+    @Autowired
+    protected EntityManager em;
 
     protected User dummyWriter;
     protected List<Board> dummyPosts;

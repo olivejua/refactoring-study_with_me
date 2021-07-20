@@ -68,7 +68,6 @@ public class StudyRecruitmentQueryRepository {
                 .innerJoin(studyRecruitment.writer, user)
                 .leftJoin(studyRecruitment.techStack, techStack)
                 .leftJoin(studyRecruitment.comment, comment)
-                .fetchJoin()
                 .where(idEq(postId))
                 .fetchOne());
     }
