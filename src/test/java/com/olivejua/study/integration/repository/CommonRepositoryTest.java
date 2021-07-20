@@ -17,7 +17,7 @@ public abstract class CommonRepositoryTest {
 
     private static int userIndex = 1;
 
-    protected User createUser() {
+    protected User createDummyUser() {
         String username = "sampleUser" + (userIndex++);
 
         User user = User.createUser(

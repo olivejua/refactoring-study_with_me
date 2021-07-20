@@ -29,7 +29,7 @@ public class PlaceRecommendation extends Board {
     private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
-    private List<LikeHistory> likes;
+    private List<LikeHistory> likes = new ArrayList<>();
 
     /**
      * 글 작성

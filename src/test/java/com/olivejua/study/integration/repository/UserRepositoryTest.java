@@ -23,7 +23,7 @@ class UserRepositoryTest extends CommonRepositoryTest {
         int expectedSize = 15;
 
         for (int i=0; i<expectedSize; i++) {
-            createUser();
+            createDummyUser();
         }
 
         List<String> usernames = userRepository.findAllNames();
@@ -35,7 +35,7 @@ class UserRepositoryTest extends CommonRepositoryTest {
     @DisplayName("email과 socialcode로 user 찾기")
     public void testFindByEmailAndSocialCode() {
         //given
-        User sampleUser = createUser();
+        User sampleUser = createDummyUser();
         String email = sampleUser.getEmail();
         String socialCode = sampleUser.getSocialCode();
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @IdClass(LikeHistoryPK.class)
@@ -31,10 +32,26 @@ public class LikeHistory {
         like.user = user;
         like.isLike = isLike;
 
+        post.getLikes().add(like);
+
         return like;
     }
 
     public void update(boolean isLike) {
         this.isLike = isLike;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LikeHistory that = (LikeHistory) o;
+        return that.getPost().getId().equals(this.post.getId()) &&
+                that.getUser().getId().equals(this.user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUser(), getPost(), isLike());
     }
 }
