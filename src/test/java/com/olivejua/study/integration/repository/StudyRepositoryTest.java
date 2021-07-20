@@ -114,6 +114,7 @@ public class StudyRepositoryTest extends CommonBoardRepositoryTest {
         SearchDto searchDto = new SearchDto(SearchType.EXPLANATION.name(), "target");
 
         //when
+        //TODO embedded 객체로 검색하면 안되는 문제
         Page<PostListResponseDto> entities = studyQueryRepository.findEntitiesWith(searchDto, paging);
 
         //then

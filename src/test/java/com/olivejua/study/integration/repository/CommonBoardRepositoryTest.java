@@ -15,16 +15,27 @@ import java.util.stream.Collectors;
 
 public abstract class CommonBoardRepositoryTest extends CommonRepositoryTest {
 
+    /**
+     * Dependency Injection
+     */
     @Autowired
     protected CommentRepository commentRepository;
 
     @Autowired
     protected EntityManager em;
 
+
+    /**
+     * Inheritance fields
+     */
     protected User dummyWriter;
     protected List<Board> dummyPosts;
     protected List<Comment> dummyComment;
 
+
+    /**
+     * Test template zone
+     */
     @BeforeEach
     void setupCommon() {
         dummyWriter = createDummyUser();
@@ -43,6 +54,10 @@ public abstract class CommonBoardRepositoryTest extends CommonRepositoryTest {
     abstract void setup();
     abstract void clearAll();
 
+
+    /**
+     * Test zone
+     */
     List<Board> createDummyPosts() {
         List<Board> posts = new ArrayList<>();
 
@@ -53,6 +68,10 @@ public abstract class CommonBoardRepositoryTest extends CommonRepositoryTest {
         return posts;
     }
 
+
+    /**
+     * Inheritance methods
+     */
     abstract Board createDummyPost();
 
     protected List<Comment> createDummyComments(List<Board> posts) {
