@@ -30,7 +30,7 @@ public class CommentRepositoryTest extends CommonBoardRepositoryTest {
 
     @Override
     void clearAll() {
-
+        
     }
 
     @Test

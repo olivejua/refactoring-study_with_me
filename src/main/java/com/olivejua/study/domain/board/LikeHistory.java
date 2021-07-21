@@ -8,18 +8,20 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static lombok.AccessLevel.*;
+
 @Getter
 @IdClass(LikeHistoryPK.class)
 @Entity
 public class LikeHistory {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private PlaceRecommendation post;
 

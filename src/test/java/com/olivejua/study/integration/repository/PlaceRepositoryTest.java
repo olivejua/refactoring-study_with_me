@@ -4,6 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.domain.board.LikeHistory;
 import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.board.QLikeHistory;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
@@ -11,6 +12,7 @@ import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,11 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
+import static com.olivejua.study.domain.QUser.user;
+import static com.olivejua.study.domain.board.QLikeHistory.likeHistory;
+import static com.olivejua.study.domain.board.QPlaceRecommendation.placeRecommendation;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
@@ -38,6 +44,9 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
 
     @Autowired
     private LikeHistoryRepository likeHistoryRepository;
+
+    @Autowired
+    private JPAQueryFactory queryFactory;
 
     /**
      * test template zone
@@ -151,8 +160,8 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
         PlaceRecommendation post = (PlaceRecommendation) dummyPosts.get(0);
         createLikeHistory(post, user, true);
 
-        em.flush();
-        em.clear();
+//        em.flush();
+//        em.clear();
 
         //when
         LikeHistory findLike = placeQueryRepository.
@@ -161,6 +170,25 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
         //then
         assertNotNull(findLike);
         assertTrue(findLike.isLike());
+    }
+
+    @Test
+    void testFindLikeHistory() {
+
+        LikeHistory likeHistory1 = likeHistoryRepository.findOneByPostIdAndUserId(3L, 1L).orElse(null);
+
+        em.flush();
+        em.clear();
+
+        LikeHistory likeHistory = queryFactory
+                .selectFrom(QLikeHistory.likeHistory)
+                .where(
+                        user.id.eq(3L),
+                        placeRecommendation.id.eq(1L))
+                .fetchOne();
+
+//        System.out.println("likeHistory = " + likeHistory.getPost().getId());
+//        System.out.println("likeHistory = " + likeHistory.getUser().getId());
     }
 
 

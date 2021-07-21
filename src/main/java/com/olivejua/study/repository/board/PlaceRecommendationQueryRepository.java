@@ -108,8 +108,8 @@ public class PlaceRecommendationQueryRepository {
     public Optional<LikeHistory> findLikeHistoryByPostAndUser(Long postId, Long userId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(likeHistory)
-                .join(likeHistory.user, user)
-                .join(likeHistory.post, placeRecommendation)
+                .join(likeHistory.user, user).fetchJoin()
+                .join(likeHistory.post, placeRecommendation).fetchJoin()
                 .where(
                         user.id.eq(userId),
                         placeRecommendation.id.eq(postId))

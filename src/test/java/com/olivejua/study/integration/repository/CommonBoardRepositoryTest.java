@@ -1,6 +1,7 @@
 package com.olivejua.study.integration.repository;
 
 import com.olivejua.study.domain.Comment;
+import com.olivejua.study.domain.Reply;
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
 import com.olivejua.study.repository.CommentRepository;
