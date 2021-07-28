@@ -1,28 +1,44 @@
 package com.olivejua.study.domain.board;
 
 import com.olivejua.study.domain.User;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-import static lombok.AccessLevel.*;
-
 @Getter
-@IdClass(LikeHistoryPK.class)
+//@IdClass(LikeHistoryPK.class)
 @Entity
 public class LikeHistory {
 
-    @Id
+    @Embeddable
+    public static class LikeHistoryPK implements Serializable {
+        @Column(name = "USER_ID")
+        private Long userId;
+
+        @Column(name = "POST_ID")
+        private Long postId;
+
+        public LikeHistoryPK() {}
+
+        public LikeHistoryPK(Long userId, Long postId) {
+            this.userId = userId;
+            this.postId = postId;
+        }
+    }
+
+    @EmbeddedId
+    private LikeHistoryPK likeHistoryPK = new LikeHistoryPK();
+
+//    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     private User user;
 
-    @Id
+//    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_ID")
+    @JoinColumn(name = "POST_ID", insertable = false, updatable = false)
     private PlaceRecommendation post;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)", name = "IS_LIKE")

@@ -27,6 +27,9 @@ public class QuestionQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    /****************************************************************
+     * 조회 쿼리
+     ***************************************************************/
     /**
      * entity 전체목록 조회
      */
@@ -85,6 +88,9 @@ public class QuestionQueryRepository {
         return toPostListResponseDtos(entities);
     }
 
+    /****************************************************************
+     * private 함수
+     ***************************************************************/
     /**
      * List<Entity> 에서 List<postId>만 추출
      */
@@ -100,9 +106,9 @@ public class QuestionQueryRepository {
                 )).collect(Collectors.toList());
     }
 
-    /**
+    /****************************************************************
      * Column 조건
-     */
+     ***************************************************************/
     private BooleanExpression allEq(SearchDto cond) {
         if (cond==null) {
             return null;

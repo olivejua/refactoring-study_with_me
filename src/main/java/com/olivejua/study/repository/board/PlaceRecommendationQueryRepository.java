@@ -42,6 +42,9 @@ public class PlaceRecommendationQueryRepository {
     private final String columnLikeCount = "likeCount";
     private final String columnDislikeCount = "dislikeCount";
 
+    /****************************************************************
+     * 조회 쿼리
+     ***************************************************************/
     /**
      * entity 전체목록 조회
      */
@@ -102,6 +105,10 @@ public class PlaceRecommendationQueryRepository {
                 .fetchOne());
     }
 
+
+    /****************************************************************
+     * private 함수
+     ***************************************************************/
     /**
      * 로그인 중인 User가 특정 Post의 '좋아요 entity' 조회
      */
@@ -200,9 +207,9 @@ public class PlaceRecommendationQueryRepository {
         return result;
     }
 
-    /**
+    /****************************************************************
      * Column 조건
-     */
+     ***************************************************************/
     private BooleanExpression idEq(Long postId) {
         return placeRecommendation.id.eq(postId);
     }

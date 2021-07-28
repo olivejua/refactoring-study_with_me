@@ -29,6 +29,9 @@ public class StudyRecruitmentQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /****************************************************************
+     * 조회 쿼리
+     ***************************************************************/
     /**
      * entity 전체목록 조회
      */
@@ -98,9 +101,9 @@ public class StudyRecruitmentQueryRepository {
         return toPostListResponseDtos(entities);
     }
 
-    /**
+    /****************************************************************
      * Column 조건
-     */
+     ***************************************************************/
     private List<PostListResponseDto> toPostListResponseDtos(List<StudyRecruitment> entities) {
         return entities.stream()
                 .map(entity -> new PostListResponseDto(
@@ -128,7 +131,7 @@ public class StudyRecruitmentQueryRepository {
     private BooleanExpression placeContains(SearchDto cond) {
         if (cond != null
                 && cond.getSearchType() == SearchType.PLACE
-                && StringUtils.isEmpty(cond.getKeyword()))
+                && !StringUtils.isEmpty(cond.getKeyword()))
             return studyRecruitment.condition.place.contains(cond.getKeyword());
 
         return null;
@@ -136,8 +139,8 @@ public class StudyRecruitmentQueryRepository {
 
     private BooleanExpression explanationContains(SearchDto cond) {
         if (cond != null
-                && cond.getSearchType() == SearchType.EXPLANATION
-                && StringUtils.isEmpty(cond.getKeyword()))
+                && cond.getSearchType().equals(SearchType.EXPLANATION)
+                && !StringUtils.isEmpty(cond.getKeyword()))
             return studyRecruitment.condition.explanation.contains(cond.getKeyword());
 
         return null;
@@ -146,7 +149,7 @@ public class StudyRecruitmentQueryRepository {
     private BooleanExpression techStackContains(SearchDto cond) {
         if (cond != null
                 && cond.getSearchType() == SearchType.TECH_STACK
-                && StringUtils.isEmpty(cond.getKeyword()))
+                && !StringUtils.isEmpty(cond.getKeyword()))
             return techStack.element.contains(cond.getKeyword());
 
         return null;
