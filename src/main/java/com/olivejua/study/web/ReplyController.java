@@ -3,6 +3,7 @@ package com.olivejua.study.web;
 import com.olivejua.study.config.auth.LoginUser;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.ReplyService;
+import com.olivejua.study.utils.UrlPaths;
 import com.olivejua.study.web.dto.reply.ReplySaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RequiredArgsConstructor
-@RequestMapping("/reply")
+@RequestMapping(UrlPaths.REPLIES)
 @RestController
 public class ReplyController {
 

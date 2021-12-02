@@ -1,5 +1,27 @@
 package com.olivejua.study.web;
 
+import static com.olivejua.study.utils.UrlPaths.*;
+import static org.springframework.data.domain.Sort.Direction.*;
+
+import java.net.URI;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.olivejua.study.config.auth.LoginUser;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.PlaceService;
@@ -8,27 +30,17 @@ import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RequiredArgsConstructor
-@RequestMapping("/place")
+@RequestMapping(PLACES)
 @RestController
 public class PlaceController {
 
     private final PlaceService placeService;
 
-    @GetMapping("/list")
+    @GetMapping(Places.LIST)
     public ResponseEntity<Page<PostListResponseDto>> list(@PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
                                                           SearchDto searchInfo) {
         Page<PostListResponseDto> results = searchInfo == null ?

@@ -1,17 +1,27 @@
 package com.olivejua.study.web;
 
+import static com.olivejua.study.utils.UrlPaths.*;
+
+import java.net.URI;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.olivejua.study.config.auth.LoginUser;
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.service.CommentService;
 import com.olivejua.study.web.dto.comment.CommentSaveRequestDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@RequestMapping("/comment")
+@RequestMapping(COMMENTS)
 @RestController
 public class CommentController {
 
