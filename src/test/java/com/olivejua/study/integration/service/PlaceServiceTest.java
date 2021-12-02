@@ -1,11 +1,15 @@
-package com.olivejua.study.service;
+package com.olivejua.study.integration.service;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.*;
+import com.olivejua.study.domain.board.Board;
+import com.olivejua.study.domain.board.LikeHistory;
+import com.olivejua.study.domain.board.Link;
+import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
+import com.olivejua.study.service.PlaceService;
 import com.olivejua.study.web.dto.board.place.PostReadResponseDto;
 import com.olivejua.study.web.dto.board.place.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.place.like.LikeStatus;

@@ -1,4 +1,4 @@
-package com.olivejua.study.service;
+package com.olivejua.study.integration.service;
 
 import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Board;
@@ -6,6 +6,7 @@ import com.olivejua.study.domain.board.Question;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.sampleData.SampleQuestion;
 import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.service.QuestionService;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.question.PostSaveRequestDto;
 import com.olivejua.study.web.dto.board.question.PostUpdateRequestDto;

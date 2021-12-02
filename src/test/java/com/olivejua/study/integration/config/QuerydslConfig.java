@@ -1,4 +1,4 @@
-package com.olivejua.study.config;
+package com.olivejua.study.integration.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.test.context.TestConfiguration;

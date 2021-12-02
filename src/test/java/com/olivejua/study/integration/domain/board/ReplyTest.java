@@ -1,4 +1,4 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.integration.domain.board;
 
 import org.junit.jupiter.api.Test;
 

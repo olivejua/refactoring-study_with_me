@@ -1,8 +1,9 @@
-package com.olivejua.study.web;
+package com.olivejua.study.integration.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olivejua.study.config.auth.SecurityConfig;
 import com.olivejua.study.service.UserService;
+import com.olivejua.study.web.UserController;
 import com.olivejua.study.web.dto.user.UserSignupRequestDto;
 import com.olivejua.study.web.dto.user.UserSignupResponseDto;
 import org.junit.jupiter.api.BeforeEach;

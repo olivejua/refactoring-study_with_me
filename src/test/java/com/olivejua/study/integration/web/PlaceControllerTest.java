@@ -1,4 +1,4 @@
-package com.olivejua.study.web;
+package com.olivejua.study.integration.web;
 
 import com.olivejua.study.config.auth.dto.SessionUser;
 import com.olivejua.study.domain.Role;

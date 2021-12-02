@@ -1,7 +1,9 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.integration.domain.board;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Link;
+import com.olivejua.study.domain.board.PlaceRecommendation;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import org.junit.jupiter.api.DisplayName;

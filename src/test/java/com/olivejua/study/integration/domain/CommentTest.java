@@ -1,7 +1,13 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.integration.domain;
 
-import com.olivejua.study.domain.board.*;
-import com.olivejua.study.sampleData.*;
+import com.olivejua.study.domain.Comment;
+import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.domain.board.StudyRecruitment;
+import com.olivejua.study.sampleData.SampleComment;
+import com.olivejua.study.sampleData.SampleQuestion;
+import com.olivejua.study.sampleData.SampleStudyRecruitment;
+import com.olivejua.study.sampleData.SampleUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

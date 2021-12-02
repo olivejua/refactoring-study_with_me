@@ -196,6 +196,7 @@ public class PlaceRepositoryTest extends CommonBoardRepositoryTest {
      * overriding zone
      */
     @Override
+
     Board createDummyPost() {
         PlaceRecommendation post = PlaceRecommendation.savePost(
                 dummyWriter,

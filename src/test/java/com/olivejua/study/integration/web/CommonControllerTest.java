@@ -1,4 +1,4 @@
-package com.olivejua.study.web;
+package com.olivejua.study.integration.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

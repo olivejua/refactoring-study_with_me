@@ -1,4 +1,4 @@
-package com.olivejua.study.service;
+package com.olivejua.study.integration.service;
 
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.Reply;

@@ -1,4 +1,4 @@
-package com.olivejua.study.config;
+package com.olivejua.study.integration.config;
 
 import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.repository.board.QuestionQueryRepository;

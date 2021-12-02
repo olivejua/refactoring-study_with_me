@@ -1,7 +1,8 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.integration.domain.board;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.board.PlaceRecommendation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 class PlaceRecommendationTest {

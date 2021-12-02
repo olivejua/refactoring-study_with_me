@@ -1,4 +1,4 @@
-package com.olivejua.study.service;
+package com.olivejua.study.integration.service;
 
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
@@ -7,6 +7,7 @@ import com.olivejua.study.repository.CommentRepository;
 import com.olivejua.study.repository.UserRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.sampleData.SampleUser;
+import com.olivejua.study.service.CommentService;
 import com.olivejua.study.web.dto.comment.CommentSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
