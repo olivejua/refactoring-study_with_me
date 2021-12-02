@@ -22,7 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,8 +58,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
                 "test post sample title",
                 Arrays.asList("test post sample tech1", "test post sample tech2", "test post sample tech3"),
                 "test post sample place",
-                LocalDateTime.of(2021, 06, 13, 00, 00),
-                LocalDateTime.of(2021, 12, 13, 00, 00),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 10,
                 "test post sample explanation");
 
@@ -79,8 +79,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
                 "test update sample title",
                 Arrays.asList("test update sample tech1", "test update sample tech2", "test update sample tech3"),
                 "test update sample place",
-                LocalDateTime.of(2021, 06, 13, 00, 00),
-                LocalDateTime.of(2021, 12, 13, 00, 00),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 10,
                 "test update sample explanation");
 
@@ -189,8 +189,8 @@ class StudyServiceTest extends CommonBoardServiceTest {
 
         Condition condition = Condition.createCondition(
                 "sample place",
-                LocalDateTime.of(2021, 06, 12, 00, 00),
-                LocalDateTime.of(2021, 12, 12, 00, 00),
+                LocalDate.of(2021, 06, 12),
+                LocalDate.of(2021, 12, 12),
                 10,
                 "sample explanation"
         );

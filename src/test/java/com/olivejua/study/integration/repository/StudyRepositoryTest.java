@@ -9,14 +9,13 @@ import com.olivejua.study.repository.board.TechStackRepository;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,8 +99,8 @@ public class StudyRepositoryTest extends CommonBoardRepositoryTest {
                 List.of("spring", "jpa", "java"),
                 Condition.createCondition(
                         "search target place",
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
+                        LocalDate.now(),
+                        LocalDate.now(),
                         5,
                         "search target explanation"));
 
@@ -137,8 +136,8 @@ public class StudyRepositoryTest extends CommonBoardRepositoryTest {
                 List.of("java", "spring", "jpa"),
                 Condition.createCondition(
                         "sample place",
-                        LocalDateTime.of(2021, 07, 19, 00, 00),
-                        LocalDateTime.of(2021, 12, 19, 00, 00),
+                        LocalDate.of(2021, 07, 19),
+                        LocalDate.of(2021, 12, 19),
                         10,
                         "sample explanation"));
 

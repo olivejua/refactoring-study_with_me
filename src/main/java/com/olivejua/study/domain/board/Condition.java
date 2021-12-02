@@ -1,12 +1,11 @@
 package com.olivejua.study.domain.board;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Embeddable
@@ -15,15 +14,15 @@ import java.util.Objects;
 public class Condition {
     private String place;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     private int capacity;
 
     private String explanation;
 
-    private Condition(String place, LocalDateTime startDate, LocalDateTime endDate, int capacity, String explanation) {
+    private Condition(String place, LocalDate startDate, LocalDate endDate, int capacity, String explanation) {
         this.place = place;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -31,8 +30,8 @@ public class Condition {
         this.explanation = explanation;
     }
 
-    public static Condition createCondition(String place, LocalDateTime startDate,
-                                            LocalDateTime endDate, int capacity, String explanation) {
+    public static Condition createCondition(String place, LocalDate startDate,
+                                            LocalDate endDate, int capacity, String explanation) {
         return new Condition(
                 place, startDate, endDate, capacity, explanation);
     }

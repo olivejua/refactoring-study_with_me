@@ -1,11 +1,10 @@
 package com.olivejua.study.web.dto.board.study;
 
 import com.olivejua.study.domain.board.Condition;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -14,13 +13,13 @@ public class PostSaveRequestDto {
     private String title;
     private List<String> techStack;
     private String place;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private int capacity;
     private String explanation;
 
     public PostSaveRequestDto(String title, List<String> techStack, String place,
-                              LocalDateTime startDate, LocalDateTime endDate,
+                              LocalDate startDate, LocalDate endDate,
                               int capacity, String explanation) {
         this.title = title;
         this.techStack = techStack;

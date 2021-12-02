@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +40,8 @@ class StudyRecruitmentTest {
 
         condition = Condition.createCondition(
                 "sample place1",
-                LocalDateTime.of(2021, 6, 1, 0, 0),
-                LocalDateTime.of(2021, 12, 31, 0, 0),
+                LocalDate.of(2021, 6, 1),
+                LocalDate.of(2021, 12, 31),
                 10,
                 "sample explanation1");
     }
@@ -76,8 +76,8 @@ class StudyRecruitmentTest {
 
         Condition changedCondition = Condition.createCondition(
                 "sample place2",
-                LocalDateTime.of(2021, 7, 1, 0, 0),
-                LocalDateTime.of(2022, 1, 31, 0, 0),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 11,
                 "sample explanation2");
 

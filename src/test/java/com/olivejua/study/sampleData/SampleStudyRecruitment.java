@@ -4,6 +4,7 @@ import com.olivejua.study.domain.User;
 import com.olivejua.study.domain.board.Condition;
 import com.olivejua.study.domain.board.StudyRecruitment;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +49,8 @@ public class SampleStudyRecruitment {
         static Condition create() {
             return Condition.createCondition(
                     "강남",
-                    LocalDateTime.of(2021, 4, 7, 0, 0),
-                    LocalDateTime.of(2021, 6, 7, 0, 0),
+                    LocalDate.of(2021, 4, 7),
+                    LocalDate.of(2021, 6, 7),
                     5,
                     "java 프로젝트 할 사람 모집");
         }

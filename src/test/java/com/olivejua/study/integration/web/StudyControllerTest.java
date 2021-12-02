@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +46,8 @@ public class StudyControllerTest extends CommonControllerTest {
 
         Condition condition = Condition.createCondition(
                 "sample place1",
-                LocalDateTime.of(2021, 06, 10, 00, 00),
-                LocalDateTime.of(2021, 12, 10, 00, 00),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 10,
                 "sample explanation"
         );
@@ -87,8 +87,8 @@ public class StudyControllerTest extends CommonControllerTest {
                 "sample title",
                 techStack,
                 "sample place",
-                LocalDateTime.of(2021, 06, 10, 00, 00),
-                LocalDateTime.of(2021, 12, 10, 00, 00),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 10,
                 "sample explanation");
 
@@ -112,8 +112,8 @@ public class StudyControllerTest extends CommonControllerTest {
                 "sample title",
                 techStack,
                 "sample place",
-                LocalDateTime.of(2021, 06, 10, 00, 00),
-                LocalDateTime.of(2021, 12, 10, 00, 00),
+                LocalDate.of(2021, 06, 10),
+                LocalDate.of(2021, 12, 10),
                 10,
                 "sample explanation");
 

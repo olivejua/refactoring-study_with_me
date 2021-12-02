@@ -8,7 +8,7 @@ import com.olivejua.study.domain.board.TechStack;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class TechStackTest {
 
         Condition condition = Condition.createCondition(
                 "강남",
-                LocalDateTime.of(2021, 4, 7, 0, 0),
-                LocalDateTime.of(2021, 6, 7, 0, 0),
+                LocalDate.of(2021, 4, 7),
+                LocalDate.of(2021, 6, 7),
                 5,
                 "java 프로젝트 할 사람 모집");
 
