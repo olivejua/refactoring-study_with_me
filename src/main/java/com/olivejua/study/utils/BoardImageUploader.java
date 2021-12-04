@@ -1,9 +1,9 @@
 package com.olivejua.study.utils;
 
 import com.olivejua.study.config.ImageConfig;
-import com.olivejua.study.domain.board.PlaceRecommendation;
-import com.olivejua.study.domain.board.Question;
-import com.olivejua.study.domain.board.StudyRecruitment;
+import com.olivejua.study.domain.PlaceRecommendation;
+import com.olivejua.study.domain.Question;
+import com.olivejua.study.domain.StudyRecruitment;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
