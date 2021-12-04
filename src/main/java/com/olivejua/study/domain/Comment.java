@@ -1,16 +1,12 @@
 package com.olivejua.study.domain;
 
-import com.olivejua.study.domain.board.Board;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -24,29 +20,28 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "POST_ID")
-    private Board post;
+    private Post post;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "USER_ID")
-    private User writer;
+    private User author;
 
     private String content;
 
-    @OneToMany(mappedBy = "comment")
-    private List<Reply> replies = new ArrayList<>();
+    private final Replies replies = new Replies();
 
-    private Comment(Board post, User writer, String content) {
+    private Comment(Post post, User author, String content) {
         this.post = post;
-        this.writer = writer;
+        this.author = author;
         this.content = content;
     }
 
     /**
      * 댓글 달기
      */
-    public static Comment createComment(Board post, User writer, String content) {
+    public static Comment createComment(Post post, User writer, String content) {
         Comment comment = new Comment(post, writer, content);
-        post.getComment().add(comment);
+        post.addComment(comment);
 
         return comment;
     }
@@ -54,7 +49,24 @@ public class Comment extends BaseTimeEntity {
     /**
      * 댓글 수정하기
      */
-    public void edit(String content) {
+    public void update(String content) {
         this.content = content;
+    }
+
+    public void removeReply(Reply reply) {
+        replies.remove(reply);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

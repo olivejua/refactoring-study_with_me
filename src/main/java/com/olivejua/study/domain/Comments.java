@@ -23,4 +23,8 @@ public class Comments {
     public void remove(Comment comment) {
         comments.remove(comment);
     }
+
+    public int size() {
+        return comments.size();
+    }
 }
