@@ -1,8 +1,9 @@
 .gradle
 .idea
 
-application-oauth.yml
-application-real-db.yml
+application-auth.yml
+application-db.yml
+application-aws.yml
 
 build
 out
