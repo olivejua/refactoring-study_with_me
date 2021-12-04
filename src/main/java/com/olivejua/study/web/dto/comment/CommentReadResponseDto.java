@@ -16,7 +16,7 @@ public class CommentReadResponseDto {
 
     public CommentReadResponseDto(Comment entity) {
         this.content = entity.getContent();
-        this.writer = new WriterReadDto(entity.getWriter());
+        this.writer = new WriterReadDto(entity.getAuthor());
         this.replies = entity.getReplies().stream()
                 .map(ReplyReadResponseDto::new)
                 .collect(Collectors.toList());

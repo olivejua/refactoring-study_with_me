@@ -1,48 +1,46 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class TechStack {
+public class Link {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TECHSTACK_ID")
+    @Column(name = "LINK_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
-    private StudyRecruitment post;
+    private PlaceRecommendation post;
 
     private String element;
 
-    public static TechStack createTechStack(StudyRecruitment post, String element) {
-        TechStack ts = new TechStack();
-        ts.post = post;
-        ts.element = element;
+    public static Link createLink(PlaceRecommendation post, String element) {
+        Link link = new Link();
+        link.post = post;
+        link.element = element;
 
-        return ts;
+        return link;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof TechStack) {
-            TechStack ts = (TechStack) obj;
-            return element.equals(ts.element);
+        if (obj instanceof Link) {
+            Link temp = (Link) obj;
+            return element.equals(temp.element);
         } else {
             return false;
         }
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(getId(), getPost(), getElement());
     }

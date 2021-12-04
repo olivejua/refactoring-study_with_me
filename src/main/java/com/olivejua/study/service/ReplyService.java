@@ -3,7 +3,7 @@ package com.olivejua.study.service;
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.Reply;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Board;
+import com.olivejua.study.domain.Post;
 import com.olivejua.study.repository.CommentRepository;
 import com.olivejua.study.repository.ReplyRepository;
 import com.olivejua.study.web.dto.reply.ReplySaveRequestDto;
@@ -29,7 +29,7 @@ public class ReplyService {
 
     public void update(Long replyId, String updatedContent) {
         Reply reply = findReply(replyId);
-        reply.edit(updatedContent);
+        reply.update(updatedContent);
     }
 
     public void delete(Long replyId) {
@@ -37,7 +37,7 @@ public class ReplyService {
         replyRepository.delete(reply);
     }
 
-    public void deleteByPost(Board post) {
+    public void deleteByPost(Post post) {
         replyRepository.deleteRepliesByPost(post);
     }
 

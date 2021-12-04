@@ -1,8 +1,8 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.Like;
+import com.olivejua.study.domain.PlaceRecommendation;
 import com.olivejua.study.repository.board.LinkRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationQueryRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
@@ -52,7 +52,7 @@ public class PlaceService {
 
     private PlaceRecommendation saveNewPost(PostSaveRequestDto requestDto, User writer) {
         PlaceRecommendation newPost =
-                PlaceRecommendation.savePost(writer, requestDto.getTitle(),
+                PlaceRecommendation.createPost(writer, requestDto.getTitle(),
                         requestDto.getAddress(), requestDto.getAddressDetail(), requestDto.getThumbnailPath(),
                         requestDto.getContent(), requestDto.getLinks());
 
@@ -66,18 +66,18 @@ public class PlaceService {
         PlaceRecommendation entity = placeQueryRepository.findEntity(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
 
-        LikeHistory likeHistory = placeQueryRepository.findLikeHistoryByPostAndUser(postId, loginUser.getId())
+        Like like = placeQueryRepository.findLikeHistoryByPostAndUser(postId, loginUser.getId())
                 .orElse(null);
 
         boardImageUploader.readImagesInPlace(entity, servletPath);
 
-        return new PostReadResponseDto(entity, likeHistory);
+        return new PostReadResponseDto(entity, like);
     }
 
     public Long update(Long postId, PostSaveRequestDto requestDto) {
         PlaceRecommendation post = findPost(postId);
 
-        post.edit(requestDto.getTitle(), requestDto.getAddress(), requestDto.getAddressDetail(),
+        post.update(requestDto.getTitle(), requestDto.getAddress(), requestDto.getAddressDetail(),
                 requestDto.getThumbnailPath(), requestDto.getContent(), requestDto.getLinks());
         linkService.update(post);
         boardImageUploader.updateImagesInPlace(post);

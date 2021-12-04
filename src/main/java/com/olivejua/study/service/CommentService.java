@@ -2,7 +2,7 @@ package com.olivejua.study.service;
 
 import com.olivejua.study.domain.Comment;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Board;
+import com.olivejua.study.domain.Post;
 import com.olivejua.study.repository.CommentRepository;
 import com.olivejua.study.repository.board.BoardRepository;
 import com.olivejua.study.web.dto.comment.CommentSaveRequestDto;
@@ -20,7 +20,7 @@ public class CommentService {
     private final ReplyService replyService;
 
     public Long save(CommentSaveRequestDto requestDto, User writer) {
-        Board post = findPost(requestDto.getPostId());
+        Post post = findPost(requestDto.getPostId());
         Comment comment = Comment.createComment(post, writer, requestDto.getContent());
 
         commentRepository.save(comment);
@@ -30,7 +30,7 @@ public class CommentService {
 
     public void update(Long commentId, String updatedContent) {
         Comment comment = findComment(commentId);
-        comment.edit(updatedContent);
+        comment.update(updatedContent);
     }
 
     public void delete(Long commentId) {
@@ -40,7 +40,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    public void deleteByPost(Board post) {
+    public void deleteByPost(Post post) {
         replyService.deleteByPost(post);
         commentRepository.deleteCommentsByPost(post);
     }
@@ -50,7 +50,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다. commentId=" + commentId));
     }
 
-    private Board findPost(Long postId) {
+    private Post findPost(Long postId) {
         return boardRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. postId=" + postId));
     }

@@ -1,7 +1,7 @@
 package com.olivejua.study.web.dto.board.study;
 
-import com.olivejua.study.domain.board.StudyRecruitment;
-import com.olivejua.study.domain.board.TechStack;
+import com.olivejua.study.domain.StudyRecruitment;
+import com.olivejua.study.domain.Tech;
 import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import com.olivejua.study.web.dto.user.WriterReadDto;
@@ -30,14 +30,14 @@ public class PostReadResponseDto {
         postId = entity.getId();
         title = entity.getTitle();
 
-        writer = new WriterReadDto(entity.getWriter());
+        writer = new WriterReadDto(entity.getAuthor());
 
-        techStack = entity.getTechStack().stream()
-                            .map(TechStack::getElement)
+        techStack = entity.getTech().stream()
+                            .map(Tech::getElement)
                             .collect(Collectors.toList());
 
         //Condition
-        place = entity.getCondition().getPlace();
+        place = entity.getCondition().getMeetingPlace();
         startDate = entity.getCondition().getStartDate();
         endDate = entity.getCondition().getEndDate();
         capacity = entity.getCondition().getCapacity();

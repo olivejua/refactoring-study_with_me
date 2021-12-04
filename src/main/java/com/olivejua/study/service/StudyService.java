@@ -1,7 +1,7 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.StudyRecruitment;
+import com.olivejua.study.domain.StudyRecruitment;
 import com.olivejua.study.repository.board.StudyRecruitmentQueryRepository;
 import com.olivejua.study.repository.board.StudyRecruitmentRepository;
 import com.olivejua.study.repository.board.TechStackRepository;
@@ -90,7 +90,7 @@ class TechStackService {
 
     public void update(StudyRecruitment post) {
         deleteByPost(post);
-        post.getTechStack().forEach(techStackRepository::save);
+        post.getTech().forEach(techStackRepository::save);
     }
 
     public void deleteByPost(StudyRecruitment post) {

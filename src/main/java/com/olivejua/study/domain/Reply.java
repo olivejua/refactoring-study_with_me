@@ -1,13 +1,13 @@
 package com.olivejua.study.domain;
 
-import com.olivejua.study.domain.board.Board;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,12 +28,7 @@ public class Reply extends BaseTimeEntity {
 
     private String content;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "POST_ID")
-    private Board post;
-
     private Reply(Comment comment, User writer, String content) {
-        this.post = comment.getPost();
         this.comment = comment;
         this.writer = writer;
         this.content = content;
@@ -49,7 +44,7 @@ public class Reply extends BaseTimeEntity {
     /**
      * 대댓글 수정하기
      */
-    public void edit(String content) {
+    public void update(String content) {
         this.content = content;
     }
 
@@ -58,5 +53,18 @@ public class Reply extends BaseTimeEntity {
      */
     public void delete() {
         comment.getReplies().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reply reply = (Reply) o;
+        return Objects.equals(id, reply.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

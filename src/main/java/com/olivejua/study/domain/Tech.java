@@ -1,4 +1,4 @@
-package com.olivejua.study.domain.board;
+package com.olivejua.study.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,38 +10,37 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Link {
+public class Tech {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LINK_ID")
+    @Column(name = "TECH_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
-    private PlaceRecommendation post;
+    private StudyRecruitment post;
 
     private String element;
 
-    public static Link createLink(PlaceRecommendation post, String element) {
-        Link link = new Link();
-        link.post = post;
-        link.element = element;
+    public static Tech createTech(StudyRecruitment post, String element) {
+        Tech ts = new Tech();
+        ts.post = post;
+        ts.element = element;
 
-        return link;
+        return ts;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Link) {
-            Link temp = (Link) obj;
-            return element.equals(temp.element);
+        if (obj instanceof Tech) {
+            Tech ts = (Tech) obj;
+            return element.equals(ts.element);
         } else {
             return false;
         }
     }
 
-    @Override
     public int hashCode() {
-        return Objects.hash(getId(), getPost(), getElement());
+        return Objects.hash(getElement());
     }
 }

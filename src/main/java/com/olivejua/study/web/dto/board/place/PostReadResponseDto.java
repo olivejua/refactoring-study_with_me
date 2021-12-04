@@ -1,9 +1,9 @@
 package com.olivejua.study.web.dto.board.place;
 
 import com.olivejua.study.domain.Comment;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.Link;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.Like;
+import com.olivejua.study.domain.Link;
+import com.olivejua.study.domain.PlaceRecommendation;
 import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.board.place.like.LikeStatus;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
@@ -35,10 +35,10 @@ public class PostReadResponseDto {
     private List<CommentReadResponseDto> comments;
     private PageDto pageInfo;
 
-    public PostReadResponseDto(PlaceRecommendation entity, LikeHistory userLikeStatus) {
+    public PostReadResponseDto(PlaceRecommendation entity, Like userLikeStatus) {
         this.postId = entity.getId();
         this.title = entity.getTitle();
-        this.writer = new WriterReadDto(entity.getWriter());
+        this.writer = new WriterReadDto(entity.getAuthor());
         this.address = entity.getAddress();
         this.addressDetail = entity.getAddressDetail();
         this.thumbnailPath = entity.getThumbnailName();
@@ -59,11 +59,11 @@ public class PostReadResponseDto {
                 .collect(Collectors.toList());
     }
 
-    private void updateLikeCounts(List<LikeHistory> likes) {
+    private void updateLikeCounts(List<Like> likes) {
         if (likes == null) return;
 
         this.likeCount = (int) likes.stream()
-                .filter(LikeHistory::isLike).count();
+                .filter(Like::isLike).count();
         this.dislikeCount = (int) likes.stream()
                 .filter(e -> !e.isLike()).count();
     }
@@ -74,7 +74,7 @@ public class PostReadResponseDto {
                 .collect(Collectors.toList());
     }
 
-    private LikeStatus getLikeStatusOfLoginUser(LikeHistory like) {
+    private LikeStatus getLikeStatusOfLoginUser(Like like) {
         if (like == null) {
             return LikeStatus.NOT_YET;
         }

@@ -1,6 +1,6 @@
 package com.olivejua.study.web.dto.board.study;
 
-import com.olivejua.study.domain.board.Condition;
+import com.olivejua.study.domain.Condition;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,12 +31,12 @@ public class PostSaveRequestDto {
     }
 
     public Condition getCondition() {
-        return Condition.createCondition(
-                place,
-                startDate,
-                endDate,
-                capacity,
-                explanation
-        );
+        return Condition.builder()
+                .meetingPlace(place)
+                .startDate(startDate)
+                .endDate(endDate)
+                .capacity(capacity)
+                .explanation(explanation)
+                .build();
     }
 }

@@ -4,11 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static lombok.AccessLevel.*;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-@Getter
 public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +61,33 @@ public class User extends BaseTimeEntity {
     public User updateName(String name) {
         this.name = name;
         return this;
+    }
+
+    /**
+     * Getter
+     */
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * equals and hashcode
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, role, socialCode);
     }
 }

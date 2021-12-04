@@ -1,8 +1,8 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.Like;
+import com.olivejua.study.domain.PlaceRecommendation;
 import com.olivejua.study.repository.board.LikeHistoryRepository;
 import com.olivejua.study.repository.board.PlaceRecommendationRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class LikeHistoryService {
     }
 
     public void delete(Long postId, Long userId) {
-        LikeHistory entity = findLikeHistory(postId, userId)
+        Like entity = findLikeHistory(postId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "해당 좋아요 기록이 없습니다. postId=" + postId + ", userId=" + userId));
 
@@ -38,7 +38,7 @@ public class LikeHistoryService {
         likeHistoryRepository.deleteLikeHistoriesByPost(post);
     }
 
-    private Optional<LikeHistory> findLikeHistory(Long postId, Long userId) {
+    private Optional<Like> findLikeHistory(Long postId, Long userId) {
         return likeHistoryRepository.findOneByPostIdAndUserId(postId, userId);
     }
 

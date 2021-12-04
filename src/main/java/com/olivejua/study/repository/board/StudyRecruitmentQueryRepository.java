@@ -1,6 +1,6 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.StudyRecruitment;
+import com.olivejua.study.domain.StudyRecruitment;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
 import com.olivejua.study.web.dto.board.study.PostListResponseDto;
@@ -109,9 +109,9 @@ public class StudyRecruitmentQueryRepository {
                 .map(entity -> new PostListResponseDto(
                         entity.getId(),
                         entity.getTitle(),
-                        entity.getWriter().getName(),
+                        entity.getNameOfAuthor(),
                         entity.getViewCount(),
-                        entity.getComment().size()
+                        entity.getSizeOfComments()
                 )).collect(Collectors.toList());
     }
 

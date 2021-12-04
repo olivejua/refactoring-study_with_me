@@ -1,7 +1,7 @@
 package com.olivejua.study.web.dto.board.place;
 
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.Like;
+import com.olivejua.study.domain.PlaceRecommendation;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class PostListResponseDto {
 
     public PostListResponseDto(PlaceRecommendation entity, long likeCount, long dislikeCount, long commentCount) {
         this.postId = entity.getId();
-        this.writerName = entity.getWriter().getName();
+        this.writerName = entity.getNameOfAuthor();
         this.title = entity.getTitle();
         this.thumbnailPath = entity.getThumbnailName();
         this.viewCount = entity.getViewCount();
@@ -46,7 +46,7 @@ public class PostListResponseDto {
         this.createdDate = createdDate;
     }
 
-    private void updateLikeCount(List<LikeHistory> likes) {
+    private void updateLikeCount(List<Like> likes) {
         this.likeCount = (int) likes.stream()
                 .filter(like -> like.isLike())
                 .count();

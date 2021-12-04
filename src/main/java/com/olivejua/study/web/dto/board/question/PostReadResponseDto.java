@@ -1,6 +1,6 @@
 package com.olivejua.study.web.dto.board.question;
 
-import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.domain.Question;
 import com.olivejua.study.web.dto.PageDto;
 import com.olivejua.study.web.dto.comment.CommentReadResponseDto;
 import com.olivejua.study.web.dto.user.WriterReadDto;
@@ -22,7 +22,7 @@ public class PostReadResponseDto {
 
     public PostReadResponseDto(Question entity) {
         this.title = entity.getTitle();
-        this.writer = new WriterReadDto(entity.getWriter());
+        this.writer = new WriterReadDto(entity.getAuthor());
         this.content = entity.getContent();
         this.viewCount = entity.getViewCount();
         this.comments = entity.getComment().stream()

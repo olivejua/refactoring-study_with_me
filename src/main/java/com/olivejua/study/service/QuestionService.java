@@ -1,7 +1,7 @@
 package com.olivejua.study.service;
 
 import com.olivejua.study.domain.User;
-import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.domain.Question;
 import com.olivejua.study.repository.board.QuestionQueryRepository;
 import com.olivejua.study.repository.board.QuestionRepository;
 import com.olivejua.study.utils.BoardImageUploader;
@@ -37,7 +37,7 @@ public class QuestionService {
     }
 
     public Long post(PostSaveRequestDto requestDto, User writer) {
-        Question newPost = Question.savePost(
+        Question newPost = Question.createPost(
                 writer, requestDto.getTitle(), requestDto.getContent());
 
         Long savedId = questionRepository.save(newPost).getId();

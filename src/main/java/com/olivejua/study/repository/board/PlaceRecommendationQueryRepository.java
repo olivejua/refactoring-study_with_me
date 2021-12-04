@@ -1,8 +1,8 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.Board;
-import com.olivejua.study.domain.board.LikeHistory;
-import com.olivejua.study.domain.board.PlaceRecommendation;
+import com.olivejua.study.domain.Like;
+import com.olivejua.study.domain.Post;
+import com.olivejua.study.domain.PlaceRecommendation;
 import com.olivejua.study.web.dto.board.place.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
@@ -112,7 +112,7 @@ public class PlaceRecommendationQueryRepository {
     /**
      * 로그인 중인 User가 특정 Post의 '좋아요 entity' 조회
      */
-    public Optional<LikeHistory> findLikeHistoryByPostAndUser(Long postId, Long userId) {
+    public Optional<Like> findLikeHistoryByPostAndUser(Long postId, Long userId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(likeHistory)
                 .join(likeHistory.user, user).fetchJoin()
@@ -164,7 +164,7 @@ public class PlaceRecommendationQueryRepository {
      */
     private List<Long> toPostIds(List<PlaceRecommendation> entities) {
         return entities.stream()
-                .map(Board::getId)
+                .map(Post::getId)
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,6 @@
 package com.olivejua.study.repository.board;
 
-import com.olivejua.study.domain.board.Question;
+import com.olivejua.study.domain.Question;
 import com.olivejua.study.web.dto.board.question.PostListResponseDto;
 import com.olivejua.study.web.dto.board.search.SearchDto;
 import com.olivejua.study.web.dto.board.search.SearchType;
@@ -99,9 +99,9 @@ public class QuestionQueryRepository {
                 .map(entity -> new PostListResponseDto(
                         entity.getId(),
                         entity.getTitle(),
-                        entity.getWriter().getName(),
+                        entity.getNameOfAuthor(),
                         entity.getViewCount(),
-                        entity.getComment().size(),
+                        entity.getSizeOfComments(),
                         entity.getCreatedDate()
                 )).collect(Collectors.toList());
     }
@@ -128,7 +128,7 @@ public class QuestionQueryRepository {
     }
 
     private BooleanExpression writerEq(SearchDto cond) {
-        return cond.getSearchType() == SearchType.WRITER && cond.getKeyword() != null
+        return cond.getSearchType() == SearchType.AUTHOR && cond.getKeyword() != null
                 ? question.writer.name.contains(cond.getKeyword()) : null;
     }
 
