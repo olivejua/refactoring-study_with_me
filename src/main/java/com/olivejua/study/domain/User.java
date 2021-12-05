@@ -6,13 +6,15 @@ import javax.persistence.*;
 
 import java.util.Objects;
 
+import static javax.persistence.EnumType.*;
+import static javax.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "USER_ID")
     private Long id;
 
@@ -22,22 +24,30 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     @Column(nullable = false)
     private Role role;
 
+    @Enumerated(STRING)
     @Column(nullable = false)
-    private String socialCode;
+    private SocialCode socialCode;
 
-    public static User createUser(String name, String email, Role role, String socialCode) {
-        User newUser = new User();
+    private User(String name, String email, Role role, SocialCode socialCode) {
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.socialCode = socialCode;
+    }
 
-        newUser.name = name;
-        newUser.email = email;
-        newUser.role = role;
-        newUser.socialCode = socialCode;
+    public static User createUser(String name, String email, Role role, SocialCode socialCode) {
+        return new User(name, email, role, socialCode);
+    }
 
-        return newUser;
+    public static User createUser(Long id, String name, String email, Role role, SocialCode socialCode) {
+        User user = new User(name, email, role, socialCode);
+        user.id = id;
+
+        return user;
     }
 
     /**
@@ -75,6 +85,22 @@ public class User extends BaseTimeEntity {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getNameOfRole() {
+        return role.name();
+    }
+
+    public SocialCode getSocialCode() {
+        return socialCode;
+    }
+
     /**
      * equals and hashcode
      */
@@ -89,5 +115,16 @@ public class User extends BaseTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, email, role, socialCode);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", socialCode=" + socialCode +
+                '}';
     }
 }

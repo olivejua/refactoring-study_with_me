@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static com.olivejua.study.domain.LikeStatus.*;
 import static javax.persistence.EnumType.*;
 
 @Getter
@@ -55,9 +56,19 @@ public class Like {
     /**
      * 좋아요 수정
      */
-
     public void update(LikeStatus status) {
         this.status = status;
+    }
+
+    /**
+     * Status
+     */
+    public boolean hasStatusOfLike() {
+        return status==LIKE;
+    }
+
+    public boolean hasStatusOfDislike() {
+        return status==DISLIKE;
     }
 
     /**

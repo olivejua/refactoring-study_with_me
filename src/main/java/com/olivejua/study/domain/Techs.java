@@ -6,6 +6,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static lombok.AccessLevel.PROTECTED;
@@ -19,14 +20,27 @@ public class Techs {
 
     public void replace(StudyRecruitment post, List<String> techs) {
         clear();
+        this.techs.addAll(mapToTechList(post, techs));
+    }
 
-        techs.forEach(e -> {
-            Tech tech = Tech.createTech(post, e);
-            this.techs.add(tech);
-        });
+    private List<Tech> mapToTechList(StudyRecruitment post, List<String> techs) {
+        return techs.stream()
+            .map(tech -> Tech.createTech(post, tech))
+            .collect(Collectors.toList());
     }
 
     private void clear() {
         techs.clear();
+    }
+
+    public boolean containsAll(List<String> techElements) {
+        if (techElements.size() != techs.size()) {
+            return false;
+        }
+
+        List<String> elements = techs.stream()
+                .map(Tech::getElement)
+                .collect(Collectors.toList());
+        return techElements.containsAll(elements);
     }
 }

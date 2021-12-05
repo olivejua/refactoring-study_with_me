@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 public abstract class Post extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "POST_ID")
     protected Long id;
 
@@ -38,9 +39,14 @@ public abstract class Post extends BaseTimeEntity {
      */
     public Post() {}
 
-    public Post(User writer, String title) {
+    public Post(User author, String title) {
         this.title = title;
-        this.author = writer;
+        this.author = author;
+    }
+
+    public Post(Long id, User author, String title) {
+        this(author, title);
+        this.id = id;
     }
 
     /**
@@ -104,6 +110,14 @@ public abstract class Post extends BaseTimeEntity {
 
     public int getViewCount() {
         return viewCount;
+    }
+
+    public int getSizeOfLikes() {
+        return likes.getSizeOfLikes();
+    }
+
+    public int getSizeOfDislikes() {
+        return likes.getSizeOfDislikes();
     }
 
     public int getSizeOfComments() {

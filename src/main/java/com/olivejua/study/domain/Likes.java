@@ -30,4 +30,16 @@ public class Likes {
     private void add(Post post, User user, LikeStatus status) {
         likes.add(Like.createLike(post, user, status));
     }
+
+    public int getSizeOfLikes() {
+        return (int) likes.stream()
+                .filter(Like::hasStatusOfLike)
+                .count();
+    }
+
+    public int getSizeOfDislikes() {
+        return (int) likes.stream()
+                .filter(Like::hasStatusOfDislike)
+                .count();
+    }
 }

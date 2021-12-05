@@ -1,6 +1,5 @@
 package com.olivejua.study.domain;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
@@ -13,7 +12,6 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @DiscriminatorValue("recruit")
 @NoArgsConstructor(access = PROTECTED)
-@Getter
 public class StudyRecruitment extends Post {
 
     @Embedded
@@ -28,6 +26,11 @@ public class StudyRecruitment extends Post {
         this.condition = condition;
     }
 
+    public StudyRecruitment(Long id, User author, String title, Condition condition) {
+        super(id, author, title);
+        this.condition = condition;
+    }
+
     /**
      * 글 작성
      */
@@ -35,6 +38,15 @@ public class StudyRecruitment extends Post {
                                               List<String> tech, Condition condition) {
 
         StudyRecruitment newPost = new StudyRecruitment(author, title, condition);
+        newPost.replaceTech(tech);
+
+        return newPost;
+    }
+
+    public static StudyRecruitment createPost(Long id, User author, String title,
+                                              List<String> tech, Condition condition) {
+
+        StudyRecruitment newPost = new StudyRecruitment(id, author, title, condition);
         newPost.replaceTech(tech);
 
         return newPost;
@@ -54,5 +66,9 @@ public class StudyRecruitment extends Post {
      */
     private void replaceTech(List<String> techs) {
         this.techs.replace(this, techs);
+    }
+
+    public boolean containsTech(List<String> techs) {
+        return this.techs.containsAll(techs);
     }
 }
