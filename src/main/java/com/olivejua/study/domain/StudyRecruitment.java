@@ -62,7 +62,7 @@ public class StudyRecruitment extends Post {
     }
 
     /**
-     * 기술스택 변경
+     * 기술스택
      */
     private void replaceTech(List<String> techs) {
         this.techs.replace(this, techs);
@@ -70,5 +70,9 @@ public class StudyRecruitment extends Post {
 
     public boolean containsTech(List<String> techs) {
         return this.techs.containsAll(techs);
+    }
+
+    public int getSizeOfTechs() {
+        return this.techs.size();
     }
 }

@@ -41,6 +41,16 @@ public class PlaceRecommendation extends Post {
         return post;
     }
 
+    public static PlaceRecommendation createPost(Long id, User author, String title,
+                                                 String address, String addressDetail,
+                                                 String content, List<String> links) {
+
+        PlaceRecommendation post = createPost(author, title, address, addressDetail, content, links);
+        post.id = id;
+
+        return post;
+    }
+
     /**
      * 글 수정
      */
@@ -58,6 +68,17 @@ public class PlaceRecommendation extends Post {
      */
     private void replaceLinks(List<String> links) {
         this.links.replace(this, links);
+    }
+
+    /**
+     * Getter
+     */
+    public int getSizeOfLinks() {
+        return links.size();
+    }
+
+    public List<Link> getLinks() {
+        return links.getLinks();
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.olivejua.study.integration.mockFactory.factory;
+package com.olivejua.study.integration.mockFactory;
 
 import com.olivejua.study.domain.Condition;
 import com.olivejua.study.domain.StudyRecruitment;
 import com.olivejua.study.domain.User;
-import com.olivejua.study.integration.mockFactory.MockStudyRecruitment;
+import com.olivejua.study.common.mockData.MockStudyRecruitment;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
@@ -27,7 +27,9 @@ public class StudyRecruitmentFactory {
             .explanation(":)")
             .build();
 
-
+    /****************************************************************************
+     * Create a Post
+     ***************************************************************************/
     public StudyRecruitment post(User author) {
         StudyRecruitment post = MockStudyRecruitment.builder()
                 .author(author)
@@ -44,18 +46,6 @@ public class StudyRecruitmentFactory {
                 .author(author)
                 .title(MOCK_TITLE)
                 .techs(techs)
-                .condition(MOCK_CONDITION)
-                .build();
-
-        return studyRecruitmentRepository.save(post);
-    }
-
-    public StudyRecruitment post(Long id, User author) {
-        StudyRecruitment post = MockStudyRecruitment.builder()
-                .id(id)
-                .author(author)
-                .title(MOCK_TITLE)
-                .techs(MOCK_TECHS)
                 .condition(MOCK_CONDITION)
                 .build();
 

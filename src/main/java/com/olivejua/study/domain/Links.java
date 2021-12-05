@@ -28,4 +28,12 @@ public class Links {
     private void clear() {
         links.clear();
     }
+
+    public int size() {
+        return links.size();
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
 }

@@ -10,8 +10,10 @@ public class UserTest extends IntegrationTest {
 
     @Test
     void save() {
+        //Given, When
         User user = userFactory.user();
 
+        //Then
         assertNotNull(user.getId());
     }
 }

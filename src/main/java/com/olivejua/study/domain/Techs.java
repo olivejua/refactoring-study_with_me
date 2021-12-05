@@ -43,4 +43,8 @@ public class Techs {
                 .collect(Collectors.toList());
         return techElements.containsAll(elements);
     }
+
+    public int size() {
+        return techs.size();
+    }
 }

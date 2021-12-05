@@ -1,12 +1,9 @@
-package com.olivejua.study.integration.mockFactory;
+package com.olivejua.study.common.mockData;
 
-import com.olivejua.study.domain.Condition;
-import com.olivejua.study.domain.StudyRecruitment;
+import com.olivejua.study.domain.Question;
 import com.olivejua.study.domain.User;
 
-import java.util.List;
-
-public class MockStudyRecruitment {
+public class MockQuestion {
 
     public static Builder builder() {
         return new Builder();
@@ -16,8 +13,7 @@ public class MockStudyRecruitment {
         private Long id;
         private User author;
         private String title;
-        private List<String> techs;
-        private Condition condition;
+        private String content;
 
         public Builder id(Long id) {
             this.id = id;
@@ -34,23 +30,17 @@ public class MockStudyRecruitment {
             return this;
         }
 
-        public Builder techs(List<String> techs) {
-            this.techs = techs;
+        public Builder content(String content) {
+            this.content = content;
             return this;
         }
 
-        public Builder condition(Condition condition) {
-            this.condition = condition;
-            return this;
-        }
-
-        public StudyRecruitment build() {
-            return StudyRecruitment.createPost(
+        public Question build() {
+            return Question.createPost(
                     id,
                     author,
                     title,
-                    techs,
-                    condition
+                    content
             );
         }
     }

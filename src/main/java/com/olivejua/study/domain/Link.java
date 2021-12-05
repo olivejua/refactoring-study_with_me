@@ -34,7 +34,7 @@ public class Link {
     public boolean equals(Object obj) {
         if (obj instanceof Link) {
             Link temp = (Link) obj;
-            return element.equals(temp.element);
+            return id.equals(temp.id);
         } else {
             return false;
         }

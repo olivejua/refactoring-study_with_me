@@ -1,4 +1,4 @@
-package com.olivejua.study.integration.mockFactory;
+package com.olivejua.study.common.mockData;
 
 import com.olivejua.study.domain.Role;
 import com.olivejua.study.domain.SocialCode;

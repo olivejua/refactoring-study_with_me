@@ -12,7 +12,6 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @DiscriminatorValue("question")
 @NoArgsConstructor(access = PROTECTED)
-@Getter
 public class Question extends Post {
 
     @Column(nullable = false)
@@ -30,11 +29,25 @@ public class Question extends Post {
         return new Question(author, title, content);
     }
 
+    public static Question createPost(Long id, User author, String title, String content) {
+        Question post = createPost(author, title, content);
+        post.id = id;
+
+        return post;
+    }
+
     /**
      * 글 수정
      */
-    public void edit(String title, String content) {
+    public void update(String title, String content) {
         updateTitle(title);
         this.content = content;
+    }
+
+    /**
+     * Getter
+     */
+    public String getContent() {
+        return content;
     }
 }
