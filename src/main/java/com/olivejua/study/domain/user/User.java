@@ -1,15 +1,14 @@
 package com.olivejua.study.domain.user;
 
 import com.olivejua.study.domain.BaseTimeEntity;
-import lombok.*;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 
-import static javax.persistence.EnumType.*;
-import static javax.persistence.GenerationType.*;
-import static lombok.AccessLevel.*;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -19,10 +18,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "USER_ID")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Enumerated(STRING)

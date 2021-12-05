@@ -10,7 +10,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u.name from User u")
-    public List<String> findAllNames();
+    List<String> findAllNames();
 
-    public Optional<User> findByEmailAndSocialCode(String email, String socialCode);
+    Optional<User> findByName(String name);
+
+    Optional<User> findByEmailAndSocialCode(String email, String socialCode);
 }

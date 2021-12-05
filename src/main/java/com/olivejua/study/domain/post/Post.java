@@ -13,10 +13,11 @@ import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.InheritanceType.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn
+@Inheritance(strategy = JOINED)
+@DiscriminatorColumn(name = "DTYPE")
 public abstract class Post extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
