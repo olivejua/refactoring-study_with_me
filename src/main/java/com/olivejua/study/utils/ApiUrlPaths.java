@@ -2,7 +2,7 @@ package com.olivejua.study.utils;
 
 import java.net.URI;
 
-public abstract class UrlPaths {
+public abstract class ApiUrlPaths {
 	private static final String SEP = "/";
 
 	public static final String USERS = SEP + "users";

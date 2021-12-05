@@ -6,6 +6,10 @@ import org.hibernate.annotations.BatchSize;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.olivejua.study.utils.ImagesUtil.extractPathFromUrl;
+import static com.olivejua.study.utils.PostImagePaths.POSTS;
 
 @NoArgsConstructor
 @Embeddable
@@ -20,5 +24,11 @@ public class Images {
 
     public void addAll(List<String> urls) {
         this.urls.addAll(urls);
+    }
+
+    public List<String> getPaths() {
+        return urls.stream()
+                .map(url -> extractPathFromUrl(POSTS, url))
+                .collect(Collectors.toList());
     }
 }
