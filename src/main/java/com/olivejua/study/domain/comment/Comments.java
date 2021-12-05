@@ -1,4 +1,4 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.comment;
 
 import lombok.NoArgsConstructor;
 
@@ -7,9 +7,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-import static lombok.AccessLevel.PROTECTED;
-
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 @Embeddable
 public class Comments {
 

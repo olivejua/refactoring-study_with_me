@@ -1,5 +1,7 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.like;
 
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.user.User;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -8,11 +10,10 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.olivejua.study.domain.LikeStatus.DISLIKE;
-import static com.olivejua.study.domain.LikeStatus.LIKE;
-import static lombok.AccessLevel.PROTECTED;
+import static com.olivejua.study.domain.like.LikeStatus.DISLIKE;
+import static com.olivejua.study.domain.like.LikeStatus.LIKE;
 
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 @Embeddable
 public class Likes {
 

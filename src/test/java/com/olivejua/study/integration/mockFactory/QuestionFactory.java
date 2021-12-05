@@ -1,8 +1,8 @@
 package com.olivejua.study.integration.mockFactory;
 
 import com.olivejua.study.common.mockData.MockQuestion;
-import com.olivejua.study.domain.Question;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.question.Question;
+import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;

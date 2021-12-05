@@ -1,8 +1,8 @@
 package com.olivejua.study.common.mockData;
 
-import com.olivejua.study.domain.Condition;
-import com.olivejua.study.domain.StudyRecruitment;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.studyRecruitment.Condition;
+import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
+import com.olivejua.study.domain.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

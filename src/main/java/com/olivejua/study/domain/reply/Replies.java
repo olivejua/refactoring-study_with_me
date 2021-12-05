@@ -1,4 +1,4 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.reply;
 
 import lombok.NoArgsConstructor;
 
@@ -8,9 +8,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-import static lombok.AccessLevel.PROTECTED;
-
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 @Embeddable
 public class Replies {
 

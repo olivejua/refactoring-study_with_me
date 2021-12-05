@@ -1,4 +1,4 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.user;
 
 import java.util.Arrays;
 

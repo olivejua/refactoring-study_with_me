@@ -1,4 +1,4 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.placeRecommendation;
 
 import lombok.NoArgsConstructor;
 

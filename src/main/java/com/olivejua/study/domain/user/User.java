@@ -1,5 +1,6 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.user;
 
+import com.olivejua.study.domain.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;

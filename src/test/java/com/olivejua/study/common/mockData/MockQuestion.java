@@ -1,7 +1,7 @@
 package com.olivejua.study.common.mockData;
 
-import com.olivejua.study.domain.Question;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.question.Question;
+import com.olivejua.study.domain.user.User;
 
 public class MockQuestion {
 

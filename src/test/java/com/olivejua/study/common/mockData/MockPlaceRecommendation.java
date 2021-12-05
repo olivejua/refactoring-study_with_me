@@ -1,7 +1,7 @@
 package com.olivejua.study.common.mockData;
 
-import com.olivejua.study.domain.PlaceRecommendation;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.placeRecommendation.PlaceRecommendation;
+import com.olivejua.study.domain.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

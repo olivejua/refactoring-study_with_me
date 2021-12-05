@@ -1,7 +1,7 @@
 package com.olivejua.study.integration.repository;
 
-import com.olivejua.study.domain.Question;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.question.Question;
+import com.olivejua.study.domain.user.User;
 import com.olivejua.study.integration.IntegrationTest;
 import org.junit.jupiter.api.Test;
 

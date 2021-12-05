@@ -1,8 +1,8 @@
 package com.olivejua.study.integration.repository;
 
-import com.olivejua.study.domain.Link;
-import com.olivejua.study.domain.PlaceRecommendation;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.placeRecommendation.Link;
+import com.olivejua.study.domain.placeRecommendation.PlaceRecommendation;
+import com.olivejua.study.domain.user.User;
 import com.olivejua.study.integration.IntegrationTest;
 import com.olivejua.study.repository.LinkRepository;
 import org.junit.jupiter.api.Test;

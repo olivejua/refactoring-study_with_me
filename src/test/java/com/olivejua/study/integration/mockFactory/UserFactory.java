@@ -1,14 +1,14 @@
 package com.olivejua.study.integration.mockFactory;
 
-import com.olivejua.study.domain.Role;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.user.Role;
+import com.olivejua.study.domain.user.User;
 import com.olivejua.study.common.mockData.MockUser;
 import com.olivejua.study.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 
-import static com.olivejua.study.domain.Role.USER;
-import static com.olivejua.study.domain.SocialCode.GOOGLE;
+import static com.olivejua.study.domain.user.Role.USER;
+import static com.olivejua.study.domain.user.SocialCode.GOOGLE;
 
 @TestComponent
 public class UserFactory {

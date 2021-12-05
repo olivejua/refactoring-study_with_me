@@ -1,6 +1,7 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.question;
 
-import lombok.Getter;
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.user.User;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;

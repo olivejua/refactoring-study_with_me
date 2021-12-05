@@ -1,12 +1,14 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.like;
 
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.user.User;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-import static com.olivejua.study.domain.LikeStatus.*;
+import static com.olivejua.study.domain.like.LikeStatus.*;
 import static javax.persistence.EnumType.*;
 
 @Getter

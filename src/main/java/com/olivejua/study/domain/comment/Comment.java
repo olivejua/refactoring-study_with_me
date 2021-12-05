@@ -1,5 +1,10 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.comment;
 
+import com.olivejua.study.domain.BaseTimeEntity;
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.reply.Replies;
+import com.olivejua.study.domain.reply.Reply;
+import com.olivejua.study.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

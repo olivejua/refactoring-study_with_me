@@ -1,11 +1,10 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.studyRecruitment;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
 import java.util.Objects;

@@ -1,11 +1,18 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.post;
+
+import com.olivejua.study.domain.BaseTimeEntity;
+import com.olivejua.study.domain.comment.Comment;
+import com.olivejua.study.domain.comment.Comments;
+import com.olivejua.study.domain.image.Images;
+import com.olivejua.study.domain.like.Likes;
+import com.olivejua.study.domain.user.User;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.*;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

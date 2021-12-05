@@ -1,8 +1,8 @@
 package com.olivejua.study.integration.mockFactory;
 
 import com.olivejua.study.common.mockData.MockPlaceRecommendation;
-import com.olivejua.study.domain.PlaceRecommendation;
-import com.olivejua.study.domain.User;
+import com.olivejua.study.domain.placeRecommendation.PlaceRecommendation;
+import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.PlaceRecommendationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;

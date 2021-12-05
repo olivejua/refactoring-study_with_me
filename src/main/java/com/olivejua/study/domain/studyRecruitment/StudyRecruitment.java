@@ -1,5 +1,7 @@
-package com.olivejua.study.domain;
+package com.olivejua.study.domain.studyRecruitment;
 
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.user.User;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
