@@ -1,4 +1,4 @@
-package com.olivejua.study.repository.board;
+package com.olivejua.study.repository;
 
 import com.olivejua.study.domain.Link;
 import com.olivejua.study.domain.PlaceRecommendation;
