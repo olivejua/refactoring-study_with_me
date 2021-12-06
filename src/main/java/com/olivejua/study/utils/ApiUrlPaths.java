@@ -15,10 +15,9 @@ public abstract class ApiUrlPaths {
 	public static final String USERS = API_SEP + "users";
 
 	public static class Users {
-		private static final String COMMON = USERS + SEP;
-
-		public static final String SIGN_UP = COMMON + "signup";
-		public static final String NAME = COMMON + "name";
+		public static final String SIGN_UP = SEP + "signup";
+		public static final String SIGN_IN = SEP + "signin";
+		public static final String NAME = SEP + "name";
 
 		public static URI createUser(Long id) {
 			return URI.create(String.format("%s%d", USERS +SEP, id));

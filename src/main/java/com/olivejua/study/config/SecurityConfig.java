@@ -1,8 +1,12 @@
 package com.olivejua.study.config;
 
+import static com.olivejua.study.utils.ApiUrlPaths.*;
+
 import com.olivejua.study.config.security.JwtAuthenticationFilter;
 import com.olivejua.study.config.security.JwtTokenProvider;
 import com.olivejua.study.domain.user.Role;
+import com.olivejua.study.utils.ApiUrlPaths;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -47,19 +51,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
 
         http.authorizeRequests()
-                .antMatchers("/", "/api/users/signin", "/api/users/signup").permitAll()
+                .antMatchers("/", USERS+Users.SIGN_IN, USERS+Users.SIGN_UP).permitAll()
                 .antMatchers(HttpMethod.GET,
-                        "/api/study-recruitment/posts",
-                        "/api/place-recommendation/posts",
-                        "/api/question/posts").permitAll()
-                .antMatchers("/api/study-recruitment/posts/**",
-                        "/api/place-recommendation/posts/**",
-                        "/api/question/posts/**").hasRole(Role.USER.name())
+                        STUDY_RECRUITMENT+POSTS,
+                        PLACES_RECOMMENDATION+POSTS,
+                        QUESTION+POSTS).permitAll()
+                .antMatchers(STUDY_RECRUITMENT+POSTS+"/**",
+                    PLACES_RECOMMENDATION+POSTS+"/**",
+                    QUESTION+POSTS+"/**").hasRole(Role.USER.getKey())
                 .anyRequest().authenticated()
         ;
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class)
         ;
+
+
     }
 }
