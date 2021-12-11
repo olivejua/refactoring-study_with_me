@@ -1,11 +1,22 @@
 package com.olivejua.study.domain.user;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Arrays;
 
+@Getter
+@RequiredArgsConstructor
 public enum SocialCode {
-    GOOGLE,
-    NAVER
+    GOOGLE("google"),
+    NAVER("naver")
     ;
+
+    private final String registrationId;
+
+    public boolean equals(String registrationId) {
+        return this.registrationId.equals(registrationId);
+    }
 
     public static SocialCode findByName(String name) {
         String upperName = name.toUpperCase();
