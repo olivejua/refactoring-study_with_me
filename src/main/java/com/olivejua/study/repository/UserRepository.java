@@ -1,5 +1,6 @@
 package com.olivejua.study.repository;
 
+import com.olivejua.study.domain.user.SocialCode;
 import com.olivejua.study.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByName(String name);
 
-    Optional<User> findByEmailAndSocialCode(String email, String socialCode);
+    Optional<User> findByEmailAndSocialCode(String email, SocialCode socialCode);
 }
