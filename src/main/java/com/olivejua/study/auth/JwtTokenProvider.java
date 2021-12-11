@@ -1,20 +1,20 @@
-package com.olivejua.study.config.security;
+package com.olivejua.study.auth;
 
-import com.olivejua.study.domain.user.Role;
+import com.olivejua.study.service.user.UserService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
+
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
 @Component
@@ -26,21 +26,21 @@ public class JwtTokenProvider {
     // 토큰 유효시간 30분
     private long tokenValidTime = 30 * 60 * 1000L;
 
-    private final UserDetailsService userDetailsService;
+    private final String KEY = "userId";
 
-    private final String KEY = "username";
+    private final UserService userService;
 
     @PostConstruct
     protected void Init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String username, List<Role> roles) {
+    public String createToken(Long userId) {
         Date now = new Date();
         Date expirationTime = new Date(now.getTime() + tokenValidTime);
 
         return Jwts.builder()
-                .claim(KEY, username)
+                .claim(KEY, userId)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -48,29 +48,32 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsernameByToken(token));
+        Long userId = this.getUserIdByToken(token);
+        UserDetails userDetails = userService.loadUserByUsername(userId+"");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String getUsernameByToken(String token) {
+    public Long getUserIdByToken(String token) {
         try {
             return Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody()
-                    .get(KEY, String.class);
+                    .get(KEY, Long.class);
         } catch (JwtException | IllegalArgumentException e) {
             throw new IllegalArgumentException();
         }
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(AUTHORIZATION);
     }
 
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
