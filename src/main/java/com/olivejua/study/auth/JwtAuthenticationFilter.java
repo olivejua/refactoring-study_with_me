@@ -21,6 +21,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("JwtAuthenticationFilter.doFilterInternal()");
+
+
+        /**
+         * TODO Access Token 만료인지 확인 후 만료된 것이라면 403 에러 반환
+         * Access Token이 만료가 된 키인지 보고,
+         * 만료가 되었다면 403 에러 주기
+         * 토큰 만료가 되면 Refresh Token (DB) 에서 유효한 키인지 확인하고
+         */
+
         String jwtHeader = jwtTokenProvider.resolveToken(request);
 
         if (isBearerToken(jwtHeader) && jwtTokenProvider.validateToken(extractJwtToken(jwtHeader))) {

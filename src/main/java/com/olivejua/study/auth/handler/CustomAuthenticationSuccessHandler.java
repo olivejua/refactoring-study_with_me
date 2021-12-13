@@ -2,8 +2,9 @@ package com.olivejua.study.auth.handler;
 
 import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.auth.dto.AuthenticatedUser;
+import com.olivejua.study.domain.auth.AuthToken;
+import com.olivejua.study.repository.AuthTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -16,13 +17,30 @@ import java.io.IOException;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthTokenRepository authTokenRepository;
+
+    private final String ACCESS_TOKEN = "access-token";
+    private final String REFRESH_TOKEN = "refresh-token";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
-        String token = jwtTokenProvider.createToken(authenticatedUser.getId());
+        String accessToken = jwtTokenProvider.createTokenForUser(authenticatedUser.getId());
+        String refreshToken = jwtTokenProvider.createRefreshTokenForUser(authenticatedUser.getId());
 
-        System.out.println("token = " + token);
-        response.addHeader(HttpHeaders.AUTHORIZATION, token);
+        updateRefreshToken(authenticatedUser, refreshToken);
+
+        response.addHeader(ACCESS_TOKEN, accessToken);
+        response.addHeader(REFRESH_TOKEN, refreshToken);
+    }
+
+    private void updateRefreshToken(AuthenticatedUser authenticatedUser, String refreshToken) {
+        authTokenRepository.findById(authenticatedUser.getId()).ifPresentOrElse(
+                authToken -> {
+                    authToken.updateRefreshToken(refreshToken);
+                    authTokenRepository.save(authToken);
+                },
+                () -> authTokenRepository.save(AuthToken.createAuthToken(authenticatedUser.toEntity(), refreshToken))
+        );
     }
 }

@@ -1,5 +1,9 @@
 package com.olivejua.study.auth;
 
+import com.olivejua.study.auth.dto.GuestUser;
+import com.olivejua.study.auth.dto.LoginUser;
+import com.olivejua.study.domain.user.Role;
+import com.olivejua.study.domain.user.SocialCode;
 import com.olivejua.study.service.user.UserService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +29,11 @@ public class JwtTokenProvider {
 
     // 토큰 유효시간 30분
     private long tokenValidTime = 30 * 60 * 1000L;
-
-    private final String KEY = "userId";
+    private final String USER_ID = "userId";
+    private final String USERNAME = "username";
+    private final String USER_EMAIL = "email";
+    private final String SOCIAL_CODE = "socialCode";
+    private final String USER_ROLE = "role";
 
     private final UserService userService;
 
@@ -35,12 +42,43 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(Long userId) {
+    public String createTokenForUser(Long userId) {
         Date now = new Date();
         Date expirationTime = new Date(now.getTime() + tokenValidTime);
 
         return Jwts.builder()
-                .claim(KEY, userId)
+                .claim(USER_ROLE, Role.USER)
+                .claim(USER_ID, userId)
+                .setIssuedAt(now)
+                .setExpiration(expirationTime)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public String createRefreshTokenForUser(Long userId) {
+        long tokenValidTime = 14 * 24 * 60 * 60 * 1000L; //2주
+
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime() + tokenValidTime);
+
+        return Jwts.builder()
+                .claim(USER_ROLE, Role.USER)
+                .claim(USER_ID, userId)
+                .setIssuedAt(now)
+                .setExpiration(expirationTime)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public String createTokenForGuest(String email, String name, SocialCode socialCode) {
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime() + tokenValidTime);
+
+        return Jwts.builder()
+                .claim(USER_ROLE, Role.GUEST)
+                .claim(USERNAME, name)
+                .claim(USER_EMAIL, email)
+                .claim(SOCIAL_CODE, socialCode)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -48,21 +86,35 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        Long userId = this.getUserIdByToken(token);
-        UserDetails userDetails = userService.loadUserByUsername(userId+"");
+        LoginUser user = this.parseLoginUserByToken(token);
+        UserDetails userDetails = userService.loadUserByUsername(user.getId() + "");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public Long getUserIdByToken(String token) {
+    public LoginUser parseLoginUserByToken(String token) {
         try {
-            return Jwts.parser()
+            Long userId = Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody()
-                    .get(KEY, Long.class);
+                    .get(USER_ID, Long.class);
+
+            return new LoginUser(userId);
         } catch (JwtException | IllegalArgumentException e) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public GuestUser parseGuestUserByToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+
+        String username = claims.get(USERNAME, String.class);
+        String userEmail = claims.get(USER_EMAIL, String.class);
+        String socialCode = claims.get(SOCIAL_CODE, String.class);
+        return new GuestUser(username, userEmail, SocialCode.findByName(socialCode));
     }
 
     public String resolveToken(HttpServletRequest request) {

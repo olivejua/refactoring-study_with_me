@@ -8,6 +8,7 @@ import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.domain.user.Role;
 import com.olivejua.study.auth.handler.JwtAccessDeniedHandler;
 import com.olivejua.study.auth.handler.JwtAuthenticationExceptionHandler;
+import com.olivejua.study.repository.AuthTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationExceptionHandler jwtAuthenticationExceptionHandler;
 
+    private final AuthTokenRepository authTokenRepository;
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
@@ -45,16 +48,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
 
         http.exceptionHandling()
-            .authenticationEntryPoint(jwtAuthenticationExceptionHandler) //인증하지 않은 사용자가 인증이 필요한 URL에 접근할 경우 발생하는 예외처리 클래스
-            .accessDeniedHandler(jwtAccessDeniedHandler) //인증한 사용자가 추가권한이 필요한 URL에 접근할 경우 발생하는 예외 처리 클래스
+            .authenticationEntryPoint(jwtAuthenticationExceptionHandler)
+            .accessDeniedHandler(jwtAccessDeniedHandler)
         ;
 
         http.oauth2Login()
                 .loginPage(USERS+Users.SIGN_IN)
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
-                .successHandler(new CustomAuthenticationSuccessHandler(jwtTokenProvider))
-                .failureHandler(new CustomAuthenticationFailureHandler())
+                .successHandler(new CustomAuthenticationSuccessHandler(jwtTokenProvider, authTokenRepository))
+                .failureHandler(new CustomAuthenticationFailureHandler(jwtTokenProvider))
                 .permitAll()
         ;
 
