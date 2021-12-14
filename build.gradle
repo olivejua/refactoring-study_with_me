@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'java'
 }
 
@@ -11,6 +12,11 @@ sourceCompatibility = '11'
 
 configurations {
 	querydsl.extendsFrom compileClasspath
+	asciidoctorExtensions
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
 }
 
 repositories {
@@ -38,10 +44,27 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 test {
 	useJUnitPlatform()
+	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs'
+	}
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
