@@ -1,8 +1,8 @@
 package com.olivejua.study.web;
 
-import com.olivejua.study.auth.dto.AuthenticatedUser;
+import com.olivejua.study.auth.annotation.AppLoginUser;
+import com.olivejua.study.auth.dto.LoginUser;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.olivejua.study.utils.ApiUrlPaths.*;
@@ -17,12 +17,13 @@ public class StudyRecruitmentController {
     }
 
     @GetMapping(POSTS + VAR_POST_ID)
-    public ResponseEntity<Long> getPost(@PathVariable Long postId, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+    public ResponseEntity<Long> getPost(@PathVariable Long postId) {
         return ResponseEntity.ok(postId);
     }
 
     @PostMapping(POSTS)
-    public ResponseEntity<String> savePost() {
+    public ResponseEntity<String> savePost(@AppLoginUser LoginUser loginUser) {
+        assert loginUser != null;
         return ResponseEntity.ok("Success!");
     }
 
