@@ -20,9 +20,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         long id = Long.parseLong(userId);
-        User user = userRepository.findById(id)
-                .orElseThrow(NotFoundUserException::new);
+        User user = findById(id);
 
         return new AuthenticatedUser(user);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundUserException(id));
     }
 }

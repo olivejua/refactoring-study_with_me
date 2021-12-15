@@ -26,7 +26,7 @@ public class CommonControllerTest extends IntegrationTest {
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
 
-    protected String makeAccessToken(Long userId) {
-        return "Bearer" + jwtTokenProvider.createTokenForUser(userId);
+    protected String getAccessToken(Long userId) {
+        return "Bearer " + jwtTokenProvider.createTokenForUser(userId);
     }
 }
