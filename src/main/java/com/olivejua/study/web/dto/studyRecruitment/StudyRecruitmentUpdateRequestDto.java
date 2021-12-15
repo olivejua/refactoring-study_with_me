@@ -1,8 +1,5 @@
 package com.olivejua.study.web.dto.studyRecruitment;
 
-import com.olivejua.study.domain.studyRecruitment.Condition;
-import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
-import com.olivejua.study.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +13,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class StudyRecruitmentSaveRequestDto {
+public class StudyRecruitmentUpdateRequestDto {
     @NotBlank(message = "게시글 제목이 비어있지 않아야 합니다")
     private String title;
     private final List<String> techs = new ArrayList<>();
@@ -28,7 +25,7 @@ public class StudyRecruitmentSaveRequestDto {
     private String explanation;
 
     @Builder
-    public StudyRecruitmentSaveRequestDto(String title, List<String> techs, String meetingPlace, LocalDate startDate, LocalDate endDate, int capacity, String explanation) {
+    public StudyRecruitmentUpdateRequestDto(String title, List<String> techs, String meetingPlace, LocalDate startDate, LocalDate endDate, int capacity, String explanation) {
         this.title = title;
         this.techs.addAll(techs);
         this.meetingPlace = meetingPlace;
@@ -36,24 +33,5 @@ public class StudyRecruitmentSaveRequestDto {
         this.endDate = endDate;
         this.capacity = capacity;
         this.explanation = explanation;
-    }
-
-    public StudyRecruitment toEntity(User author) {
-        return StudyRecruitment.createPost(
-                author,
-                title,
-                techs,
-                toCondition()
-        );
-    }
-
-    private Condition toCondition() {
-        return Condition.builder()
-                .meetingPlace(meetingPlace)
-                .startDate(startDate)
-                .endDate(endDate)
-                .capacity(capacity)
-                .explanation(explanation)
-                .build();
     }
 }
