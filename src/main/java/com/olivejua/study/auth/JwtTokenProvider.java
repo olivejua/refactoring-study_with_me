@@ -93,8 +93,8 @@ public class JwtTokenProvider {
 
     public LoginUser parseLoginUserByToken(String token) {
         try {
-            if (token.startsWith("Bearer")) {
-                token = token.replace("Bearer", "");
+            if (token.startsWith("Bearer ")) {
+                token = token.replace("Bearer ", "");
             }
 
             Long userId = Jwts.parser()
