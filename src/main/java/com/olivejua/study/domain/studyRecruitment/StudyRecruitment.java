@@ -77,4 +77,15 @@ public class StudyRecruitment extends Post {
     public int getSizeOfTechs() {
         return this.techs.size();
     }
+
+    public List<String> getElementsOfTechs() {
+        return this.techs.getElementsOfContent();
+    }
+
+    /**
+     * 스터디 환경
+     */
+    public Condition getCondition() {
+        return condition;
+    }
 }

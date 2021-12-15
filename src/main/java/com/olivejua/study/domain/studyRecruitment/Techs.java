@@ -47,4 +47,10 @@ public class Techs {
     public int size() {
         return techs.size();
     }
+
+    public List<String> getElementsOfContent() {
+        return techs.stream()
+                .map(Tech::getElement)
+                .collect(Collectors.toList());
+    }
 }

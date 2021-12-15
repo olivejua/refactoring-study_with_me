@@ -13,6 +13,7 @@ public abstract class ErrorCodes {
 
     public static class StudyRecruitment {
         private static final String PREFIX = "S";
+        public static final String NOT_FOUND_STUDY_RECRUITMENT_EXCEPTION = PREFIX + "001";
     }
 
     public static class PlaceRecommendation {

@@ -102,6 +102,13 @@ public abstract class Post extends BaseTimeEntity {
     }
 
     /**
+     * 작성자
+     */
+    public boolean hasSameAuthorAs(User user) {
+        return author.equals(user);
+    }
+
+    /**
      * Getter 
      */
     public Long getId() {
@@ -110,6 +117,10 @@ public abstract class Post extends BaseTimeEntity {
 
     public String getNameOfAuthor() {
         return author.getName();
+    }
+
+    public User getAuthor() {
+        return author;
     }
 
     public String getTitle() {

@@ -1,5 +1,6 @@
 package com.olivejua.study.web.advice;
 
+import com.olivejua.study.exception.ApplicationException;
 import com.olivejua.study.response.FailResult;
 import com.olivejua.study.utils.ErrorCodes;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -19,6 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = {ApplicationException.class})
+    protected ResponseEntity<FailResult> handleApplicationException(ApplicationException exception) {
+        FailResult result = FailResult.createFailResult(exception.CODE, exception.MESSAGE);
+
+        return ResponseEntity
+                .status(exception.HTTP_STATUS)
+                .body(result);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

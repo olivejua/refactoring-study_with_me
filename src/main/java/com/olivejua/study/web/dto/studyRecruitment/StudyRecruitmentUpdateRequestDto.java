@@ -1,5 +1,7 @@
 package com.olivejua.study.web.dto.studyRecruitment;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.olivejua.study.domain.studyRecruitment.Condition;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,5 +35,15 @@ public class StudyRecruitmentUpdateRequestDto {
         this.endDate = endDate;
         this.capacity = capacity;
         this.explanation = explanation;
+    }
+
+    public Condition toCondition() {
+        return Condition.builder()
+                .meetingPlace(meetingPlace)
+                .startDate(startDate)
+                .endDate(endDate)
+                .capacity(capacity)
+                .explanation(explanation)
+                .build();
     }
 }
