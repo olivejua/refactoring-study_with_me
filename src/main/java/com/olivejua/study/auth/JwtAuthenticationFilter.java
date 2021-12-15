@@ -41,10 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isBearerToken(String jwtHeader) {
-        return jwtHeader!=null && jwtHeader.startsWith("Bearer ");
+        return jwtHeader!=null && jwtHeader.startsWith("Bearer");
     }
 
     private String extractJwtToken(String bearerToken) {
-        return bearerToken.replace("Bearer ", "");
+        return bearerToken.replace("Bearer", "");
     }
 }

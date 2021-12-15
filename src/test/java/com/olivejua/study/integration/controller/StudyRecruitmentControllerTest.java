@@ -3,22 +3,17 @@ package com.olivejua.study.integration.controller;
 import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static com.olivejua.study.utils.ApiUrlPaths.POSTS;
 import static com.olivejua.study.utils.ApiUrlPaths.STUDY_RECRUITMENT;
-import static org.apache.http.HttpHeaders.*;
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,9 +56,5 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
-    }
-
-    private String makeAccessToken(Long userId) {
-        return "Bearer " + jwtTokenProvider.createTokenForUser(userId);
     }
 }

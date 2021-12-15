@@ -27,6 +27,6 @@ public class CommonControllerTest extends IntegrationTest {
     protected JwtTokenProvider jwtTokenProvider;
 
     protected String makeAccessToken(Long userId) {
-        return "Bearer " + jwtTokenProvider.createTokenForUser(userId);
+        return "Bearer" + jwtTokenProvider.createTokenForUser(userId);
     }
 }
