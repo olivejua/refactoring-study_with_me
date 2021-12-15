@@ -1,6 +1,6 @@
 package com.olivejua.study.service.auth;
 
-import com.olivejua.study.response.CommonResult;
+import com.olivejua.study.response.FailResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -8,11 +8,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ResponseService {
 
-    public CommonResult getAuthorizationFailResult(String code, String msg) {
-        CommonResult result = new CommonResult();
-        result.setSuccess(false);
-        result.setCode(code);
-        result.setMsg(msg);
-        return result;
+    public FailResult getAuthorizationFailResult(String code, String msg) {
+        return FailResult.createFailResult(code, msg);
     }
 }

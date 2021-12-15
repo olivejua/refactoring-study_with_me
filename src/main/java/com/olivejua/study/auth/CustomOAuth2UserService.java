@@ -3,7 +3,7 @@ package com.olivejua.study.auth;
 import com.olivejua.study.auth.dto.AuthenticatedUser;
 import com.olivejua.study.auth.dto.OAuthAttributes;
 import com.olivejua.study.domain.user.User;
-import com.olivejua.study.exception.user.NotFoundAuthenticationException;
+import com.olivejua.study.exception.auth.NotFoundAuthenticationException;
 import com.olivejua.study.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

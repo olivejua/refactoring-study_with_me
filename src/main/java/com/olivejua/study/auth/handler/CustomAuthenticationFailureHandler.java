@@ -1,7 +1,7 @@
 package com.olivejua.study.auth.handler;
 
 import com.olivejua.study.auth.JwtTokenProvider;
-import com.olivejua.study.exception.user.NotFoundAuthenticationException;
+import com.olivejua.study.exception.auth.NotFoundAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;

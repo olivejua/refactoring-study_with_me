@@ -32,6 +32,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         response.addHeader(ACCESS_TOKEN, accessToken);
         response.addHeader(REFRESH_TOKEN, refreshToken);
+        System.out.println("accessToken = " + accessToken);
     }
 
     private void updateRefreshToken(AuthenticatedUser authenticatedUser, String refreshToken) {

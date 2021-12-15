@@ -1,8 +1,22 @@
 package com.olivejua.study.exception.user;
 
-public class NotFoundUserException extends RuntimeException {
+import com.olivejua.study.exception.ApplicationException;
+import com.olivejua.study.utils.ErrorCodes;
+import org.springframework.http.HttpStatus;
+
+public class NotFoundUserException extends ApplicationException {
+
+    private static final HttpStatus HTTP_STATUS = HttpStatus.BAD_REQUEST;
+    private static final String CODE = ErrorCodes.User.NOT_FOUND_USER_EXCEPTION;
+    private static final String MESSAGE = "User 정보를 찾을 수 없습니다";
 
     public NotFoundUserException() {
-        super("User를 찾지 못했습니다.");
+        super(HTTP_STATUS, CODE, MESSAGE);
+    }
+
+    public NotFoundUserException(Long userId) {
+        super(HTTP_STATUS,
+                CODE,
+                String.format("%s. userId=%d", MESSAGE, userId));
     }
 }
