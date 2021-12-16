@@ -6,10 +6,12 @@ import com.olivejua.study.domain.user.User;
 import com.olivejua.study.exception.studyRecruitment.NotFoundStudyRecruitmentPost;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import com.olivejua.study.service.user.UserService;
-import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentResponseDto;
+import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
+import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +51,15 @@ public class StudyRecruitmentService {
         return userService.findById(userId);
     }
 
-    public StudyRecruitmentResponseDto getOnePost(Long postId) {
+    public StudyRecruitmentReadResponseDto getOnePost(Long postId) {
         StudyRecruitment findPost = findPostById(postId);
         findPost.addViewCount();
-        return new StudyRecruitmentResponseDto(findPost);
+        return new StudyRecruitmentReadResponseDto(findPost);
+    }
+
+    public Page<StudyRecruitmentListResponseDto> getPosts() {
+
+        return null;
     }
 }
 

@@ -51,4 +51,15 @@ public class StudyRecruitmentFactory {
 
         return studyRecruitmentRepository.save(post);
     }
+
+    public StudyRecruitment post(User author, String title) {
+        StudyRecruitment post = MockStudyRecruitment.builder()
+                .author(author)
+                .title(title)
+                .techs(MOCK_TECHS)
+                .condition(MOCK_CONDITION)
+                .build();
+
+        return studyRecruitmentRepository.save(post);
+    }
 }

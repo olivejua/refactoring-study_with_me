@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -226,6 +225,64 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                                 fieldWithPath("post.capacity").type(NUMBER).description("최대 인원 수"),
                                 fieldWithPath("post.explanation").type(STRING).description("추가 설명"),
                                 fieldWithPath("post.createdDate").type(STRING).description("작성일자")
+                        )
+                ))
+        ;
+    }
+
+    @Test
+    @DisplayName("스터디 모집 게시글 목록을 가져온다")
+    void testGetPosts() throws Exception {
+        User authorA = userFactory.user("authorA");
+        User authorB = userFactory.user("authorB");
+        User authorC = userFactory.user("authorC");
+        List<User> authors = List.of(authorA, authorB, authorC);
+
+        for (User author : authors) {
+            for (int i = 0; i < 5; i++) {
+                studyRecruitmentFactory.post(author, String.format("test title %d written by %s", i, author.getName()));
+            }
+        }
+
+        mockMvc.perform(get(STUDY_RECRUITMENT+POSTS)
+                        .header(AUTHORIZATION, accessToken)
+                        .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success").value(true))
+                .andExpect(jsonPath("content").exists())
+                .andExpect(jsonPath("pageInfo").exists())
+                .andExpect(jsonPath("pageInfo.totalElements").value(15))
+                .andDo(document("study-recruitment/get-posts",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.ACCEPT).description("accept header"),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content-Type header")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(BOOLEAN).description("성공 처리 여부"),
+                                subsectionWithPath("content").description("요청한 컨텐츠 내용"),
+                                subsectionWithPath("pageInfo").description("요청한 컨텐츠 목록의 페이징 정보")
+                        ),
+                        responseFields(
+                                beneathPath("content").withSubsectionId("content"),
+                                fieldWithPath("post.id").type(NUMBER).description("게시글 ID"),
+                                fieldWithPath("post.author.id").type(NUMBER).description("작성자 ID"),
+                                fieldWithPath("post.author.name").type(STRING).description("작성자 이름"),
+                                fieldWithPath("post.title").type(STRING).description("게시글 제목"),
+                                fieldWithPath("post.techs").type(ARRAY).description("기술 스택 목록"),
+                                fieldWithPath("post.createdDate").type(STRING).description("작성일자")
+                        ),
+                        responseFields(
+                                beneathPath("pageInfo").withSubsectionId("pageInfo"),
+                                fieldWithPath("totalElements").type(NUMBER).description("총 컨텐츠 개수"),
+                                fieldWithPath("totalPages").type(NUMBER).description("총 페이지 개수"),
+                                fieldWithPath("number").type(NUMBER).description("현재 페이지 수"),
+                                fieldWithPath("first").type(NUMBER).description("첫 페이지 여부"),
+                                fieldWithPath("last").type(NUMBER).description("마지막 페이지 여부"),
+                                fieldWithPath("numberOfElements").type(NUMBER).description("현재 페이지 컨텐츠 개수")
                         )
                 ))
         ;
