@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class StudyRecruitmentResponseDto {
+public class StudyRecruitmentReadResponseDto {
     private Long id;
     private AuthorResponseDto author;
     private String title;
@@ -27,7 +27,7 @@ public class StudyRecruitmentResponseDto {
     private String explanation;
     private LocalDateTime createdDate;
 
-    public StudyRecruitmentResponseDto(StudyRecruitment post) {
+    public StudyRecruitmentReadResponseDto(StudyRecruitment post) {
         id = post.getId();
         initAuthor(post.getAuthor());
         title = post.getTitle();

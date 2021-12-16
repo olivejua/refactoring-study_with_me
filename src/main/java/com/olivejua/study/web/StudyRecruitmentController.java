@@ -2,14 +2,21 @@ package com.olivejua.study.web;
 
 import com.olivejua.study.auth.annotation.AppLoginUser;
 import com.olivejua.study.auth.dto.LoginUser;
+import com.olivejua.study.response.ListResult;
 import com.olivejua.study.response.SingleResult;
 import com.olivejua.study.response.SuccessResult;
 import com.olivejua.study.service.studyRecruitment.StudyRecruitmentService;
-import com.olivejua.study.web.dto.post.PostResponseDto;
-import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentResponseDto;
+import com.olivejua.study.web.dto.post.PostListResponseDto;
+import com.olivejua.study.web.dto.post.PostReadResponseDto;
+import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
+import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +32,17 @@ public class StudyRecruitmentController {
     private final StudyRecruitmentService studyRecruitmentService;
 
     @GetMapping(POSTS)
-    public ResponseEntity<Long> getPosts() {
-        return ResponseEntity.ok(123L);
+    public ResponseEntity<ListResult<StudyRecruitmentListResponseDto>> getPosts(
+            @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageRequest) {
+        Page<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts();
+        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(POSTS + VAR_POST_ID)
     public ResponseEntity<SingleResult> getPost(@PathVariable Long postId) {
-        StudyRecruitmentResponseDto findPost = studyRecruitmentService.getOnePost(postId);
-        PostResponseDto<StudyRecruitmentResponseDto> responseDto = new PostResponseDto<>(findPost);
+        StudyRecruitmentReadResponseDto findPost = studyRecruitmentService.getOnePost(postId);
+        PostReadResponseDto<StudyRecruitmentReadResponseDto> responseDto = new PostReadResponseDto<>(findPost);
         SingleResult result = SingleResult.createSuccessResult(responseDto);
         return ResponseEntity.ok(result);
     }
