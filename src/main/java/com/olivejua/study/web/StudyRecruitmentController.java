@@ -34,8 +34,8 @@ public class StudyRecruitmentController {
     @GetMapping(POSTS)
     public ResponseEntity<ListResult<StudyRecruitmentListResponseDto>> getPosts(
             @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageRequest) {
-        Page<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts();
-        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts);
+        PostListResponseDto<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts(pageRequest);
+        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts.getPosts(), findPosts.getPageInfo());
         return ResponseEntity.ok(result);
     }
 
