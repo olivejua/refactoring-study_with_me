@@ -6,6 +6,7 @@ import com.olivejua.study.domain.user.User;
 import com.olivejua.study.exception.studyRecruitment.NotFoundStudyRecruitmentPost;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import com.olivejua.study.service.user.UserService;
+import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,10 @@ public class StudyRecruitmentService {
         return userService.findById(userId);
     }
 
+    public StudyRecruitmentResponseDto getOnePost(Long postId) {
+        StudyRecruitment findPost = findPostById(postId);
+        findPost.addViewCount();
+        return new StudyRecruitmentResponseDto(findPost);
+    }
 }
 

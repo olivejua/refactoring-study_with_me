@@ -30,10 +30,10 @@ public class StudyRecruitmentController {
     }
 
     @GetMapping(POSTS + VAR_POST_ID)
-    public ResponseEntity<SingleResult<PostResponseDto<StudyRecruitmentResponseDto>>> getPost(@PathVariable Long postId) {
-
-
-        SingleResult<PostResponseDto> result = new SingleResult<>();
+    public ResponseEntity<SingleResult> getPost(@PathVariable Long postId) {
+        StudyRecruitmentResponseDto findPost = studyRecruitmentService.getOnePost(postId);
+        PostResponseDto<StudyRecruitmentResponseDto> responseDto = new PostResponseDto<>(findPost);
+        SingleResult result = SingleResult.createSuccessResult(responseDto);
         return ResponseEntity.ok(result);
     }
 

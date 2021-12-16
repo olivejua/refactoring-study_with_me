@@ -190,7 +190,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
 
     @Test
     @DisplayName("하나의 스터디 모집 게시글 가져온다")
-    void testGetAnPost() throws Exception {
+    void testGetOnePost() throws Exception {
         User author = testUser;
         StudyRecruitment post = studyRecruitmentFactory.post(author);
 
@@ -207,7 +207,6 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
                         ),
                         responseHeaders(
-                                headerWithName(HttpHeaders.LOCATION).description("location header"),
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("content-Type header")
                         ),
                         responseFields(

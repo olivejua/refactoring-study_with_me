@@ -1,10 +1,13 @@
 package com.olivejua.study.response;
 
-public class SingleResult<T> extends SuccessResult {
-    private T content;
+import lombok.Getter;
 
-    public SingleResult<T> createSuccessResult(T content) {
-        SingleResult<T> result = new SingleResult<>();
+@Getter
+public class SingleResult extends SuccessResult {
+    private Object content;
+
+    public static SingleResult createSuccessResult(Object content) {
+        SingleResult result = new SingleResult();
         result.success();
         result.content = content;
 
