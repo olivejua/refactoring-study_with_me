@@ -72,12 +72,23 @@ public abstract class Post extends BaseTimeEntity {
     }
 
     /**
-     * 첨부이미지 수정
+     * 첨부이미지
      */
-    protected void replaceImages(List<String> images) {
+    public void addImages(List<String> images) {
         this.images.addAll(images);
     }
 
+    public void replaceImages(List<String> images) {
+        this.images.replace(images);
+    }
+
+    public List<String> getImagePaths() {
+        return images.getPaths();
+    }
+
+    public boolean hasImages() {
+        return images.hasImages();
+    }
 
     /**
      * 좋아요(like) 추가

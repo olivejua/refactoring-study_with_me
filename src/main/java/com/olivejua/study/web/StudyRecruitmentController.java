@@ -13,7 +13,6 @@ import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseD
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -49,7 +48,7 @@ public class StudyRecruitmentController {
 
     @PostMapping(POSTS)
     public ResponseEntity<SuccessResult> savePost(@AppLoginUser LoginUser loginUser,
-                                                  @Validated @RequestBody StudyRecruitmentSaveRequestDto requestDto) {
+                                                  @Validated StudyRecruitmentSaveRequestDto requestDto) {
 
         Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser.getUser());
 

@@ -37,7 +37,7 @@ public class IntegrationTest {
     @Autowired
     protected QuestionFactory questionFactory;
 
-    protected MultipartFile getMockImage() throws IOException {
+    protected MockMultipartFile getMockImage() throws IOException {
         String fileName = "testImage";
         String extension = "jpg";
         String path = "src/test/resources/images/testImage.jpg";

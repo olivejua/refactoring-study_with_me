@@ -1,12 +1,14 @@
 package com.olivejua.study.service.studyRecruitment;
 
-import com.olivejua.study.auth.dto.LoginUser;
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
-import com.olivejua.study.exception.studyRecruitment.NotFoundStudyRecruitmentPost;
+import com.olivejua.study.exception.post.DifferentUserWithPostAuthorException;
+import com.olivejua.study.exception.post.NotFoundPostException;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import com.olivejua.study.response.PageInfo;
+import com.olivejua.study.service.UploadService;
 import com.olivejua.study.service.user.UserService;
+import com.olivejua.study.utils.PostImagePaths;
 import com.olivejua.study.web.dto.post.PostListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,35 +29,66 @@ import java.util.stream.Collectors;
 @Service
 public class StudyRecruitmentService {
     private final StudyRecruitmentRepository studyRecruitmentRepository;
-    private final UserService userService;
+    private final UploadService uploadService;
 
-    public Long savePost(StudyRecruitmentSaveRequestDto requestDto, LoginUser loginUser) {
-        User author = userService.findById(loginUser.getId());
+    public Long savePost(StudyRecruitmentSaveRequestDto requestDto, User author) {
         StudyRecruitment savedPost = studyRecruitmentRepository.save(requestDto.toEntity(author));
+
+        if (requestDto.hasImages()) {
+            List<String> uploadedImageUrls = uploadImages(requestDto.getImages(), savedPost.getId());
+            savedPost.addImages(uploadedImageUrls);
+        }
 
         return savedPost.getId();
     }
 
-    public void updatePost(Long postId, StudyRecruitmentUpdateRequestDto requestDto, LoginUser loginUser) {
+    public void updatePost(Long postId, StudyRecruitmentUpdateRequestDto requestDto, User author) {
         StudyRecruitment post = findPostById(postId);
-        post.hasSameAuthorAs(findUserById(loginUser.getId()));
+        validateAuthor(post, author);
+
         post.update(requestDto.getTitle(), requestDto.toCondition(), requestDto.getTechs());
+
+        if (requestDto.hasImages()) {
+            List<String> uploadedImageUrls = replaceImages(requestDto.getImages(), post);
+            post.replaceImages(uploadedImageUrls);
+        }
     }
 
-    public void deletePost(Long postId, LoginUser loginUser) {
+    public void deletePost(Long postId, User author) {
         StudyRecruitment post = findPostById(postId);
-        post.hasSameAuthorAs(findUserById(loginUser.getId()));
+        validateAuthor(post, author);
+
+        if (post.hasImages()) {
+            uploadService.remove(post.getImagePaths());
+        }
 
         studyRecruitmentRepository.delete(post);
     }
 
-    public StudyRecruitment findPostById(Long postId) {
-        return studyRecruitmentRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundStudyRecruitmentPost(postId));
+    private void validateAuthor(StudyRecruitment post, User author) {
+        if (post.hasSameAuthorAs(author)) {
+            return;
+        }
+
+        throw new DifferentUserWithPostAuthorException();
     }
 
-    public User findUserById(Long userId) {
-        return userService.findById(userId);
+    private List<String> uploadImages(List<MultipartFile> images, Long postId) {
+        return uploadService.upload(images, PostImagePaths.STUDY_RECRUITMENT + postId);
+    }
+
+    private List<String> replaceImages(List<MultipartFile> images, StudyRecruitment post) {
+        removeImages(post);
+        return uploadImages(images, post.getId());
+    }
+
+    private void removeImages(StudyRecruitment post) {
+        uploadService.remove(post.getImagePaths());
+    }
+
+    private StudyRecruitment findPostById(Long postId) {
+        return studyRecruitmentRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundPostException(postId));
     }
 
     public StudyRecruitmentReadResponseDto getOnePost(Long postId) {

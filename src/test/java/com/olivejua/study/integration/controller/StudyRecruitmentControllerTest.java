@@ -3,26 +3,36 @@ package com.olivejua.study.integration.controller;
 import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
+import com.olivejua.study.repository.StudyRecruitmentRepository;
+import com.olivejua.study.service.UploadService;
 import com.olivejua.study.utils.ErrorCodes;
+import com.olivejua.study.utils.PostImagePaths;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static com.olivejua.study.utils.ApiUrlPaths.*;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +41,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudyRecruitmentControllerTest extends CommonControllerTest {
 
     @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private UploadService uploadService;
+
+    @Autowired
+    private StudyRecruitmentRepository studyRecruitmentRepository;
+
+    private static final String DIRECT = "study-recruitment/";
 
     private User testUser;
     private String accessToken;
@@ -43,17 +61,51 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
     }
 
     @Test
+    @DisplayName("스터디 모집 게시글을 첨부이미와 같이 작성한다")
+    void testSaveContainingImages() throws Exception {
+        StudyRecruitmentSaveRequestDto requestDto = studyRecruitmentFactory.saveRequestDto();
+
+        String baseImageUrl = "https://aws.s3.simplelog.com/" + PostImagePaths.STUDY_RECRUITMENT + "1/";
+        when(uploadService.upload(anyList(), anyString())).thenReturn(List.of(baseImageUrl+"1.jpg", baseImageUrl+"2.jpg"));
+
+        mockMvc.perform(multipart(STUDY_RECRUITMENT + POSTS)
+                        .file("images", getMockImage().getBytes())
+                        .file("images", getMockImage().getBytes())
+                        .params(toParamsMap(requestDto))
+                        .header(AUTHORIZATION, accessToken)
+                        .accept(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto))
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("success").value(true))
+        ;
+    }
+
+    private MultiValueMap<String, String> toParamsMap(StudyRecruitmentSaveRequestDto requestDto) {
+        LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("title", requestDto.getTitle());
+        requestDto.getTechs()
+                .forEach(tech -> params.add("techs", tech));
+        params.add("meetingPlace", requestDto.getMeetingPlace());
+        params.add("startDate", requestDto.getStartDate().toString());
+        params.add("endDate", requestDto.getEndDate().toString());
+        params.add("capacity", String.valueOf(requestDto.getCapacity()));
+        params.add("explanation", requestDto.getExplanation());
+
+        return params;
+    }
+
+    @Test
+    void testLocalDateToString() {
+        LocalDate now = LocalDate.now();
+        System.out.println(now);
+    }
+
+    @Test
     @DisplayName("스터디 모집 게시글을 작성한다")
     void testSave() throws Exception {
-        StudyRecruitmentSaveRequestDto requestDto = StudyRecruitmentSaveRequestDto.builder()
-                .title("test title")
-                .techs(List.of("java", "jpa", "spring boot"))
-                .meetingPlace("강남")
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(3))
-                .capacity(10)
-                .explanation("test explanation")
-                .build();
+        StudyRecruitmentSaveRequestDto requestDto = studyRecruitmentFactory.saveRequestDto();
 
         mockMvc.perform(post(STUDY_RECRUITMENT + POSTS)
                 .header(AUTHORIZATION, accessToken)
@@ -63,7 +115,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("success").value(true))
-                .andDo(document("study-recruitment/save-a-post",
+                .andDo(document(DIRECT + "create-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
@@ -92,15 +144,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
     @Test
     @DisplayName("스터디 모집 게시글을 작성할 때 유효성 검사가 실패한다")
     void testSave_Error() throws Exception {
-        StudyRecruitmentSaveRequestDto requestDto = StudyRecruitmentSaveRequestDto.builder()
-                .title("")
-                .techs(List.of("java", "jpa", "spring boot"))
-                .meetingPlace("강남")
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(3))
-                .capacity(-1)
-                .explanation("test explanation")
-                .build();
+        StudyRecruitmentSaveRequestDto requestDto = studyRecruitmentFactory.saveRequestDto("", -1);
 
         mockMvc.perform(post(STUDY_RECRUITMENT + POSTS)
                         .header(AUTHORIZATION, accessToken)
@@ -121,15 +165,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
         User author = testUser;
         StudyRecruitment post = studyRecruitmentFactory.post(author, List.of("java", "spring boot"));
 
-        StudyRecruitmentUpdateRequestDto requestDto = StudyRecruitmentUpdateRequestDto.builder()
-                .title("updated title")
-                .techs(List.of("node.js", "typescript"))
-                .meetingPlace("홍대")
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(6))
-                .capacity(5)
-                .explanation("updated explanation")
-                .build();
+        StudyRecruitmentUpdateRequestDto requestDto = studyRecruitmentFactory.updateRequestDto();
 
         mockMvc.perform(put(STUDY_RECRUITMENT+POSTS+VAR_POST_ID, post.getId())
                 .header(AUTHORIZATION, accessToken)
@@ -139,7 +175,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").value(true))
-                .andDo(document("study-recruitment/update-a-post",
+                .andDo(document(DIRECT + "update-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
@@ -174,7 +210,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").value(true))
-                .andDo(document("study-recruitment/delete-a-post",
+                .andDo(document(DIRECT + "delete-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
                         ),
@@ -200,7 +236,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").value(true))
                 .andExpect(jsonPath("content").exists())
-                .andDo(document("study-recruitment/get-a-post",
+                .andDo(document(DIRECT + "get-a-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
@@ -253,7 +289,7 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                 .andExpect(jsonPath("content").exists())
                 .andExpect(jsonPath("pageInfo").exists())
                 .andExpect(jsonPath("pageInfo.totalElements").value(15))
-                .andDo(document("study-recruitment/get-posts",
+                .andDo(document(DIRECT + "get-posts",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
@@ -268,20 +304,20 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                         ),
                         responseFields(
                                 beneathPath("content").withSubsectionId("content"),
-                                fieldWithPath("post.id").type(NUMBER).description("게시글 ID"),
-                                fieldWithPath("post.author.id").type(NUMBER).description("작성자 ID"),
-                                fieldWithPath("post.author.name").type(STRING).description("작성자 이름"),
-                                fieldWithPath("post.title").type(STRING).description("게시글 제목"),
-                                fieldWithPath("post.techs").type(ARRAY).description("기술 스택 목록"),
-                                fieldWithPath("post.createdDate").type(STRING).description("작성일자")
+                                fieldWithPath("id").type(NUMBER).description("게시글 ID"),
+                                fieldWithPath("author.id").type(NUMBER).description("작성자 ID"),
+                                fieldWithPath("author.name").type(STRING).description("작성자 이름"),
+                                fieldWithPath("title").type(STRING).description("게시글 제목"),
+                                fieldWithPath("techs").type(ARRAY).description("기술 스택 목록"),
+                                fieldWithPath("createdDate").type(STRING).description("작성일자")
                         ),
                         responseFields(
                                 beneathPath("pageInfo").withSubsectionId("pageInfo"),
                                 fieldWithPath("totalElements").type(NUMBER).description("총 컨텐츠 개수"),
                                 fieldWithPath("totalPages").type(NUMBER).description("총 페이지 개수"),
                                 fieldWithPath("number").type(NUMBER).description("현재 페이지 수"),
-                                fieldWithPath("first").type(NUMBER).description("첫 페이지 여부"),
-                                fieldWithPath("last").type(NUMBER).description("마지막 페이지 여부"),
+                                fieldWithPath("first").type(BOOLEAN).description("첫 페이지 여부"),
+                                fieldWithPath("last").type(BOOLEAN).description("마지막 페이지 여부"),
                                 fieldWithPath("numberOfElements").type(NUMBER).description("현재 페이지 컨텐츠 개수")
                         )
                 ))
