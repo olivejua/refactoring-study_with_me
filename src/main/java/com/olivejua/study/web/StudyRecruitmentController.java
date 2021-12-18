@@ -51,7 +51,7 @@ public class StudyRecruitmentController {
     public ResponseEntity<SuccessResult> savePost(@AppLoginUser LoginUser loginUser,
                                                   @Validated @RequestBody StudyRecruitmentSaveRequestDto requestDto) {
 
-        Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser);
+        Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser.getUser());
 
         return ResponseEntity.created(URI.create(STUDY_RECRUITMENT+POSTS+"/"+savedPostId))
                 .body(SuccessResult.createSuccessResult());
@@ -62,7 +62,7 @@ public class StudyRecruitmentController {
                                                     @Validated @RequestBody StudyRecruitmentUpdateRequestDto requestDto,
                                                     @AppLoginUser LoginUser loginUser) {
 
-        studyRecruitmentService.updatePost(postId, requestDto, loginUser);
+        studyRecruitmentService.updatePost(postId, requestDto, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
     }
 
@@ -70,7 +70,7 @@ public class StudyRecruitmentController {
     public ResponseEntity<SuccessResult> deletePost(@PathVariable Long postId,
                                                     @AppLoginUser LoginUser loginUser) {
 
-        studyRecruitmentService.deletePost(postId, loginUser);
+        studyRecruitmentService.deletePost(postId, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
     }
 }

@@ -1,16 +1,15 @@
 package com.olivejua.study.auth.dto;
 
-import com.olivejua.study.domain.user.Role;
+import com.olivejua.study.domain.user.User;
 import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 @Getter
 public class LoginUser {
-    private Long id;
-    private Role role = Role.USER;
+    private User user;
 
-    public LoginUser(Long id) {
-        this.id = id;
+    public LoginUser(User user) {
+        this.user = user;
     }
 }

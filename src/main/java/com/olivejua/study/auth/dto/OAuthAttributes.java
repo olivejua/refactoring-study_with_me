@@ -52,14 +52,5 @@ public class OAuthAttributes {
                 (String) response.get("email"),
                 NAVER);
     }
-
-    public User toEntity() {
-        return User.createUser(
-                name,
-                email,
-                Role.GUEST,
-                socialCode
-        );
-    }
 }
 
