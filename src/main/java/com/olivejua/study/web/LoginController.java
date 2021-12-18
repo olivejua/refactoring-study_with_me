@@ -6,7 +6,6 @@ import com.olivejua.study.auth.annotation.AppLoginUser;
 import com.olivejua.study.auth.dto.GuestUser;
 import com.olivejua.study.auth.dto.LoginUser;
 import com.olivejua.study.domain.auth.AuthToken;
-import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.AuthTokenRepository;
 import com.olivejua.study.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,14 +53,12 @@ public class LoginController {
     public String getToken(@AppLoginUser LoginUser loginUser, HttpServletRequest request) {
         String refreshToken = jwtTokenProvider.resolveToken(request);
 
-        User user = userRepository.findById(loginUser.getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        AuthToken token = authTokenRepository.findByUser(user)
+        AuthToken token = authTokenRepository.findByUser(loginUser.getUser())
                 .orElseThrow(() -> new IllegalArgumentException("유저의 토큰 정보를 찾을 수 없습니다."));
 
         boolean validate = token.isExpired(jwtTokenProvider) && token.equalsToken(refreshToken);
         if (validate) {
-            String newRefreshToken = jwtTokenProvider.createRefreshTokenForUser(user.getId());
+            String newRefreshToken = jwtTokenProvider.createRefreshTokenForUser(loginUser.getUserId());
             token.updateRefreshToken(newRefreshToken);
 
             return newRefreshToken;
