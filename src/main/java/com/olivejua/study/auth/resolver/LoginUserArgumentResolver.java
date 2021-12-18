@@ -1,9 +1,10 @@
 package com.olivejua.study.auth.resolver;
 
-import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.auth.annotation.AppLoginUser;
 import com.olivejua.study.auth.dto.AuthenticatedUser;
 import com.olivejua.study.auth.dto.LoginUser;
+import com.olivejua.study.domain.user.User;
+import com.olivejua.study.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -31,6 +32,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthenticatedUser principal = (AuthenticatedUser) authentication.getPrincipal();
-        return new LoginUser(principal.getId());
+
+        User loginUser = userService.findById(principal.getId());
+        return new LoginUser(loginUser);
     }
 }
