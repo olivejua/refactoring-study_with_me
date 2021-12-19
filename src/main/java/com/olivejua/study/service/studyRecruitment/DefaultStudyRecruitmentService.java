@@ -2,12 +2,10 @@ package com.olivejua.study.service.studyRecruitment;
 
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
-import com.olivejua.study.exception.post.DifferentUserWithPostAuthorException;
 import com.olivejua.study.exception.post.NotFoundPostException;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import com.olivejua.study.response.PageInfo;
-import com.olivejua.study.service.upload.UploadService;
-import com.olivejua.study.utils.PostImagePaths;
+import com.olivejua.study.service.post.PostService;
 import com.olivejua.study.web.dto.post.PostListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
@@ -18,24 +16,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.olivejua.study.utils.PostImagePaths.STUDY_RECRUITMENT;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class DefaultStudyRecruitmentService implements StudyRecruitmentService {
     private final StudyRecruitmentRepository studyRecruitmentRepository;
-    private final UploadService uploadService;
+    private final PostService postService;
 
     @Override
     public Long savePost(StudyRecruitmentSaveRequestDto requestDto, User author) {
         StudyRecruitment savedPost = studyRecruitmentRepository.save(requestDto.toEntity(author));
 
-        List<String> uploadedImageUrls = uploadImages(requestDto.getImages(), savedPost.getId());
+        List<String> uploadedImageUrls = postService.uploadImages(requestDto.getImages(), STUDY_RECRUITMENT, savedPost.getId());
         savedPost.addImages(uploadedImageUrls);
 
         return savedPost.getId();
@@ -44,52 +42,21 @@ public class DefaultStudyRecruitmentService implements StudyRecruitmentService {
     @Override
     public void updatePost(Long postId, StudyRecruitmentUpdateRequestDto requestDto, User author) {
         StudyRecruitment post = findPostById(postId);
-        validateAuthor(post, author);
+        postService.validateAuthor(post, author);
 
         post.update(requestDto.getTitle(), requestDto.toCondition(), requestDto.getTechs());
 
-        List<String> uploadedImageUrls = replaceImages(requestDto.getImages(), post);
+        List<String> uploadedImageUrls = postService.replaceImages(requestDto.getImages(), STUDY_RECRUITMENT, post);
         post.replaceImages(uploadedImageUrls);
     }
 
     @Override
     public void deletePost(Long postId, User author) {
         StudyRecruitment post = findPostById(postId);
-        validateAuthor(post, author);
-
-        removeImages(post);
+        postService.validateAuthor(post, author);
+        postService.removeImages(post);
 
         studyRecruitmentRepository.delete(post);
-    }
-
-    private void validateAuthor(StudyRecruitment post, User author) {
-        if (post.hasSameAuthorAs(author)) {
-            return;
-        }
-
-        throw new DifferentUserWithPostAuthorException();
-    }
-
-    private List<String> uploadImages(List<MultipartFile> images, Long postId) {
-        if (images.isEmpty()) return Collections.emptyList();
-
-        return uploadService.upload(images, PostImagePaths.STUDY_RECRUITMENT + postId);
-    }
-
-    private List<String> replaceImages(List<MultipartFile> images, StudyRecruitment post) {
-        removeImages(post);
-        return uploadImages(images, post.getId());
-    }
-
-    private void removeImages(StudyRecruitment post) {
-        if (post.hasImages()) {
-            uploadService.remove(post.getImagePaths());
-        }
-    }
-
-    private StudyRecruitment findPostById(Long postId) {
-        return studyRecruitmentRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundPostException(postId));
     }
 
     @Override
@@ -106,6 +73,11 @@ public class DefaultStudyRecruitmentService implements StudyRecruitmentService {
 
         PageInfo pageInfo = toPageInfo(posts);
         return new PostListResponseDto<>(listResponseDtos, pageInfo);
+    }
+
+    private StudyRecruitment findPostById(Long postId) {
+        return studyRecruitmentRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundPostException(postId));
     }
 
     private PageInfo toPageInfo(Page<StudyRecruitment> posts) {
