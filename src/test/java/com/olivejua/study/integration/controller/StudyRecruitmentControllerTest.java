@@ -4,7 +4,7 @@ import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
-import com.olivejua.study.service.UploadService;
+import com.olivejua.study.service.upload.UploadService;
 import com.olivejua.study.utils.ErrorCodes;
 import com.olivejua.study.utils.PostImagePaths;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
