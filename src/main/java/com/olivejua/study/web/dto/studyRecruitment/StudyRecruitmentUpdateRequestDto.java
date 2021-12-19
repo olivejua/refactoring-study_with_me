@@ -53,10 +53,6 @@ public class StudyRecruitmentUpdateRequestDto {
         this.images.addAll(images);
     }
 
-    public boolean hasImages() {
-        return !images.isEmpty();
-    }
-
     public Condition toCondition() {
         return Condition.builder()
                 .meetingPlace(meetingPlace)

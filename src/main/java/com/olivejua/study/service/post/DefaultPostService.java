@@ -28,16 +28,16 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public List<String> uploadImages(List<MultipartFile> images, String domainImagePath, Long postId) {
+    public List<String> uploadImages(List<MultipartFile> images, String postImagePath, Long postId) {
         if (images.isEmpty()) return Collections.emptyList();
 
-        return uploadService.upload(images, domainImagePath + postId);
+        return uploadService.upload(images, postImagePath + postId);
     }
 
     @Override
-    public List<String> replaceImages(List<MultipartFile> images, String domainImagePath, Post post) {
+    public List<String> replaceImages(List<MultipartFile> images, String postImagePath, Post post) {
         removeImages(post);
-        return uploadImages(images, domainImagePath, post.getId());
+        return uploadImages(images, postImagePath, post.getId());
     }
 
     @Override

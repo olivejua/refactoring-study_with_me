@@ -10,9 +10,9 @@ public interface PostService {
 
     void validateAuthor(Post post, User author);
 
-    List<String> uploadImages(List<MultipartFile> images, String domainImagePath, Long postId);
+    List<String> uploadImages(List<MultipartFile> images, String postImagePath, Long postId);
 
-    List<String> replaceImages(List<MultipartFile> images, String domainImagePath, Post post);
+    List<String> replaceImages(List<MultipartFile> images, String postImagePath, Post post);
 
     void removeImages(Post post);
 }
