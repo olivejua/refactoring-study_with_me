@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -32,6 +33,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -109,26 +112,24 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
 
         mockMvc.perform(post(STUDY_RECRUITMENT + POSTS)
                 .header(AUTHORIZATION, accessToken)
-                .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto)))
+                .params(toParamsMap(requestDto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("success").value(true))
                 .andDo(document(DIRECT + "create-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
-                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
                         ),
-                        requestFields(
-                                fieldWithPath("title").type(STRING).description("게시글 제목"),
-                                fieldWithPath("techs").type(ARRAY).description("스터디에서 사용할 기술 스택"),
-                                fieldWithPath("meetingPlace").type(STRING).description("만남 장소 (지역)"),
-                                fieldWithPath("startDate").type(STRING).description("스터디 시작일자"),
-                                fieldWithPath("endDate").type(STRING).description("스터디 종료일자"),
-                                fieldWithPath("capacity").type(NUMBER).description("최대 인원 수"),
-                                fieldWithPath("explanation").type(STRING).description("추가 설명")
+                        requestParameters(
+                                parameterWithName("title").description("게시글 제목"),
+                                parameterWithName("techs").description("스터디에서 사용할 기술 스택"),
+                                parameterWithName("meetingPlace").description("만남 장소 (지역)"),
+                                parameterWithName("startDate").description("스터디 시작일자"),
+                                parameterWithName("endDate").description("스터디 종료일자"),
+                                parameterWithName("capacity").description("최대 인원 수"),
+                                parameterWithName("explanation").description("추가 설명")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.LOCATION).description("location header"),
@@ -148,9 +149,8 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
 
         mockMvc.perform(post(STUDY_RECRUITMENT + POSTS)
                         .header(AUTHORIZATION, accessToken)
-                        .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .params(toParamsMap(requestDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("success").value(false))
@@ -169,26 +169,24 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
 
         mockMvc.perform(put(STUDY_RECRUITMENT+POSTS+VAR_POST_ID, post.getId())
                 .header(AUTHORIZATION, accessToken)
-                .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto)))
+                .params(toParamsMap(requestDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("success").value(true))
                 .andDo(document(DIRECT + "update-post",
                         requestHeaders(
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
-                                headerWithName(HttpHeaders.CONTENT_TYPE).description("content type header"),
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("bearer Token")
                         ),
-                        requestFields(
-                                fieldWithPath("title").type(STRING).description("게시글 제목"),
-                                fieldWithPath("techs").type(ARRAY).description("스터디에서 사용할 기술 스택"),
-                                fieldWithPath("meetingPlace").type(STRING).description("만남 장소 (지역)"),
-                                fieldWithPath("startDate").type(STRING).description("스터디 시작일자"),
-                                fieldWithPath("endDate").type(STRING).description("스터디 종료일자"),
-                                fieldWithPath("capacity").type(NUMBER).description("최대 인원 수"),
-                                fieldWithPath("explanation").type(STRING).description("추가 설명")
+                        requestParameters(
+                                parameterWithName("title").description("게시글 제목"),
+                                parameterWithName("techs").description("스터디에서 사용할 기술 스택"),
+                                parameterWithName("meetingPlace").description("만남 장소 (지역)"),
+                                parameterWithName("startDate").description("스터디 시작일자"),
+                                parameterWithName("endDate").description("스터디 종료일자"),
+                                parameterWithName("capacity").description("최대 인원 수"),
+                                parameterWithName("explanation").description("추가 설명")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("content-Type header")
@@ -197,6 +195,20 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                                 fieldWithPath("success").type(BOOLEAN).description("성공 처리 여부")
                         )
                 ));
+    }
+
+    private MultiValueMap<String, String> toParamsMap(StudyRecruitmentUpdateRequestDto requestDto) {
+        LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("title", requestDto.getTitle());
+        requestDto.getTechs()
+                .forEach(tech -> params.add("techs", tech));
+        params.add("meetingPlace", requestDto.getMeetingPlace());
+        params.add("startDate", requestDto.getStartDate().toString());
+        params.add("endDate", requestDto.getEndDate().toString());
+        params.add("capacity", String.valueOf(requestDto.getCapacity()));
+        params.add("explanation", requestDto.getExplanation());
+
+        return params;
     }
 
     @Test

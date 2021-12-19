@@ -6,6 +6,7 @@ import com.olivejua.study.response.ListResult;
 import com.olivejua.study.response.SingleResult;
 import com.olivejua.study.response.SuccessResult;
 import com.olivejua.study.service.studyRecruitment.StudyRecruitmentService;
+import com.olivejua.study.service.validation.RequestDtoValidationException;
 import com.olivejua.study.web.dto.post.PostListResponseDto;
 import com.olivejua.study.web.dto.post.PostReadResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +50,9 @@ public class StudyRecruitmentController {
 
     @PostMapping(POSTS)
     public ResponseEntity<SuccessResult> savePost(@AppLoginUser LoginUser loginUser,
-                                                  @Validated StudyRecruitmentSaveRequestDto requestDto) {
+                                                  @Validated StudyRecruitmentSaveRequestDto requestDto, Errors errors) {
+
+        validateErrors(errors);
 
         Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser.getUser());
 
@@ -58,8 +62,9 @@ public class StudyRecruitmentController {
 
     @PutMapping(POSTS + VAR_POST_ID)
     public ResponseEntity<SuccessResult> updatePost(@PathVariable Long postId,
-                                                    @Validated @RequestBody StudyRecruitmentUpdateRequestDto requestDto,
+                                                    @Validated StudyRecruitmentUpdateRequestDto requestDto, Errors errors,
                                                     @AppLoginUser LoginUser loginUser) {
+        validateErrors(errors);
 
         studyRecruitmentService.updatePost(postId, requestDto, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
@@ -71,5 +76,11 @@ public class StudyRecruitmentController {
 
         studyRecruitmentService.deletePost(postId, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
+    }
+
+    private void validateErrors(Errors errors) {
+        if (errors.hasErrors()) {
+            throw new RequestDtoValidationException(errors);
+        }
     }
 }
