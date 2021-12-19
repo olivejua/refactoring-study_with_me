@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class StudyRecruitmentServiceTest extends IntegrationTest {
 
@@ -199,7 +199,7 @@ public class StudyRecruitmentServiceTest extends IntegrationTest {
 
     @Test
     @DisplayName("DB에 게시글을 저장하고, 이미지도 같이 저장한다")
-    void testUpdatePost_withImages() throws IOException {
+    void testUpdatePost_withImages() {
         //given
         List<String> mockSavedImagePaths = List.of(POST_IMAGE_PATH + "1.jpg", POST_IMAGE_PATH + "2.jpg");
         StudyRecruitment post = studyRecruitmentFactory.postWithImages(author, mockSavedImagePaths);
@@ -210,11 +210,23 @@ public class StudyRecruitmentServiceTest extends IntegrationTest {
                 .map(imagePath -> MOCK_DOMAIN_URL + imagePath)
                 .collect(Collectors.toList());
 
-        when(uploadService.upload(anyList(), anyString())).thenReturn(mockDomainImagePaths);
+        doReturn(mockDomainImagePaths).when(uploadService).upload(anyList(), anyString());
+        doNothing().doThrow(new RuntimeException()).when(uploadService).remove(post.getImagePaths());
 
         //when
         studyRecruitmentService.updatePost(post.getId(), requestDto, author);
 
+        verify(uploadService).remove(anyList());
 
+        //then
+        entityManager.flush();
+        entityManager.clear();
+
+        Optional<StudyRecruitment> optionalFindPost = studyRecruitmentRepository.findById(post.getId());
+        assertTrue(optionalFindPost.isPresent());
+        StudyRecruitment findPost = optionalFindPost.get();
+
+        //images
+        assertTrue(mockUpdatedImagePaths.containsAll(findPost.getImagePaths()));
     }
 }

@@ -23,6 +23,7 @@ public class Images {
     private final List<String> urls = new ArrayList<>();
 
     public void addAll(List<String> urls) {
+        if (urls.isEmpty()) return;
         this.urls.addAll(urls);
     }
 

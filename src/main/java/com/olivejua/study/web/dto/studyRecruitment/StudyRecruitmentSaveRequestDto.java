@@ -55,10 +55,6 @@ public class StudyRecruitmentSaveRequestDto {
         this.images.addAll(images);
     }
 
-    public boolean hasImages() {
-        return !images.isEmpty();
-    }
-
     public StudyRecruitment toEntity(User author) {
         return StudyRecruitment.createPost(
                 author,

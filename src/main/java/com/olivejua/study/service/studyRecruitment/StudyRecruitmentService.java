@@ -7,7 +7,6 @@ import com.olivejua.study.exception.post.NotFoundPostException;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
 import com.olivejua.study.response.PageInfo;
 import com.olivejua.study.service.UploadService;
-import com.olivejua.study.service.user.UserService;
 import com.olivejua.study.utils.PostImagePaths;
 import com.olivejua.study.web.dto.post.PostListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,8 @@ public class StudyRecruitmentService {
     public Long savePost(StudyRecruitmentSaveRequestDto requestDto, User author) {
         StudyRecruitment savedPost = studyRecruitmentRepository.save(requestDto.toEntity(author));
 
-        if (requestDto.hasImages()) {
-            List<String> uploadedImageUrls = uploadImages(requestDto.getImages(), savedPost.getId());
-            savedPost.addImages(uploadedImageUrls);
-        }
+        List<String> uploadedImageUrls = uploadImages(requestDto.getImages(), savedPost.getId());
+        savedPost.addImages(uploadedImageUrls);
 
         return savedPost.getId();
     }
@@ -48,19 +47,15 @@ public class StudyRecruitmentService {
 
         post.update(requestDto.getTitle(), requestDto.toCondition(), requestDto.getTechs());
 
-        if (requestDto.hasImages()) {
-            List<String> uploadedImageUrls = replaceImages(requestDto.getImages(), post);
-            post.replaceImages(uploadedImageUrls);
-        }
+        List<String> uploadedImageUrls = replaceImages(requestDto.getImages(), post);
+        post.replaceImages(uploadedImageUrls);
     }
 
     public void deletePost(Long postId, User author) {
         StudyRecruitment post = findPostById(postId);
         validateAuthor(post, author);
 
-        if (post.hasImages()) {
-            uploadService.remove(post.getImagePaths());
-        }
+        removeImages(post);
 
         studyRecruitmentRepository.delete(post);
     }
@@ -74,6 +69,8 @@ public class StudyRecruitmentService {
     }
 
     private List<String> uploadImages(List<MultipartFile> images, Long postId) {
+        if (images.isEmpty()) return Collections.emptyList();
+
         return uploadService.upload(images, PostImagePaths.STUDY_RECRUITMENT + postId);
     }
 
@@ -83,7 +80,9 @@ public class StudyRecruitmentService {
     }
 
     private void removeImages(StudyRecruitment post) {
-        uploadService.remove(post.getImagePaths());
+        if (post.hasImages()) {
+            uploadService.remove(post.getImagePaths());
+        }
     }
 
     private StudyRecruitment findPostById(Long postId) {
