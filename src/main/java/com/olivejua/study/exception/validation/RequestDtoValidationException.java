@@ -1,4 +1,4 @@
-package com.olivejua.study.service.validation;
+package com.olivejua.study.exception.validation;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;

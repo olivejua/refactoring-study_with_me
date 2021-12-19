@@ -2,7 +2,7 @@ package com.olivejua.study.web.advice;
 
 import com.olivejua.study.exception.ApplicationException;
 import com.olivejua.study.response.FailResult;
-import com.olivejua.study.service.validation.RequestDtoValidationException;
+import com.olivejua.study.exception.validation.RequestDtoValidationException;
 import com.olivejua.study.utils.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

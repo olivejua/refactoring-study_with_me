@@ -1,4 +1,4 @@
-package com.olivejua.study.service;
+package com.olivejua.study.service.upload;
 
 import com.olivejua.study.infra.S3Uploader;
 import lombok.RequiredArgsConstructor;

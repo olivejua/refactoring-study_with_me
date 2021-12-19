@@ -1,4 +1,4 @@
-package com.olivejua.study.service;
+package com.olivejua.study.service.upload;
 
 import org.springframework.web.multipart.MultipartFile;
 
