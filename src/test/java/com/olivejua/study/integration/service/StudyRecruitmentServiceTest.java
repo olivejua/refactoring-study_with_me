@@ -28,7 +28,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 public class StudyRecruitmentServiceTest extends IntegrationTest {
 
@@ -198,25 +199,25 @@ public class StudyRecruitmentServiceTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("DB에 게시글을 저장하고, 이미지도 같이 저장한다")
-    void testUpdatePost_withImages() {
+    @DisplayName("DB에 게시글을 수정하고, 이미지도 같이 수정한다")
+    void testUpdatePost_withImages() throws IOException {
         //given
         List<String> mockSavedImagePaths = List.of(POST_IMAGE_PATH + "1.jpg", POST_IMAGE_PATH + "2.jpg");
         StudyRecruitment post = studyRecruitmentFactory.postWithImages(author, mockSavedImagePaths);
-        StudyRecruitmentUpdateRequestDto requestDto = studyRecruitmentFactory.updateRequestDto();
 
+        entityManager.flush();
+
+        StudyRecruitmentUpdateRequestDto requestDto = studyRecruitmentFactory.updateRequestDto(List.of(getMockImage(), getMockImage()));
         List<String> mockUpdatedImagePaths = List.of(POST_IMAGE_PATH + "3.jpg", POST_IMAGE_PATH + "4.jpg", POST_IMAGE_PATH + "5.jpg");
         List<String> mockDomainImagePaths = mockUpdatedImagePaths.stream()
                 .map(imagePath -> MOCK_DOMAIN_URL + imagePath)
                 .collect(Collectors.toList());
 
         doReturn(mockDomainImagePaths).when(uploadService).upload(anyList(), anyString());
-        doNothing().doThrow(new RuntimeException()).when(uploadService).remove(post.getImagePaths());
+        doReturn(mockSavedImagePaths.size()).when(uploadService).remove(anyList());
 
         //when
         studyRecruitmentService.updatePost(post.getId(), requestDto, author);
-
-        verify(uploadService).remove(anyList());
 
         //then
         entityManager.flush();
@@ -228,5 +229,31 @@ public class StudyRecruitmentServiceTest extends IntegrationTest {
 
         //images
         assertTrue(mockUpdatedImagePaths.containsAll(findPost.getImagePaths()));
+        assertEquals(mockUpdatedImagePaths.size(), findPost.getSizeOfImages());
+    }
+
+    @Test
+    @DisplayName("DB에 게시글을 삭제하고, 기술스택, 이미지도 모두 삭제된다")
+    void testDeletePost_withImages() {
+        //given
+        List<String> mockSavedImagePaths = List.of(POST_IMAGE_PATH + "1.jpg", POST_IMAGE_PATH + "2.jpg");
+        StudyRecruitment post = studyRecruitmentFactory.postWithImages(author, mockSavedImagePaths);
+
+        entityManager.flush();
+
+        doReturn(mockSavedImagePaths.size()).when(uploadService).remove(anyList());
+
+        //when
+        studyRecruitmentService.deletePost(post.getId(), author);
+
+        //then
+        entityManager.flush();
+        entityManager.clear();
+
+        Optional<StudyRecruitment> optionalPost = studyRecruitmentRepository.findById(post.getId());
+        assertFalse(optionalPost.isPresent());
+
+        List<Tech> findTechs = techRepository.findByPost(post);
+        assertTrue(findTechs.isEmpty());
     }
 }

@@ -90,6 +90,10 @@ public abstract class Post extends BaseTimeEntity {
         return images.hasImages();
     }
 
+    public int getSizeOfImages() {
+        return images.size();
+    }
+
     /**
      * 좋아요(like) 추가
      */

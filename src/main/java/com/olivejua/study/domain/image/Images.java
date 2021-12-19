@@ -41,4 +41,8 @@ public class Images {
     public boolean hasImages() {
         return !urls.isEmpty();
     }
+
+    public int size() {
+        return urls.size();
+    }
 }

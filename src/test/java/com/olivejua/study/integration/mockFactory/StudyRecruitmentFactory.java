@@ -135,4 +135,17 @@ public class StudyRecruitmentFactory {
                 .build();
     }
 
+    public StudyRecruitmentUpdateRequestDto updateRequestDto(List<MultipartFile> images) {
+        return StudyRecruitmentUpdateRequestDto.builder()
+                .title("updated title")
+                .techs(List.of("node.js", "typescript"))
+                .meetingPlace("홍대")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(6))
+                .capacity(5)
+                .explanation("updated explanation")
+                .images(images)
+                .build();
+    }
+
 }
