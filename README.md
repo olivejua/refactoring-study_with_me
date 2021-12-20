@@ -26,19 +26,6 @@
 |JPA & hibernate|AJAX|AWS|
 |Junit|JavaScript||
 |MariaDB|Bootstrap||
-  
-
-
-## 기능별 구동 화면
-
-1. [유저](/docs/function/user.md)
-    - 회원가입 / 로그인
-2. 게시판
-    1. [스터디 모집](/docs/function/study_recruitment.md)
-    2. [장소 추천](/docs/function/place_recommendation.md)
-    3. [질문](/docs/function/question.md)
-3. 웹 구축
-    - [웹 사이트 구경하기](http://ec2-15-164-33-81.ap-northeast-2.compute.amazonaws.com:8080/)
 
 ## 리팩토링
 ### 1.1v (2021.02~2021.07)
