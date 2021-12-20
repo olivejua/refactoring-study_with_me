@@ -5,9 +5,13 @@ import com.olivejua.study.domain.user.User;
 import com.olivejua.study.exception.post.NotFoundPostException;
 import com.olivejua.study.repository.PlaceRecommendationRepository;
 import com.olivejua.study.service.post.PostService;
+import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationListResponseDto;
+import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationReadResponseDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationSaveRequestDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationUpdateRequestDto;
+import com.olivejua.study.web.dto.post.PostListResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +58,19 @@ public class DefaultPlaceRecommendationService implements PlaceRecommendationSer
         postService.removeImages(post);
 
         placeRecommendationRepository.delete(post);
+    }
+
+    @Override
+    public PlaceRecommendationReadResponseDto getOnePost(Long postId) {
+        PlaceRecommendation findPost = findPostById(postId);
+        findPost.addViewCount();
+
+        return new PlaceRecommendationReadResponseDto(findPost);
+    }
+
+    @Override
+    public PostListResponseDto<PlaceRecommendationListResponseDto> getPosts(Pageable pageable) {
+        placeRecommendationRepository.findPosts(pageable);
     }
 
     private PlaceRecommendation findPostById(Long postId) {
