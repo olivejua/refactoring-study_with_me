@@ -2,6 +2,7 @@ package com.olivejua.study.web.advice;
 
 import com.olivejua.study.exception.ApplicationException;
 import com.olivejua.study.response.FailResult;
+import com.olivejua.study.exception.validation.RequestDtoValidationException;
 import com.olivejua.study.utils.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,6 +31,13 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(exception.HTTP_STATUS)
                 .body(result);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RequestDtoValidationException.class)
+    public FailResult handleValidation(Exception e) {
+        return FailResult.createFailResult(
+                ErrorCodes.Global.CONSTRAINT_VIOLATION_EXCEPTION, e.getMessage());
     }
 
     @Override

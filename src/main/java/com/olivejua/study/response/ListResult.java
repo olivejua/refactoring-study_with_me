@@ -22,9 +22,9 @@ public class ListResult<T> extends SuccessResult {
         content.addAll(list);
     }
 
-    public ListResult(Page<T> pageList) {
-        this(pageList.getContent());
-        pageInfo = toPageInfo(pageList);
+    public ListResult(List<T> list, PageInfo pageInfo) {
+        this(list);
+        this.pageInfo = pageInfo;
     }
 
     private PageInfo toPageInfo(Page<T> pageList) {

@@ -83,6 +83,22 @@ public class PlaceRecommendation extends Post {
         return links.getLinks();
     }
 
+    public List<String> getElementsOfLinks() {
+        return links.getElements();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);

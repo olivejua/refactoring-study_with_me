@@ -12,9 +12,9 @@ public class PostListResponseDto<T>  {
     private final List<T> posts = new ArrayList<>();
     private PageInfo pageInfo;
 
-    public PostListResponseDto(Page<T> posts) {
-        this.posts.addAll(posts.getContent());
-        this.pageInfo = toPageInfo(posts);
+    public PostListResponseDto(List<T> posts, PageInfo pageInfo) {
+        this.posts.addAll(posts);
+        this.pageInfo = pageInfo;
     }
 
     private PageInfo toPageInfo(Page<T> posts) {

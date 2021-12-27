@@ -86,24 +86,22 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        LoginUser user = this.parseLoginUserByToken(token);
-        UserDetails userDetails = userService.loadUserByUsername(user.getId() + "");
+        Long userId = this.parseUserIdByToken(token);
+        UserDetails userDetails = userService.loadUserByUsername(userId + "");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public LoginUser parseLoginUserByToken(String token) {
+    public Long parseUserIdByToken(String token) {
         try {
             if (token.startsWith("Bearer ")) {
                 token = token.replace("Bearer ", "");
             }
 
-            Long userId = Jwts.parser()
+            return Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody()
                     .get(USER_ID, Long.class);
-
-            return new LoginUser(userId);
         } catch (JwtException | IllegalArgumentException e) {
             throw new IllegalArgumentException();
         }

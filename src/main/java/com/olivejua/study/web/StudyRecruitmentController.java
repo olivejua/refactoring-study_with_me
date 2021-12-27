@@ -2,6 +2,7 @@ package com.olivejua.study.web;
 
 import com.olivejua.study.auth.annotation.AppLoginUser;
 import com.olivejua.study.auth.dto.LoginUser;
+import com.olivejua.study.exception.validation.RequestDtoValidationException;
 import com.olivejua.study.response.ListResult;
 import com.olivejua.study.response.SingleResult;
 import com.olivejua.study.response.SuccessResult;
@@ -13,11 +14,9 @@ import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseD
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +31,9 @@ public class StudyRecruitmentController {
     private final StudyRecruitmentService studyRecruitmentService;
 
     @GetMapping(POSTS)
-    public ResponseEntity<ListResult<StudyRecruitmentListResponseDto>> getPosts(
-            @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageRequest) {
-        Page<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts();
-        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts);
+    public ResponseEntity<ListResult<StudyRecruitmentListResponseDto>> getPosts(Pageable pageRequest) {
+        PostListResponseDto<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts(pageRequest);
+        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts.getPosts(), findPosts.getPageInfo());
         return ResponseEntity.ok(result);
     }
 
@@ -49,9 +47,11 @@ public class StudyRecruitmentController {
 
     @PostMapping(POSTS)
     public ResponseEntity<SuccessResult> savePost(@AppLoginUser LoginUser loginUser,
-                                                  @Validated @RequestBody StudyRecruitmentSaveRequestDto requestDto) {
+                                                  @Validated StudyRecruitmentSaveRequestDto requestDto, Errors errors) {
 
-        Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser);
+        validateErrors(errors);
+
+        Long savedPostId = studyRecruitmentService.savePost(requestDto, loginUser.getUser());
 
         return ResponseEntity.created(URI.create(STUDY_RECRUITMENT+POSTS+"/"+savedPostId))
                 .body(SuccessResult.createSuccessResult());
@@ -59,10 +59,11 @@ public class StudyRecruitmentController {
 
     @PutMapping(POSTS + VAR_POST_ID)
     public ResponseEntity<SuccessResult> updatePost(@PathVariable Long postId,
-                                                    @Validated @RequestBody StudyRecruitmentUpdateRequestDto requestDto,
+                                                    @Validated StudyRecruitmentUpdateRequestDto requestDto, Errors errors,
                                                     @AppLoginUser LoginUser loginUser) {
+        validateErrors(errors);
 
-        studyRecruitmentService.updatePost(postId, requestDto, loginUser);
+        studyRecruitmentService.updatePost(postId, requestDto, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
     }
 
@@ -70,7 +71,13 @@ public class StudyRecruitmentController {
     public ResponseEntity<SuccessResult> deletePost(@PathVariable Long postId,
                                                     @AppLoginUser LoginUser loginUser) {
 
-        studyRecruitmentService.deletePost(postId, loginUser);
+        studyRecruitmentService.deletePost(postId, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
+    }
+
+    private void validateErrors(Errors errors) {
+        if (errors.hasErrors()) {
+            throw new RequestDtoValidationException(errors);
+        }
     }
 }

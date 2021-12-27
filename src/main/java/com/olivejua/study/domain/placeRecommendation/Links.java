@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,5 +36,11 @@ public class Links {
 
     public List<Link> getLinks() {
         return links;
+    }
+
+    public List<String> getElements() {
+        return links.stream()
+                .map(Link::getElement)
+                .collect(Collectors.toList());
     }
 }

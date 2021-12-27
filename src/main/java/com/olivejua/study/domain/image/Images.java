@@ -23,12 +23,26 @@ public class Images {
     private final List<String> urls = new ArrayList<>();
 
     public void addAll(List<String> urls) {
+        if (urls.isEmpty()) return;
         this.urls.addAll(urls);
+    }
+
+    public void replace(List<String> urls) {
+        this.urls.clear();
+        addAll(urls);
     }
 
     public List<String> getPaths() {
         return urls.stream()
                 .map(url -> extractPathFromUrl(POSTS, url))
                 .collect(Collectors.toList());
+    }
+
+    public boolean hasImages() {
+        return !urls.isEmpty();
+    }
+
+    public int size() {
+        return urls.size();
     }
 }
