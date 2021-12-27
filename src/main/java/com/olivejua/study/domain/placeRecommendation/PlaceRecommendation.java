@@ -5,6 +5,7 @@ import com.olivejua.study.domain.user.User;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class PlaceRecommendation extends Post {
     private String addressDetail;
     private String content;
 
+    @Embedded
     private final Links links = new Links();
 
     public PlaceRecommendation(User author, String title, String address,
