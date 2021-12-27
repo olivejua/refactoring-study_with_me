@@ -1,30 +1,42 @@
 package com.olivejua.study.web.dto.post;
 
-import com.olivejua.study.response.PageInfo;
+import com.olivejua.study.domain.post.Post;
+import com.olivejua.study.domain.user.User;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@NoArgsConstructor(access = PROTECTED)
 @Getter
-public class PostListResponseDto<T>  {
-    private final List<T> posts = new ArrayList<>();
-    private PageInfo pageInfo;
+public abstract class PostListResponseDto {
+    protected Long id;
+    protected AuthorResponseDto author;
+    protected String title;
+    protected LocalDateTime createdDate;
 
-    public PostListResponseDto(List<T> posts, PageInfo pageInfo) {
-        this.posts.addAll(posts);
-        this.pageInfo = pageInfo;
+    public PostListResponseDto(Post post) {
+        id = post.getId();
+        initAuthor(post.getAuthor());
+        title = post.getTitle();
+        createdDate = post.getCreatedDate();
     }
 
-    private PageInfo toPageInfo(Page<T> posts) {
-        return PageInfo.builder()
-                .totalElements(posts.getTotalElements())
-                .totalPages(posts.getTotalPages())
-                .number(posts.getNumber())
-                .first(posts.isFirst())
-                .last(posts.isLast())
-                .numberOfElements(posts.getNumberOfElements())
-                .build();
+    protected void initAuthor(User user) {
+        this.author = new AuthorResponseDto(user);
+    }
+
+    @NoArgsConstructor(access = PROTECTED)
+    @Getter
+    private static class AuthorResponseDto {
+        private Long id;
+        private String name;
+
+        public AuthorResponseDto(User user) {
+            id = user.getId();
+            name = user.getName();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.olivejua.study.integration.controller;
 
-import com.olivejua.study.auth.JwtTokenProvider;
 import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
@@ -41,9 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StudyRecruitmentControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @MockBean
     private UploadService uploadService;
@@ -261,17 +257,17 @@ public class StudyRecruitmentControllerTest extends CommonControllerTest {
                         ),
                         responseFields(
                                 beneathPath("content").withSubsectionId("content"),
-                                fieldWithPath("post.id").type(NUMBER).description("게시글 ID"),
-                                fieldWithPath("post.author.id").type(NUMBER).description("작성자 ID"),
-                                fieldWithPath("post.author.name").type(STRING).description("작성자 이름"),
-                                fieldWithPath("post.title").type(STRING).description("게시글 제목"),
-                                fieldWithPath("post.techs").type(ARRAY).description("기술 스택 목록"),
-                                fieldWithPath("post.meetingPlace").type(STRING).description("만남 장소 (지역)"),
-                                fieldWithPath("post.startDate").type(STRING).description("스터디 시작일자"),
-                                fieldWithPath("post.endDate").type(STRING).description("스터디 종료일자"),
-                                fieldWithPath("post.capacity").type(NUMBER).description("최대 인원 수"),
-                                fieldWithPath("post.explanation").type(STRING).description("추가 설명"),
-                                fieldWithPath("post.createdDate").type(STRING).description("작성일자")
+                                fieldWithPath("id").type(NUMBER).description("게시글 ID"),
+                                fieldWithPath("author.id").type(NUMBER).description("작성자 ID"),
+                                fieldWithPath("author.name").type(STRING).description("작성자 이름"),
+                                fieldWithPath("title").type(STRING).description("게시글 제목"),
+                                fieldWithPath("techs").type(ARRAY).description("기술 스택 목록"),
+                                fieldWithPath("meetingPlace").type(STRING).description("만남 장소 (지역)"),
+                                fieldWithPath("startDate").type(STRING).description("스터디 시작일자"),
+                                fieldWithPath("endDate").type(STRING).description("스터디 종료일자"),
+                                fieldWithPath("capacity").type(NUMBER).description("최대 인원 수"),
+                                fieldWithPath("explanation").type(STRING).description("추가 설명"),
+                                fieldWithPath("createdDate").type(STRING).description("작성일자")
                         )
                 ))
         ;

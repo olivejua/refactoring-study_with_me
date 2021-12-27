@@ -5,7 +5,7 @@ import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationListRes
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationReadResponseDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationSaveRequestDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationUpdateRequestDto;
-import com.olivejua.study.web.dto.post.PostListResponseDto;
+import com.olivejua.study.web.dto.post.PostListResponseDtos;
 import org.springframework.data.domain.Pageable;
 
 public interface PlaceRecommendationService {
@@ -18,5 +18,5 @@ public interface PlaceRecommendationService {
 
     PlaceRecommendationReadResponseDto getOnePost(Long postId);
 
-    PostListResponseDto<PlaceRecommendationListResponseDto> getPosts(Pageable pageable);
+    PostListResponseDtos<PlaceRecommendationListResponseDto> getPosts(Pageable pageable);
 }

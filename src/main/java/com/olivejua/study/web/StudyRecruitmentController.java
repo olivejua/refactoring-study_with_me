@@ -7,8 +7,7 @@ import com.olivejua.study.response.ListResult;
 import com.olivejua.study.response.SingleResult;
 import com.olivejua.study.response.SuccessResult;
 import com.olivejua.study.service.studyRecruitment.StudyRecruitmentService;
-import com.olivejua.study.web.dto.post.PostListResponseDto;
-import com.olivejua.study.web.dto.post.PostReadResponseDto;
+import com.olivejua.study.web.dto.post.PostListResponseDtos;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
@@ -32,16 +31,14 @@ public class StudyRecruitmentController {
 
     @GetMapping(POSTS)
     public ResponseEntity<ListResult<StudyRecruitmentListResponseDto>> getPosts(Pageable pageRequest) {
-        PostListResponseDto<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts(pageRequest);
-        ListResult<StudyRecruitmentListResponseDto> result = new ListResult<>(findPosts.getPosts(), findPosts.getPageInfo());
-        return ResponseEntity.ok(result);
+        PostListResponseDtos<StudyRecruitmentListResponseDto> findPosts = studyRecruitmentService.getPosts(pageRequest);
+        return ResponseEntity.ok(findPosts.toListResult());
     }
 
     @GetMapping(POSTS + VAR_POST_ID)
     public ResponseEntity<SingleResult> getPost(@PathVariable Long postId) {
         StudyRecruitmentReadResponseDto findPost = studyRecruitmentService.getOnePost(postId);
-        PostReadResponseDto<StudyRecruitmentReadResponseDto> responseDto = new PostReadResponseDto<>(findPost);
-        SingleResult result = SingleResult.createSuccessResult(responseDto);
+        SingleResult result = SingleResult.createSuccessResult(findPost);
         return ResponseEntity.ok(result);
     }
 

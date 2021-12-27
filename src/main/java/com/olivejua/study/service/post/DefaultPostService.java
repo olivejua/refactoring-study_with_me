@@ -3,8 +3,10 @@ package com.olivejua.study.service.post;
 import com.olivejua.study.domain.post.Post;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.exception.post.DifferentUserWithPostAuthorException;
+import com.olivejua.study.response.PageInfo;
 import com.olivejua.study.service.upload.UploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,5 +47,17 @@ public class DefaultPostService implements PostService {
         if (post.hasImages()) {
             uploadService.remove(post.getImagePaths());
         }
+    }
+
+    @Override
+    public PageInfo toPageInfo(Page<? extends Post> posts) {
+        return PageInfo.builder()
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .number(posts.getNumber())
+                .first(posts.isFirst())
+                .last(posts.isLast())
+                .numberOfElements(posts.getNumberOfElements())
+                .build();
     }
 }

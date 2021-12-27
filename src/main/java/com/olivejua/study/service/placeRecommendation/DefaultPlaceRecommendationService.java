@@ -9,13 +9,15 @@ import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationListRes
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationReadResponseDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationSaveRequestDto;
 import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationUpdateRequestDto;
-import com.olivejua.study.web.dto.post.PostListResponseDto;
+import com.olivejua.study.web.dto.post.PostListResponseDtos;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.olivejua.study.utils.PostImagePaths.PLACE_RECOMMENDATION;
 
@@ -69,13 +71,22 @@ public class DefaultPlaceRecommendationService implements PlaceRecommendationSer
     }
 
     @Override
-    public PostListResponseDto<PlaceRecommendationListResponseDto> getPosts(Pageable pageable) {
-        placeRecommendationRepository.findPosts(pageable);
+    public PostListResponseDtos<PlaceRecommendationListResponseDto> getPosts(Pageable pageable) {
+        Page<PlaceRecommendation> posts = placeRecommendationRepository.findPosts(pageable);
+        List<PlaceRecommendationListResponseDto> listResponseDtos = mapToPlaceRecommendationListResponseDto(posts.getContent());
+
+        return new PostListResponseDtos<>(listResponseDtos, postService.toPageInfo(posts));
     }
 
     private PlaceRecommendation findPostById(Long postId) {
         return placeRecommendationRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException(postId));
+    }
+
+    private List<PlaceRecommendationListResponseDto> mapToPlaceRecommendationListResponseDto(List<PlaceRecommendation> entities) {
+        return entities.stream()
+                .map(PlaceRecommendationListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }

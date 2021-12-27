@@ -4,9 +4,8 @@ import com.olivejua.study.domain.studyRecruitment.StudyRecruitment;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.exception.post.NotFoundPostException;
 import com.olivejua.study.repository.StudyRecruitmentRepository;
-import com.olivejua.study.response.PageInfo;
 import com.olivejua.study.service.post.PostService;
-import com.olivejua.study.web.dto.post.PostListResponseDto;
+import com.olivejua.study.web.dto.post.PostListResponseDtos;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentListResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentReadResponseDto;
 import com.olivejua.study.web.dto.studyRecruitment.StudyRecruitmentSaveRequestDto;
@@ -67,28 +66,16 @@ public class DefaultStudyRecruitmentService implements StudyRecruitmentService {
     }
 
     @Override
-    public PostListResponseDto<StudyRecruitmentListResponseDto> getPosts(Pageable pageable) {
+    public PostListResponseDtos<StudyRecruitmentListResponseDto> getPosts(Pageable pageable) {
         Page<StudyRecruitment> posts = studyRecruitmentRepository.findPosts(pageable);
         List<StudyRecruitmentListResponseDto> listResponseDtos = mapToStudyRecruitmentListResponseDto(posts.getContent());
 
-        PageInfo pageInfo = toPageInfo(posts);
-        return new PostListResponseDto<>(listResponseDtos, pageInfo);
+        return new PostListResponseDtos<>(listResponseDtos, postService.toPageInfo(posts));
     }
 
     private StudyRecruitment findPostById(Long postId) {
         return studyRecruitmentRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException(postId));
-    }
-
-    private PageInfo toPageInfo(Page<StudyRecruitment> posts) {
-        return PageInfo.builder()
-                .totalElements(posts.getTotalElements())
-                .totalPages(posts.getTotalPages())
-                .number(posts.getNumber())
-                .first(posts.isFirst())
-                .last(posts.isLast())
-                .numberOfElements(posts.getNumberOfElements())
-                .build();
     }
 
     private List<StudyRecruitmentListResponseDto> mapToStudyRecruitmentListResponseDto(List<StudyRecruitment> entities) {
