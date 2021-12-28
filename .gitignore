@@ -4,6 +4,7 @@
 application-auth.yml
 application-db.yml
 application-aws.yml
+application-local-db.yml
 
 build
 out
