@@ -40,22 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StudyRecruitmentControllerTest extends CommonControllerTest {
-
-    @MockBean
-    private UploadService uploadService;
-
-    @Autowired
-    private StudyRecruitmentRepository studyRecruitmentRepository;
-
     private static final String DIRECT = "study-recruitment/";
-
-    private User testUser;
-    private String accessToken;
 
     @BeforeEach
     void setup() {
-        testUser = userFactory.user();
-        accessToken = getAccessToken(testUser.getId());
+        setupUserAndAccessToken();
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.olivejua.study.common.mockData.MockPlaceRecommendation;
 import com.olivejua.study.domain.placeRecommendation.PlaceRecommendation;
 import com.olivejua.study.domain.user.User;
 import com.olivejua.study.repository.PlaceRecommendationRepository;
+import com.olivejua.study.web.dto.placeRecommendation.PlaceRecommendationSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -46,5 +47,15 @@ public class PlaceRecommendationFactory {
                 .build();
 
         return placeRecommendationRepository.save(post);
+    }
+
+    public PlaceRecommendationSaveRequestDto saveRequestDto() {
+        return PlaceRecommendationSaveRequestDto.builder()
+                .title("test title")
+                .address("서울시 강남구")
+                .addressDetail("ABC 카페")
+                .links(List.of("www.naver.com/places/123", "www.daum.net/cafe/abc"))
+                .content("test content")
+                .build();
     }
 }
