@@ -1,13 +1,12 @@
 package com.olivejua.study.auth.dto;
 
-import com.olivejua.study.domain.user.Role;
 import com.olivejua.study.domain.user.SocialCode;
-import com.olivejua.study.domain.user.User;
 import lombok.Getter;
 
 import java.util.Map;
 
-import static com.olivejua.study.domain.user.SocialCode.*;
+import static com.olivejua.study.domain.user.SocialCode.GOOGLE;
+import static com.olivejua.study.domain.user.SocialCode.NAVER;
 
 @Getter
 public class OAuthAttributes {
