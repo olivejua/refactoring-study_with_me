@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -41,9 +40,6 @@ public class StudyRecruitmentServiceTest extends IntegrationTest {
 
     @Autowired
     private TechRepository techRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @MockBean
     private UploadService uploadService;

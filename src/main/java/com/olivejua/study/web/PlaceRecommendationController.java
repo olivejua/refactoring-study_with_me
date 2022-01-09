@@ -59,6 +59,7 @@ public class PlaceRecommendationController {
         placeRecommendationService.updatePost(postId, requestDto, loginUser.getUser());
         return ResponseEntity.ok(SuccessResult.createSuccessResult());
     }
+
     @DeleteMapping(POSTS + VAR_POST_ID)
     public ResponseEntity<SuccessResult> deletePost(@PathVariable Long postId,
                                                     @AppLoginUser LoginUser loginUser) {

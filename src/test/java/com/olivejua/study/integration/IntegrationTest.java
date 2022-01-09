@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -36,6 +36,9 @@ public class IntegrationTest {
 
     @Autowired
     protected QuestionFactory questionFactory;
+
+    @Autowired
+    protected EntityManager entityManager;
 
     protected MockMultipartFile getMockImage() throws IOException {
         String fileName = "testImage";
